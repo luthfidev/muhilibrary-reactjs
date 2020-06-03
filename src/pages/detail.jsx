@@ -7,7 +7,7 @@ class Detail extends Component {
                 <div className="detail">
                     <div className="detail-header">
                         <div className="back">
-                            <a href="#" className="btn-back">Back</a>
+                            <a href="/dashboard" className="btn-back">Back</a>
                         </div>
                         <div className="action">
                             <a href="#">Edit</a>

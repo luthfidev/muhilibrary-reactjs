@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+
 
 class Register extends Component {
     render() { 
@@ -43,7 +45,7 @@ class Register extends Component {
                             </div>
                             <div className="submit">
                                 <button className="btn-register">Sign Up</button>
-                                <a href="#" className="btn-login">Login</a>
+                                <a href="/" className="btn-login">Login</a>
                             </div>
                         </form>
 

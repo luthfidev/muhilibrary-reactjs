@@ -46,7 +46,7 @@ class Login extends Component {
                     </div>
                     <div className="submit">
                         <button className="btn-login">Login</button>
-                        <a href="#" className="btn-signup">Signup</a>
+                        <a href="/register" className="btn-signup">Signup</a>
                     </div>
                 </form>
 

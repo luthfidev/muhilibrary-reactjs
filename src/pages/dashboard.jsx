@@ -4,7 +4,7 @@ class Dashboard extends Component {
     render(){
         return(
                 <>      
-                        <div className="dashboard">
+                    <div className="dashboard">
                         <div className="sidebar">
                             <div className="profile">
                                 <div className="profile-img">

@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
-
 
 class Register extends Component {
     render() { 
@@ -20,7 +18,7 @@ class Register extends Component {
                 <div className="register-content">
                     <div className="logo">
                         <div className="brand">
-                            <img src={require("../assets/img/bookshelf.png")}/>
+                            <img alt="bookshelf" src={require("../assets/img/bookshelf.png")}/>
                         </div>
                     </div>
                     <div className="form">

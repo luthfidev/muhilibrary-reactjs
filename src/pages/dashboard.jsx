@@ -8,7 +8,7 @@ class Dashboard extends Component {
                         <div className="sidebar">
                             <div className="profile">
                                 <div className="profile-img">
-                                    <img src={require("../assets/img/jono.png")} className="profile-img" alt="profile-picture"/>
+                                    <img src={require("../assets/img/jono.png")} alt="profile-picture"/>
                                 </div>
                                 <div className="profile-name">Jono</div>
                             </div>

@@ -1,68 +1,62 @@
 import React, {Component} from 'react';
+import {Row, Col, Form, FormGroup, Input, Label, Button} from 'reactstrap'
+
+import brand from '../assets/img/bookshelf.png'
 
 class Login extends Component {
     render(){
         return(
         <>
-        <div className="login">
-            <div className="login-bg">
-                <div className="text">
-                    <div className="bg-text">
-                        <h1>Book is a window to the world</h1>
-                    </div>
-                    <div className="bg-watermark">
-                        <p>Photo by Mark Pan4ratte on Unsplash</p>
-                    </div>
-                </div>
+        <Row className='h-100 no-gutters'>
+          <Col md={8} className='login-cover'>
+            <div className='d-flex flex-column justify-content-between login-overlay w-100 h-100'>
+              <h1 className='text-white'>Book is a window to the world</h1>
+              <div className='text-white'>Photo by Mark Pan4ratte on Unsplash</div>
             </div>
-            <div className="login-content">
-            <div className="logo">
-                <div className="brand">
-                    <img src={require("../assets/img/bookshelf.png")}/>
-                </div>
+          </Col>
+          <Col md={4}>
+            <div className='d-flex flex-column w-100 h-100'>
+              <div className='d-flex justify-content-end'>
+                <img className='p-3' src={brand} alt='Logo' />
+              </div>
+              <div className='flex-grow-1 d-flex justify-content-center align-items-center'>
+                <Form>
+                  <h1>Login</h1>
+                  <p>Welcome Back, Please Login to your account</p>
+                  <FormGroup>
+                    <Label className='w-100'>
+                      <div>Email</div>
+                      <Input type='email' />
+                    </Label>
+                  </FormGroup>
+                  <FormGroup>
+                    <Label className='w-100'>
+                      <div>Password</div>
+                      <Input type='password' />
+                    </Label>
+                  </FormGroup>
+                  <div className='d-flex flex-row justify-content-between'>
+                    <FormGroup check>
+                      <Label check>
+                        <Input type='checkbox' />
+                        <span>Remember Me</span>
+                      </Label>
+                    </FormGroup>
+                    <div>Forgot Password</div>
+                  </div>
+                  <div className='mt-2'>
+                    <Button>Login</Button>
+                    <Button className='ml-2'>Sign Up</Button>
+                  </div>
+                </Form>
+              </div>
+              <div className='d-flex flex-column align-content-center p-5'>
+                <div>By signing up, you agree to Book’s</div>
+                <div><p>Terms and Conditions &amp; Privacy Policy</p></div>
+              </div>
             </div>
-            <div className="form">
-                <div className="text-login">
-                    <h1>Login</h1>
-                    <p>Welcome Back, Please Login to your account</p>
-                </div>
-                <form>
-                    <div className="input">
-                        <div className="field">
-                            <input type="email" placeholder="Email"/>
-                        </div>
-                        <div className="field">
-                            <input type="password" placeholder="password"/>
-                        </div>
-                    </div>
-                    <div className="tnc">
-                        <div className="remember">
-                            <input type="checkbox"/>
-                            <label>Remember me</label>
-                        </div>
-                        <div className="forgot">
-                            <a href="#">Forgot Password</a>
-                        </div>
-                    </div>
-                    <div className="submit">
-                        <button className="btn-login">Login</button>
-                        <a href="/register" className="btn-signup">Signup</a>
-                    </div>
-                </form>
-
-            </div>
-            <div className="footer">
-                <div className="footer-1">
-                    <h4>By signing up, you agree to book's</h4>
-                </div>
-                <div className="footer-2">
-                    <p>
-                        <a href="#">Term and Condition</a> & <a href="#">Privacy Policy</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-        </div>
+          </Col>
+        </Row>
         </>
     );
     }

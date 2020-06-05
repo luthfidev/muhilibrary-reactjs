@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios'
 import {Row, 
         Form, 
         FormGroup, 
@@ -11,6 +12,21 @@ import {Row,
 import avatar from '../assets/img/jono.png'
 
 class Dashboard extends Component {
+
+    constructor(props){
+        super(props)
+        this.state = {
+          data: []
+        }
+      }
+
+      async componentDidMount(){
+        const results = await axios.get('https://api-muhilibrary.herokuapp.com/books')
+        const {data} = results
+        this.setState(data)
+      }
+
+
     render(){
         return(
                 <>          
@@ -58,90 +74,27 @@ class Dashboard extends Component {
                     </Col>
                     <Col md={9}>
                         <Container className="mt-3">
+                        {this.state.data.length !== 0 &&(
                             <Row className="m-2">
-                                <Col md={3}>
+                           {this.state.data.map((book, index) => (  
+                                <Col>   
                                     <Card className="shadow"> 
                                         <CardBody>
-                                        <CardTitle>Card title</CardTitle>
-                                        <CardSubtitle>Card subtitle</CardSubtitle>
-                                        <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText>
-                                        <Link to="/detail" className="btn btn-primary"> Detail</Link>
+                                        <CardTitle>{book.title}</CardTitle>
+                                        <CardSubtitle className="badge badge-primary">{book.genreName}</CardSubtitle>
+                                        <CardText>{book.nameStatus}</CardText>
+                                        <Link to={`/detail:${book.id}`} className="btn btn-primary"> Detail</Link>
                                         </CardBody>
                                     </Card>
+                                   
                                 </Col>
-                                <Col md={3}>
-                                    <Card className="shadow"> 
-                                        <CardBody>
-                                        <CardTitle>Card title</CardTitle>
-                                        <CardSubtitle>Card subtitle</CardSubtitle>
-                                        <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText>
-                                        <Link to="/detail" className="btn btn-primary"> Detail</Link>
-                                        </CardBody>
-                                    </Card>
-                                </Col>
-                                <Col md={3}>
-                                    <Card className="shadow"> 
-                                        <CardBody>
-                                        <CardTitle>Card title</CardTitle>
-                                        <CardSubtitle>Card subtitle</CardSubtitle>
-                                        <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText>
-                                        <Link to="/detail" className="btn btn-primary"> Detail</Link>
-                                        </CardBody>
-                                    </Card>
-                                </Col>
-                                <Col md={3}>
-                                    <Card className="shadow"> 
-                                        <CardBody>
-                                        <CardTitle>Card title</CardTitle>
-                                        <CardSubtitle>Card subtitle</CardSubtitle>
-                                        <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText>
-                                        <Link to="/detail" className="btn btn-primary"> Detail</Link>
-                                        </CardBody>
-                                    </Card>
-                                </Col>
+                                 ))}
+                           
                             </Row>
-                            <Row className="m-2 mt-3">
-                                <Col md={3}>
-                                    <Card className="shadow"> 
-                                        <CardBody>
-                                        <CardTitle>Card title</CardTitle>
-                                        <CardSubtitle>Card subtitle</CardSubtitle>
-                                        <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText>
-                                        <Link to="/detail" className="btn btn-primary"> Detail</Link>
-                                        </CardBody>
-                                    </Card>
-                                </Col>
-                                <Col md={3}>
-                                    <Card className="shadow"> 
-                                        <CardBody>
-                                        <CardTitle>Card title</CardTitle>
-                                        <CardSubtitle>Card subtitle</CardSubtitle>
-                                        <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText>
-                                        <Link to="/detail" className="btn btn-primary"> Detail</Link>
-                                        </CardBody>
-                                    </Card>
-                                </Col>
-                                <Col md={3}>
-                                    <Card className="shadow"> 
-                                        <CardBody>
-                                        <CardTitle>Card title</CardTitle>
-                                        <CardSubtitle>Card subtitle</CardSubtitle>
-                                        <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText>
-                                        <Link to="/detail" className="btn btn-primary"> Detail</Link>
-                                        </CardBody>
-                                    </Card>
-                                </Col>
-                                <Col md={3}>
-                                    <Card className="shadow"> 
-                                        <CardBody>
-                                        <CardTitle>Card title</CardTitle>
-                                        <CardSubtitle>Card subtitle</CardSubtitle>
-                                        <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText>
-                                        <Link to="/detail" className="btn btn-primary"> Detail</Link>
-                                        </CardBody>
-                                    </Card>
-                                </Col>
-                            </Row>
+                            )}
+                            {this.state.data.length===0 &&(
+                                <h1>Data is not available!</h1>
+                            )}
                         </Container>
                     </Col>
                     </Row>

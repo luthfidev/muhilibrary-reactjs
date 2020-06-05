@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Row, Col, Form, FormGroup, Input, Label, Button} from 'reactstrap'
+import { Link } from 'react-router-dom';
 
 import brand from '../assets/img/bookshelf.png'
 
@@ -46,7 +47,7 @@ class Login extends Component {
                   </div>
                   <div className='mt-2'>
                     <Button>Login</Button>
-                    <Button className='ml-2'>Sign Up</Button>
+                    <Link to="/register" className="ml-2 btn btn-outline-dark"> Sign Up</Link>
                   </div>
                 </Form>
               </div>

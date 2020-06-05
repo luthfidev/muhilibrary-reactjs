@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Row, Col, Form, FormGroup, Input, Label, Button} from 'reactstrap'
+import { Link } from 'react-router-dom';
 
 import brand from '../assets/img/bookshelf.png'
 
@@ -21,7 +22,7 @@ class Register extends Component {
                     </div>
                     <div className='flex-grow-1 d-flex justify-content-center align-items-center'>
                         <Form>
-                        <h1>Login</h1>
+                        <h1>Register</h1>
                         <p>Welcome Back, Please Login to your account</p>
                         <FormGroup>
                             <Label className='w-100'>
@@ -48,8 +49,8 @@ class Register extends Component {
                             </Label>
                         </FormGroup>
                         <div className='mt-2'>
-                            <Button>Login</Button>
-                            <Button className='ml-2'>Sign Up</Button>
+                            <Link to="/" className="btn btn-outline-dark"> Login</Link>
+                            <Button className='ml-2 btn btn-primary'>Sign Up</Button>
                         </div>
                         </Form>
                     </div>

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Row, Col, Button} from 'reactstrap'
+import { Link } from 'react-router-dom';
 
 class Detail extends Component {
     render(){
@@ -9,7 +10,7 @@ class Detail extends Component {
                     <Row className="detail-header w-100 no-gutters">
                         <div className="btn-action d-flex flex-row w-100">
                         <Col className="back ml-3 mt-4">
-                            <a href="/dashboard" className="btn-back">Back</a>
+                             <Link to="/dashboard" className="btn-back"> Back</Link>
                         </Col>
                         <Row className="action mt-3 mr-3">
                             <a className="btn-edit mr-3" href="#">Edit</a>
@@ -38,7 +39,7 @@ class Detail extends Component {
                             </div>
                         </Col>
                         <Col md={5} className="right d-flex flex-column align-items-end justify-content-between">
-                            <div className="cover">
+                            <div className="cover d-none d-md-block d-sm-block">
                                 <img src={require("../assets/img/cover-book.png")}/>
                             </div>
                             <div className="borrow mb-5">

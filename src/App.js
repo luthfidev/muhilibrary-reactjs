@@ -10,6 +10,8 @@ import Dashboard from './pages/dashboard';
 import Author from './pages/admin/author';
 import Genre from './pages/admin/genre';
 import Transaction from './pages/admin/transaction';
+import User from './pages/admin/user';
+import Status from './pages/admin/Status';
 import Notfound from './pages/notfound';
 
 
@@ -27,6 +29,8 @@ function App() {
           <Route path="/author" exact component={Author}/>
           <Route path="/genre" exact component={Genre}/>
           <Route path="/transaction" exact component={Transaction}/>
+          <Route path="/user" exact component={User}/>
+          <Route path="/status" exact component={Status}/>
           <Route component={Notfound} />
         </Switch>
       </BrowserRouter>

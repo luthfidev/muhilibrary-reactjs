@@ -14,16 +14,16 @@ class Sidebar extends Component {
                     <h1>Jono</h1>
                 </div>
                 <Nav.Item className="mt-4">
-                    <Nav.Link className="bg-info"><Link className="text-decoration-none text-white" to="/dashboard"> Dashboard</Link></Nav.Link>
+              <Link className="bg-info nav-link text-decoration-none text-white" to="/dashboard"> Dashboard</Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link className="bg-info"><Link className="text-decoration-none text-white" to="/author"> Author</Link></Nav.Link>
+                  <Link className="bg-info nav-link text-decoration-none text-white" to="/author"> Author</Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link className="bg-info"><Link className="text-decoration-none text-white" to="/genre"> Genre</Link></Nav.Link>
+                 <Link className="bg-info nav-link text-decoration-none text-white" to="/genre"> Genre</Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link className="bg-info"><Link className="text-decoration-none text-white" to="/transaction"> Transaction</Link></Nav.Link>
+                <Link className="bg-info nav-link text-decoration-none text-white" to="/transaction"> Transaction</Link>
                 </Nav.Item>
                 <Nav.Item>
                     <Nav.Link eventKey="link-2">Link</Nav.Link>

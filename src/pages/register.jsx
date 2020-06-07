@@ -1,5 +1,10 @@
 import React, {Component} from 'react';
-import {Row, Col, Form, FormGroup, Input, Label, Button} from 'reactstrap'
+import {
+    Row, 
+    Col,
+    Form,
+    Button
+   } from 'react-bootstrap'
 import { Link } from 'react-router-dom';
 
 import brand from '../assets/img/bookshelf.png'
@@ -8,59 +13,58 @@ class Register extends Component {
     render() { 
         return(
             <>
-              <Row className='h-100 no-gutters'>
-                <Col md={8} className='login-cover'>
-                    <div className='d-flex flex-column justify-content-between login-overlay w-100 h-100'>
-                    <h1 className='text-white'>Book is a window to the world</h1>
-                    <div className='text-white'>Photo by Mark Pan4ratte on Unsplash</div>
+             <Row className="h-100 no-gutters">
+              <Col md={8} className="bg-login">
+                  <div className="text w-100 h-100 ml-3 d-flex flex-column justify-content-between">
+                    <div className="bg-text-login">
+                      <h1 className="text-white">Book is a window to the world</h1>
                     </div>
-                </Col>
-                <Col md={4}>
-                    <div className='d-flex flex-column w-100 h-100'>
-                    <div className='d-flex justify-content-end'>
-                        <img className='p-3' src={brand} alt='Logo' />
+                    <div className="bg-text-watermark">
+                      <p className="text-white">Photo by Mark Pan4ratte on Unplash</p>
                     </div>
-                    <div className='flex-grow-1 d-flex justify-content-center align-items-center'>
-                        <Form>
+                  </div>
+              </Col>
+              <Col md={4} className="h-100">
+                  <div className="content-login h-100">
+                      <div className="brand d-flex">
+                          <img alt="brand" className="ml-auto mr-3 mt-2" src={brand}/>
+                      </div>
+                      <div className="h-75 m-4 d-flex justify-content-center align-items-center">
+                        <Form >
                         <h1>Register</h1>
-                        <p>Welcome Back, Please Login to your account</p>
-                        <FormGroup>
-                            <Label className='w-100'>
-                            <div>Username</div>
-                            <Input type='text' />
-                            </Label>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label className='w-100'>
-                            <div>fullname</div>
-                            <Input type='text' />
-                            </Label>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label className='w-100'>
-                            <div>Email</div>
-                            <Input type='email' />
-                            </Label>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label className='w-100'>
-                            <div>Password</div>
-                            <Input type='password' />
-                            </Label>
-                        </FormGroup>
-                        <div className='mt-2'>
-                            <Link to="/" className="btn btn-outline-dark"> Login</Link>
-                            <Button className='ml-2 btn btn-primary'>Sign Up</Button>
-                        </div>
+                          <p>Welcome Back, Please Login to your account</p>
+                          <Form.Group>
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control type="text" placeholder="Username" />
+                          </Form.Group>
+                          <Form.Group>
+                            <Form.Label>Full Name</Form.Label>
+                            <Form.Control type="text" placeholder="Full Name" />
+                          </Form.Group>
+                          <Form.Group>
+                            <Form.Label>Email</Form.Label>
+                            <Form.Control type="email" placeholder="Enter email" />
+                          </Form.Group>
+                          <Form.Group>
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control type="password" placeholder="Password" />
+                          </Form.Group>
+                          <Button variant="primary" type="submit">
+                            Submit
+                          </Button>
+                          <Link to="/" className="ml-2 btn btn-outline-dark"> Login</Link>
                         </Form>
-                    </div>
-                    <div className='d-flex flex-column align-content-center p-5'>
+                      </div>
+                      <Col className="footer-login d-flex justify-content-center align-content-center">
+                        <div>
                         <div>By signing up, you agree to Book’s</div>
-                        <div><p>Terms and Conditions &amp; Privacy Policy</p></div>
-                    </div>
-                    </div>
-                </Col>
-                </Row>
+                        <Link to="/register"> Terms and Conditions</Link> & 
+                        <Link to="/register"> Privacy Policy</Link>
+                        </div>
+                      </Col>
+                  </div>
+              </Col>
+          </Row>
             </>
         )
     }

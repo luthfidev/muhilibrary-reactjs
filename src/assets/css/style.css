@@ -6,7 +6,7 @@ html, body, #root {
     padding: 0;  
 }
 
-.login-cover{
+.bg-login{
     background-image: url('../img//bg-login.jpg');
     background-size: contain;
   }
@@ -16,59 +16,60 @@ html, body, #root {
     background-color: rgba(0,0,0,0.5);
   }
 
-  .btn-signup {
-    padding: 8px;
-    background-color: white;
-    border: 1px solid;
-    color: black;
-    border-radius: 5px;
-  }
-
-
   /*detail*/
-  .detail-header{
-    background-image: url('../img//cover-half.png');
+  .detail-header {
+    background-image: url(../img//cover-half.png);
     background-size: cover;
+    width: 100%;
+  }
+  .detail-header img{
+    background-size: cover;
+    width: 100%;
   }
 
-  .detail-header .btn-action .back .btn-back {
-    background-color: white;
-    padding: 15px;
-    border-radius: 50px;
-    text-decoration: none;
-    color: black;
-  }
-
-.detail-header .action a {
-    text-decoration: none;
-}
-.btn-edit, .btn-delete {
-   color: grey;
-   font-weight: bold;
-   font-size: 20px;
-}
-
-.detail-content .right .cover {
-    margin-top: -180px
-}
-
-.detail-content .right .borrow a {
-    background-color: #FBCC38;
-    color: white;
-    font-weight: bold;
-    padding: 20px;
-    border-radius: 10px;
-    border: 0;
-    font-size: 20px;
-    text-align: center;
-    text-decoration: none;
-}
-
-.detail-content .left .badge span {
-    font-size: 14px;
+.detail-content .right .cover-img {
+   margin-top: -150px
 }
 
 /* dashboard */
+
+/* topanavbar*/
+nav .top-navbar{
+  height: 100px;
+  position: fixed;
+}
+
+.navbar-brand img{
+  width: 50px;
+  height: 50px;
+ }
+
+ .brand img {
+  width: 50px;
+  height: 50px;
+ }
+
+.form-inline input {
+  border-radius: 20px;
+}
+
+/*sidebar */
+
+.avatar-img {
+  margin-top: 50px;
+  margin-left: 20px;
+}
+.avatar-img h1 {
+  margin-left: 20px;
+}
+
+.sidebar {
+  height: 100%;
+  width: 25%;
+  background-color: black;
+  transition: 0.7s;
+}
+
 
 .avatar {
   vertical-align: middle;
@@ -76,3 +77,6 @@ html, body, #root {
   height: 100px;
   border-radius: 50%;
 }
+
+/*main content 8*/
+

@@ -1,15 +1,10 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios'
-import {Row, 
-        Form, 
-        FormGroup, 
-        Label, 
-        Input, 
-        Col, 
-        Nav, Button, Container, Card, CardImg, CardText, CardBody,
-        CardTitle, CardSubtitle, NavItem, NavLink} from 'reactstrap'
-import avatar from '../assets/img/jono.png'
+import TopNavbar from './navbar'
+import Sidebar from './sidebar'
+import Spiner from '../components/Loader'
+import { Container, Row, Col, Jumbotron, Card, Carousel } from 'react-bootstrap';
 
 class Dashboard extends Component {
 
@@ -20,85 +15,77 @@ class Dashboard extends Component {
         }
       }
 
+
       async componentDidMount(){
-        const results = await axios.get('https://api-muhilibrary.herokuapp.com/books')
-        const {data} = results
-        this.setState(data)
+          const results = await axios.get('https://api-muhilibrary.herokuapp.com/books?limit=10')
+          const {data} = results
+          this.setState(data) 
       }
-
-
+    
     render(){
+      
         return(
-                <>          
-                        <Row className="navbar-dashboard no-gutters">
-                            <Col className="no-gutters">
-                                <Nav className="navbar-light bg-dark">
-                                <NavItem>
-                                <NavLink href="#">All Category</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                <NavLink href="#">All Time</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                <FormGroup className="mt-2 ">
-                                    <Input className="rounded-pill" type="text" placeholder="Search" />
-                                </FormGroup>
-                                </NavItem>
-                                <NavItem>
-                                <NavLink  href="#">Icon</NavLink>
-                                </NavItem>
-                                </Nav>
-                            </Col>
-                        </Row>
-                    <Row className="">
-                    <Col md={2} className="ml-3 mt-2 shadow">
-                        <Nav vertical>
-                            <Col className="ml-5 mt-3">
-                            <NavItem>
-                                <img className="avatar shadow" src={avatar} alt="avatar"/>
-                            </NavItem>
-                            <NavItem>
-                            <h1>Jono</h1>
-                            </NavItem>
-                            </Col>
-                            <NavItem>
-                            <NavLink href="#">Explore</NavLink>
-                            </NavItem>
-                            <NavItem>
-                            <NavLink href="#">History</NavLink>
-                            </NavItem>
-                            <NavItem>
-                            <NavLink href="#">Add book</NavLink>
-                            </NavItem>
-                        </Nav>
-                    </Col>
-                    <Col md={9}>
-                        <Container className="mt-3">
-                        {this.state.data.length !== 0 &&(
-                            <Row className="m-2">
-                           {this.state.data.map((book, index) => (  
-                                <Col>   
-                                    <Card className="shadow"> 
-                                        <CardBody>
-                                        <CardTitle>{book.title}</CardTitle>
-                                        <CardSubtitle className="badge badge-primary">{book.genreName}</CardSubtitle>
-                                        <CardText>{book.nameStatus}</CardText>
-                                        <Link to={`/detail:${book.id}`} className="btn btn-primary"> Detail</Link>
-                                        </CardBody>
-                                    </Card>
-                                   
-                                </Col>
-                                 ))}
-                           
-                            </Row>
-                            )}
-                            {this.state.data.length===0 &&(
-                                <h1>Data is not available!</h1>
-                            )}
-                        </Container>
-                    </Col>
-                    </Row>
-                </>
+            <>
+                <Row className="no-gutters w-100 h-100">
+                    <div className="d-flex flex-row w-100">
+                        <Sidebar/>           
+                            <div className="w-100 d-flex flex-column">
+                                <div className="top-navbar sticky-top">
+                                    <TopNavbar/>
+                                </div>
+                               <Container fluid className="mt-4">
+                                    <Jumbotron>
+                                    <Carousel>
+                                    {this.state.data.map((book, index) => (  
+                                        <Carousel.Item>
+                                            <img style={{ height: '200px' }}
+                                            className="d-block"
+                                            src={book.image}
+                                            alt="First slide"
+                                            />
+                                            <Carousel.Caption>
+                                            <h3>{book.title}</h3>
+                                            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                                            </Carousel.Caption>
+                                        </Carousel.Item>
+                                        ))}
+                                        </Carousel>
+                                    </Jumbotron>
+                                    <Col>
+                                    
+                                    {this.state.data.length !== 0 &&(
+                                        
+                                    <Row>
+                        
+                                        {this.state.data.map((book, index) => (  
+                                        <Link to="/detail" className="text-dark text-decoration-none"> 
+                                            <Card className="shadow m-2" style={{ width: '18rem' }}>
+                                                <Card.Img variant="top" style={{ height: '200px' }} src={book.image} />
+                                                <Card.Body>
+                                                    <Card.Title>{book.title}</Card.Title>
+                                                    <Card.Subtitle className="badge badge-primary">{book.genreName}</Card.Subtitle>
+                                                    <Card.Subtitle className="ml-2 badge badge-success text-white">{book.nameStatus}</Card.Subtitle>
+                                                    <Card.Text>
+                                                    Some quick example text to build on the card title and make up the bulk of
+                                                    the card's content.             
+                                                    </Card.Text>
+                                                </Card.Body>
+                                                </Card>
+                                        </Link>
+                                        ))}
+                                          
+                                    </Row>
+                                         )}
+                                         {this.state.data.length===0 &&(
+                                             <Spiner/>
+                                         )}
+                                         
+                                    </Col>
+                               </Container>
+                            </div>
+                    </div>        
+                </Row>
+            </>
         )
     };
 }

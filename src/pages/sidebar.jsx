@@ -26,6 +26,15 @@ class Sidebar extends Component {
                 <Link className="bg-info nav-link text-decoration-none text-white" to="/transaction"> Transaction</Link>
                 </Nav.Item>
                 <Nav.Item>
+                <Link className="bg-info nav-link text-decoration-none text-white" to="/user"> User</Link>
+                </Nav.Item>
+                <Nav.Item>
+                <Link className="bg-info nav-link text-decoration-none text-white" to="/status"> Status</Link>
+                </Nav.Item>
+                <Nav.Item>
+                <Link className="bg-danger nav-link text-decoration-none text-white" to="/logout"> Logout</Link>
+                </Nav.Item>
+                <Nav.Item>
                     <Nav.Link eventKey="link-2">Link</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>

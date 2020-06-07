@@ -44,19 +44,16 @@ class Dashboard extends Component {
                                             alt="First slide"
                                             />
                                             <Carousel.Caption>
-                                            <h3>{book.title}</h3>
+                                            <h3 className="text-dark">{book.title}</h3>
                                             <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
                                             </Carousel.Caption>
                                         </Carousel.Item>
                                         ))}
                                         </Carousel>
                                     </Jumbotron>
-                                    <Col>
-                                    
+                                    <Col>                                   
                                     {this.state.data.length !== 0 &&(
-                                        
                                     <Row>
-                        
                                         {this.state.data.map((book, index) => (  
                                         <Link to="/detail" className="text-dark text-decoration-none"> 
                                             <Card className="shadow m-2" style={{ width: '18rem' }}>
@@ -72,8 +69,7 @@ class Dashboard extends Component {
                                                 </Card.Body>
                                                 </Card>
                                         </Link>
-                                        ))}
-                                          
+                                        ))}       
                                     </Row>
                                          )}
                                          {this.state.data.length===0 &&(

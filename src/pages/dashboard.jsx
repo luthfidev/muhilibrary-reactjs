@@ -27,7 +27,6 @@ class Dashboard extends Component {
             const {data} = results.data
             
             const pageInfo = results.data.pageInfo
-            console.log(pageInfo)
             this.setState({data, pageInfo, isLoading: false})
             if (params) {
                 this.props.history.push(`?${param}`)
@@ -65,11 +64,11 @@ class Dashboard extends Component {
                                     <Jumbotron>
                                     <Carousel>
                                     {this.state.data.map((book, index) => (  
-                                        <Carousel.Item>
-                                            <img style={{ height: '200px' }}
+                                        <Carousel.Item key={book.id.toString()}>
+                                            <img  style={{ height: '200px' }}
                                             className="d-block"
                                             src={book.image}
-                                            alt="First slide"
+                                            alt="Slider"
                                             />
                                             <Carousel.Caption>
                                             <h3 className="text-dark">{book.title}</h3>

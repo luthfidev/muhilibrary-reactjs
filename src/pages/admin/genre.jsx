@@ -1,12 +1,48 @@
 import React, {Component} from 'react';
 import TopNavbar from '../navbar'
 import Sidebar from '../sidebar'
-import { Container, Row, Table, Card} from 'react-bootstrap';
+import { Container, Row, Table, Card, Pagination} from 'react-bootstrap';
+import axios from 'axios'
+import qs from 'querystring'
 
 class Genre extends Component {
 
+    constructor(props){
+        super(props)
+        this.state = {
+          data: [],
+          pageInfo: [],
+          isLoading: false
+        }
+      }
+
+      fetchData = async (params) => {
+            this.setState({isLoading: true})
+            const {REACT_APP_URL} = process.env
+            const param = `${qs.stringify(params)}`
+            const url = `${REACT_APP_URL}genres?${param}`
+            const results = await axios.get(url)
+            const {data} = results.data
+            
+            const pageInfo = results.data.pageInfo
+            this.setState({data, pageInfo, isLoading: false})
+            if (params) {
+                this.props.history.push(`?${param}`)
+            }
+      }
+
+
+      async componentDidMount(){
+   /*        const results = await axios.get('https://api-muhilibrary.herokuapp.com/books?limit=10')
+          const {data} = results
+          this.setState(data)  */
+          const param = qs.parse(this.props.location.search.slice(1))
+          await this.fetchData(param)
+      }
+
     render(){
-      
+        const params = qs.parse(this.props.location.search.slice(1))
+        params.page = params.page || 1
         return(
             <>
                 <Row className="no-gutters w-100 h-100">
@@ -20,35 +56,46 @@ class Genre extends Component {
                                <Card>
                                 <Card.Header>Genre</Card.Header>
                                 <Card.Body>
+                                <button className="btn btn-success mb-2">Add</button>
                                     <Table striped bordered hover>
-                                    <thead>
+                                    <thead align="center">
                                         <tr>
-                                        <th>#</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Username</th>
+                                        <th>No</th>
+                                        <th>Name Genre</th>
+                                        <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    {this.state.data.length !== 0 &&(
+                                    <tbody align="center">
+                                         {this.state.data.map((genre, index) => (  
                                         <tr>
-                                        <td>1</td>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                        </tr>
-                                        <tr>
-                                        <td>2</td>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                        </tr>
-                                        <tr>
-                                        <td>3</td>
-                                        <td colSpan="2">Larry the Bird</td>
-                                        <td>@twitter</td>
-                                        </tr>
+                                        <td>{index + 1}</td>
+                                        <td>{genre.name}</td>                                
+                                        <td align="center">
+                                        <button className="btn btn-warning ml-2">Edit</button>
+                                        <button className="btn btn-danger ml-2">Delete</button>
+                                        </td>                                
+                                        </tr>   
+                                         ))}                           
                                     </tbody>
+                                    )}
+                                    {this.state.data.length===0 &&(
+                                        <h1>Data Not Available</h1>
+                                    )}
                                     </Table>
+                                    <div className="d-flex justify-content-center">
+                                    <Pagination>
+                                            <Pagination.First onClick={()=>this.fetchData({...params, page: parseInt(params.page)-1})}/>
+                                            <Pagination.Prev />
+                                            {[...Array(this.state.pageInfo.totalPage)].map((o, i)=>{
+                                             return (
+                                            <Pagination.Item onClick={()=>this.fetchData({...params, page: params.page? i+1 : i+1})} className='mr-1 ml-1' key={i.toString()}>{i+1}</Pagination.Item>
+                                             )
+                                            })}
+                                            <Pagination.Next onClick={()=>this.fetchData({...params, page: parseInt(params.page)+1})}/>
+                                            <Pagination.Last />
+                                    </Pagination>
+                                    </div>
                                 </Card.Body>
                                 </Card>
                                </Container>

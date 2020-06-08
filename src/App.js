@@ -11,7 +11,7 @@ import Author from './pages/admin/author';
 import Genre from './pages/admin/genre';
 import Transaction from './pages/admin/transaction';
 import User from './pages/admin/user';
-import Status from './pages/admin/Status';
+import Status from './pages/admin/status';
 import Notfound from './pages/notfound';
 
 

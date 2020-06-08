@@ -3,7 +3,7 @@ import TopNavbar from '../navbar'
 import Sidebar from '../sidebar'
 import { Container, Row, Table, Card} from 'react-bootstrap';
 
-class Author extends Component {
+class Transaction extends Component {
 
     render(){
       
@@ -18,7 +18,7 @@ class Author extends Component {
                                 </div>
                                <Container fluid className="mt-4">
                                <Card>
-                                <Card.Header>Author</Card.Header>
+                                <Card.Header>Transaction</Card.Header>
                                 <Card.Body>
                                     <Table striped bordered hover>
                                     <thead>
@@ -60,4 +60,4 @@ class Author extends Component {
     };
 }
 
-export default Author
+export default Transaction

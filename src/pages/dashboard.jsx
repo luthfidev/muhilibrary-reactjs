@@ -72,7 +72,7 @@ class Dashboard extends Component {
                                             alt="First slide"
                                             />
                                             <Carousel.Caption>
-                                            <h3>{book.title}</h3>
+                                            <h3 className="text-dark">{book.title}</h3>
                                             <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
                                             </Carousel.Caption>
                                         </Carousel.Item>
@@ -94,7 +94,6 @@ class Dashboard extends Component {
                                     </Dropdown>
 
                                     {this.state.data.length !== 0 &&(
-                                        
                                     <Row>
                                         {this.state.data.map((book, index) => (  
                                         <Link key={book.id.toString()} to="/detail" className="text-dark text-decoration-none"> 

@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
 
+
+import SweetAlert from 'react-bootstrap-sweetalert'
+
 import axios from 'axios'
 const {REACT_APP_URL} = process.env
 
@@ -20,6 +23,7 @@ export class AddAuthor extends Component {
         this.setState({[  event.target.name]: event.target.value})
     }
 
+    
     handlePost = (event) => {
         event.preventDefault()
         this.setState({isLoading: true})
@@ -28,23 +32,18 @@ export class AddAuthor extends Component {
             description: this.state.description
         }
         const url = `${REACT_APP_URL}authors`
-        axios.post(url, authorData).then( (response) =>{
-            console.log(response);
-           console.log(this.props)
+        axios.post(url, authorData).then( (response) => {
+           /*  console.log(response); */
           })
           .catch(function (error) {
             console.log(error);
-            /*    console.log(response)
-               console.log(response.data.message) */
            }) 
-           
-     
+           console.log(this.props)
+           this.props.onHide()
     }
-    
-    
+   
 
     render(){
-
         return(
             <Modal
             {...this.props}
@@ -59,7 +58,7 @@ export class AddAuthor extends Component {
             </Modal.Header>
             <Modal.Body>
                 <div className="contaniner">
-                <Form onSubmit={ (e) => this.handlePost(e)}>
+                <Form onSubmit={ this.handlePost}>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Name Author</Form.Label>
                     <Form.Control name="name" onChange={this.handleChange} type="text" placeholder="Name Author" />

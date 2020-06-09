@@ -5,6 +5,8 @@ import { Container, Row, Table, Card, Pagination} from 'react-bootstrap';
 import axios from 'axios'
 import qs from 'querystring'
 
+import SweetAlert from 'react-bootstrap-sweetalert'
+
 import {AddAuthor} from '../../components/author/AddAuthor'
 
 class Author extends Component {
@@ -15,8 +17,10 @@ class Author extends Component {
           data: [],
           pageInfo: [],
           isLoading: false,
-          addModalShow : false
+          addModalShow : false,
+          alert: null
         }
+
       }
 
       fetchData = async (params) => {
@@ -38,9 +42,46 @@ class Author extends Component {
         const {REACT_APP_URL} = process.env
         const url = `${REACT_APP_URL}authors/${id}`
         await axios.delete(url)
+        console.log(this.props)
+ 
         this.fetchData()
       }
 
+      showModal = () => {
+        this.setState({ show: true });
+      };
+    
+      hideModal = () => {
+        this.setState({ show: false });
+      };
+    
+
+      onDelete = (id)  => {
+        const getAlert = () => (
+            <SweetAlert
+                warning
+                showCancel
+                confirmBtnText="Yes, delete it!"
+                confirmBtnBsStyle="danger"
+                title="Are you sure?"
+                onConfirm={() => this.deleteAuthor(id) && this.hideAlert()}
+                onCancel={() => this.hideAlert()}
+                focusCancelBtn
+                >
+             Delete this id {id}
+                </SweetAlert>
+          );
+      
+          this.setState({
+            alert: getAlert()
+          });
+      }
+
+      hideAlert() {
+        this.setState({
+          alert: null
+        });
+      }
     
       async componentDidMount(){
    /*        const results = await axios.get('https://api-muhilibrary.herokuapp.com/books?limit=10')
@@ -50,8 +91,6 @@ class Author extends Component {
           await this.fetchData(param)
       }
       
-
-
     render(){
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
@@ -76,6 +115,7 @@ class Author extends Component {
                                     <AddAuthor
                                         show={this.state.addModalShow}
                                         onHide={addModalClose}
+                                        refres={this.fetchData}
                                     />
 
                                
@@ -95,8 +135,11 @@ class Author extends Component {
                                         <td>{author.name}</td>                                
                                         <td align="center">
                                         <button className="btn btn-warning ml-2">Edit</button>
-                                        <button onClick={() => this.deleteAuthor(author.id)} className="btn btn-danger ml-2">Delete</button>
-                                        </td>                                
+                        
+                                       <button onClick={() =>  {  this.onDelete(author.id)} } className="btn btn-danger ml-2">Delete</button> 
+                                      {/*   <button onClick={() =>  { if (window.confirm('Are you sure you wish to delete this item?')) this.deleteAuthor(author.id)} } className="btn btn-danger ml-2">Delete</button> */}
+                                        </td> 
+                                        {this.state.alert}                               
                                         </tr>   
                                          ))}                           
                                     </tbody>

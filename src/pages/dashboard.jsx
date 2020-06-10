@@ -6,6 +6,10 @@ import Sidebar from './sidebar'
 import Spiner from '../components/Loader'
 import { Container, Row, Col, Jumbotron, Card, Carousel, Pagination, Dropdown } from 'react-bootstrap';
 import qs from 'querystring'
+import AsyncSelect from 'react-select/async'
+
+import {AddBook} from '../components/book/AddBook'
+
 
 class Dashboard extends Component {
 
@@ -14,7 +18,8 @@ class Dashboard extends Component {
         this.state = {
           data: [],
           pageInfo: [],
-          isLoading: false
+          isLoading: false,
+          addModalShow : false
         }
       }
 
@@ -41,10 +46,28 @@ class Dashboard extends Component {
           const param = qs.parse(this.props.location.search.slice(1))
           await this.fetchData(param)
       }
+
     
+    
+
+    /*  filterColors = (inputValue) => {
+        return this.fetchData.genreName.filter(i =>
+          i.label.toLowerCase().includes(inputValue.toLowerCase())
+        );
+      };
+    */
+   
+ /*     promiseOptions = inputValue =>
+        new Promise(resolve => {
+            setTimeout(() => {
+            resolve(filterColors(inputValue));
+            }, 1000);
+        });  */
+
     render(){
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
+        let addModalClose = () => this.setState({addModalShow:false})
         return(
             <>
                 <Row className="no-gutters w-100 h-100">
@@ -79,19 +102,27 @@ class Dashboard extends Component {
                                         </Carousel>
                                     </Jumbotron>
                                     <Col>
-
-                                    <Dropdown className="mb-4">
-                                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                        Genre
-                                    </Dropdown.Toggle>
-
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                                        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                                        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                                    </Dropdown.Menu>
-                                    </Dropdown>
-
+                                        <div className="d-flex flex-row ">
+                                        <Dropdown className="mb-4">
+                                        <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                            Genre
+                                        </Dropdown.Toggle>
+                                            <Dropdown.Menu>
+                                            {this.state.data.map(gen => 
+                                                <Dropdown.Item key={gen.id}>{gen.genreName}</Dropdown.Item>
+                                                )}
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+                                            <div className="ml-2">
+                                                <button onClick={()=> this.setState({addModalShow: true})} className="btn btn-primary mb-2">Add Book</button>
+                                            </div>
+                                        </div>
+                                    
+                                    <AddBook
+                                        show={this.state.addModalShow}
+                                        onHide={addModalClose}
+                                        refreshdata={() => this.fetchData()}
+                                    />
                                     {this.state.data.length !== 0 &&(
                                     <Row>
                                         {this.state.data.map((book, index) => (  

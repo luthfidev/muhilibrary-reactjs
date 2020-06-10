@@ -5,7 +5,7 @@ import {
   Form,
   Button
  } from 'react-bootstrap'
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import brand from '../assets/img/bookshelf.png'
 
@@ -24,6 +24,7 @@ class Login extends Component {
     this.state = {
         email: '',
         password: '',
+        loggedIn: false
     }
     this.handlePost = this.handlePost.bind(this)
 }
@@ -45,19 +46,30 @@ handlePost = (event) => {
     axios.post(url, authorData).then( (response) => {
         console.log(response);
       /*   this.props.history.push('/author') */
-    
+      if (response.data.token) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+      }
       })
       .catch(function (error) {
-        console.log(error);
+        console.log(error.response);
   
         /*    console.log(response)
            console.log(response.data.message) */
        }) 
-       
-       this.props.history.push('/dashboards')
+     /*  if (this.props.success == true) {
+        this.props.history.push('/dashboards')
+
+      } else {
+       this.props.history.push('/')
+      }  */
+      return <Redirect to="/dashboard" />;
+     
 }
 
     render(){
+      if (this.state.loggedIn) {
+        return <Redirect to="/dashboard" />;
+    }
         return(
         <>
           <Row className="h-100 no-gutters">

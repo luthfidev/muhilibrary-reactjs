@@ -8,12 +8,11 @@ import axios from 'axios'
 const {REACT_APP_URL} = process.env
 
 
-export class AddAuthor extends Component {
+export class AddGenre extends Component {
     constructor(props) {
         super(props)
         this.state = {
             name: '',
-            description: '',
             alert: ''
         }
         this.handlePost = this.handlePost.bind(this)
@@ -26,12 +25,11 @@ export class AddAuthor extends Component {
        handlePost = (event) => {
         event.preventDefault()
         this.setState({isLoading: true})
-        const authorData = {
-            name: this.state.name,
-            description: this.state.description
+        const genreData = {
+            name: this.state.name
         }
-        const url = `${REACT_APP_URL}authors`
-        axios.post(url, authorData).then( (response) => {
+        const url = `${REACT_APP_URL}genres`
+        axios.post(url, genreData).then( (response) => {
             this.setState({addMsg: "User is successfully added to the database"})
             console.log(response)
           })
@@ -41,6 +39,8 @@ export class AddAuthor extends Component {
            this.props.refreshdata()
            this.props.onHide()
     }
+   
+
        
     render(){
       
@@ -60,15 +60,11 @@ export class AddAuthor extends Component {
                 <div className="contaniner">
                 <Form onSubmit={ this.handlePost}>
                 <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Name Author</Form.Label>
-                    <Form.Control name="name" onChange={this.handleChange} type="text" placeholder="Name Author" />
+                    <Form.Label>Name Genre</Form.Label>
+                    <Form.Control name="name" onChange={this.handleChange} type="text" placeholder="Name Genre" />
                     <Form.Text className="text-muted">
                     Please text mode
                     </Form.Text>
-                </Form.Group>
-                <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control name="description" onChange={this.handleChange} type="text" placeholder="Description" />
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Save

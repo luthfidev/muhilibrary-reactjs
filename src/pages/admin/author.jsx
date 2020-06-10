@@ -8,6 +8,7 @@ import qs from 'querystring'
 import SweetAlert from 'react-bootstrap-sweetalert'
 
 import {AddAuthor} from '../../components/author/AddAuthor'
+import {EditAuthor} from '../../components/author/EditAuthor'
 
 class Author extends Component {
 
@@ -42,8 +43,6 @@ class Author extends Component {
         const {REACT_APP_URL} = process.env
         const url = `${REACT_APP_URL}authors/${id}`
         await axios.delete(url)
-        console.log(this.props)
- 
         this.fetchData()
       }
 
@@ -89,14 +88,15 @@ class Author extends Component {
           this.setState(data)  */
           const param = qs.parse(this.props.location.search.slice(1))
           await this.fetchData(param)
+
       }
       
     render(){
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
-
+        const {authorid, authorname, authordescription} = this.state
         let addModalClose = () => this.setState({addModalShow:false})
-
+        let editModalClose = () => this.setState({editModalShow:false})
         return(
             <>
                <Row className="no-gutters w-100 h-100">
@@ -108,17 +108,24 @@ class Author extends Component {
                                 </div>
                                <Container fluid className="mt-4">
                                <Card>
-                                <Card.Header>Genre</Card.Header>
+                                <Card.Header><p style={{color: 'green'}}>{this.state.addMsg}</p></Card.Header>
                                 <Card.Body>
                                 <button onClick={()=> this.setState({addModalShow: true})} className="btn btn-success mb-2">Add</button>
                                     
                                     <AddAuthor
                                         show={this.state.addModalShow}
                                         onHide={addModalClose}
-                                        refres={this.fetchData}
+                                        refreshdata={() => this.fetchData()}
                                     />
 
-                               
+                                     <EditAuthor
+                                        show={this.state.editModalShow}
+                                        onHide={editModalClose}
+                                        refreshdata={() => this.fetchData()}
+                                        authorid = {authorid}
+                                        authorname = {authorname}
+                                        authordescription = {authordescription}
+                                         />
                                     <Table striped bordered hover>
                                     <thead align="center">
                                         <tr>
@@ -134,7 +141,10 @@ class Author extends Component {
                                         <td>{index + 1}</td>
                                         <td>{author.name}</td>                                
                                         <td align="center">
-                                        <button className="btn btn-warning ml-2">Edit</button>
+                                        <button  onClick={() =>  {  this.setState({editModalShow: true, 
+                                                                                    authorid: author.id, 
+                                                                                    authorname: author.name, 
+                                                                                    authordescription: author.description})} } className="btn btn-warning ml-2">Edit</button>
                         
                                        <button onClick={() =>  {  this.onDelete(author.id)} } className="btn btn-danger ml-2">Delete</button> 
                                       {/*   <button onClick={() =>  { if (window.confirm('Are you sure you wish to delete this item?')) this.deleteAuthor(author.id)} } className="btn btn-danger ml-2">Delete</button> */}

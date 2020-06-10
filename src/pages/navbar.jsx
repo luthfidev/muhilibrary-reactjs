@@ -20,6 +20,13 @@ class TopNavbar extends Component {
     }
     
 
+  /*   onChangeHandler = (e) => {
+        this.props.search(
+            { search: this.state.query } 
+        )
+      
+      }; */
+
     search = (e) => {
         if(e.keyCode === 13) {
             this.props.search(
@@ -28,7 +35,10 @@ class TopNavbar extends Component {
         }
     }
 
+    
+
     render(){
+
         return(
             <>
          <Navbar bg="light" expand="sm" className="w-100 h-100 top-navbar">

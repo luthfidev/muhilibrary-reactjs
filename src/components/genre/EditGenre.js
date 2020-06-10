@@ -1,19 +1,16 @@
 import React, { Component } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
-
-
 import SweetAlert from 'react-bootstrap-sweetalert'
 
 import axios from 'axios'
 const {REACT_APP_URL} = process.env
 
 
-export class AddAuthor extends Component {
+export class EditGenre extends Component {
     constructor(props) {
         super(props)
         this.state = {
             name: '',
-            description: '',
             alert: ''
         }
         this.handlePost = this.handlePost.bind(this)
@@ -23,27 +20,29 @@ export class AddAuthor extends Component {
     handleChange = event => {
         this.setState({[  event.target.name]: event.target.value})
     }
-       handlePost = (event) => {
+       
+    handlePost = (event) => {
         event.preventDefault()
         this.setState({isLoading: true})
+ 
         const authorData = {
             name: this.state.name,
-            description: this.state.description
         }
-        const url = `${REACT_APP_URL}authors`
-        axios.post(url, authorData).then( (response) => {
-            this.setState({addMsg: "User is successfully added to the database"})
-            console.log(response)
+
+        const url = `${REACT_APP_URL}genres/${this.props.genreid}`
+        axios.patch(url, authorData).then( (response) => {
+
+           
           })
           .catch(function (error) {
             console.log(error.response);
            }) 
+          
            this.props.refreshdata()
            this.props.onHide()
     }
-       
+
     render(){
-      
         return(
             <Modal
             {...this.props}
@@ -53,25 +52,37 @@ export class AddAuthor extends Component {
           >
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter">
-                Add Author
+                Edit Genre
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="contaniner">
                 <Form onSubmit={ this.handlePost}>
                 <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Name Author</Form.Label>
-                    <Form.Control name="name" onChange={this.handleChange} type="text" placeholder="Name Author" />
+                    <Form.Label>ID Genre</Form.Label>
+                    <Form.Control 
+                        name="id" 
+                        readOnly 
+                        onChange={this.handleChange} 
+                        type="text" placeholder="ID Genre" 
+                        defaultValue={this.props.genreid}/>
                     <Form.Text className="text-muted">
                     Please text mode
                     </Form.Text>
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control name="description" onChange={this.handleChange} type="text" placeholder="Description" />
+                    <Form.Label>Name Genre</Form.Label>
+                    <Form.Control 
+                        name="name" 
+                        onChange={this.handleChange} 
+                        type="text" placeholder="Name Genre" 
+                        defaultValue={this.props.genrename}/>
+                    <Form.Text className="text-muted">
+                    Please text mode
+                    </Form.Text>
                 </Form.Group>
                 <Button variant="primary" type="submit">
-                    Save
+                    Update
                 </Button>
                 </Form>
                 </div>

@@ -7,6 +7,7 @@ import {
  } from 'react-bootstrap'
 import { Link, Redirect } from 'react-router-dom';
 
+import qs from 'querystring'
 import brand from '../assets/img/bookshelf.png'
 
 
@@ -43,9 +44,9 @@ handlePost = (event) => {
         password: this.state.password
     }
     const url = `${REACT_APP_URL}auth/`
-    axios.post(url, authorData).then( (response) => {
+    axios.post(url, qs.stringify(authorData)).then( (response) => {
         console.log(response);
-      /*   this.props.history.push('/author') */
+    
       if (response.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
@@ -62,13 +63,13 @@ handlePost = (event) => {
       } else {
        this.props.history.push('/')
       }  */
-      return <Redirect to="/dashboard" />;
+     /*  return <Redirect to="/dashboard" />; */
      
 }
 
     render(){
-      if (this.state.loggedIn) {
-        return <Redirect to="/dashboard" />;
+      if (localStorage.getItem('user')) {
+        this.props.history.push('/dashboard')
     }
         return(
         <>

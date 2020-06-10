@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import './App.css';
 
 import Login from './pages/login';
+import Landing from './pages/landing';
 import Register from './pages/register';
 import Detail from './pages/detail';
 import Dashboard from './pages/dashboard';
@@ -22,7 +23,8 @@ function App() {
     
       <BrowserRouter>
         <Switch>
-          <Route path="/" exact component={Login}/>
+          <Route path="/" exact component={Landing}/>
+          <Route path="/login" exact component={Login}/>
           <Route path="/register" exact component={Register}/>
           <Route path="/detail" exact component={Detail}/>
           <Route path="/dashboard" exact component={Dashboard}/>

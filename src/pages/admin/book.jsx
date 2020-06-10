@@ -4,14 +4,13 @@ import Sidebar from '../sidebar'
 import { Container, Row, Table, Card, Pagination} from 'react-bootstrap';
 import axios from 'axios'
 import qs from 'querystring'
-import Swal from 'sweetalert2'
 
-import {AddGenre} from '../../components/genre/AddGenre'
-import {EditGenre} from '../../components/genre/EditGenre'
+import SweetAlert from 'react-bootstrap-sweetalert'
 
-import authHeader from '../../services/authHeader'
+import {AddBook} from '../../components/book/AddBook'
+import {EditBook} from '../../components/book/EditBook'
 
-class Genre extends Component {
+class Book extends Component {
 
     constructor(props){
         super(props)
@@ -22,14 +21,15 @@ class Genre extends Component {
           addModalShow : false,
           alert: null
         }
+
       }
 
       fetchData = async (params) => {
             this.setState({isLoading: true})
             const {REACT_APP_URL} = process.env
             const param = `${qs.stringify(params)}`
-            const url = `${REACT_APP_URL}genres?${param}`
-            const results = await axios.get(url, { headers: authHeader() })
+            const url = `${REACT_APP_URL}books?${param}`
+            const results = await axios.get(url)
             const {data} = results.data
             
             const pageInfo = results.data.pageInfo
@@ -37,57 +37,69 @@ class Genre extends Component {
             if (params) {
                 this.props.history.push(`?${param}`)
             }
-            console.log(authHeader)
       }
 
-      deleteGenre = async(id) => {
+      deleteAuthor = async(id) => {
         const {REACT_APP_URL} = process.env
-        const url = `${REACT_APP_URL}genres/${id}`
+        const url = `${REACT_APP_URL}books/${id}`
         await axios.delete(url)
         this.fetchData()
       }
 
+      showModal = () => {
+        this.setState({ show: true });
+      };
+    
+      hideModal = () => {
+        this.setState({ show: false });
+      };
+    
+
+      onDelete = (id)  => {
+        const getAlert = () => (
+            <SweetAlert
+                warning
+                showCancel
+                confirmBtnText="Yes, delete it!"
+                confirmBtnBsStyle="danger"
+                title="Are you sure?"
+                onConfirm={() => this.deleteBook(id) && this.hideAlert()}
+                onCancel={() => this.hideAlert()}
+                focusCancelBtn
+                >
+             Delete this id {id}
+                </SweetAlert>
+          );
       
-      onConfirmDelete = (id) => {
-        Swal.fire({
-          title: 'Are you sure?',
-          text: "After delete you can't revert this data",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-          if (result.value) {
-            this.deleteGenre(id)
-            Swal.fire(
-              'Deleted!',
-              'Your data has been deleted.',
-              'success'
-            )
-          }
-        })
+          this.setState({
+            alert: getAlert()
+          });
       }
 
-
+      hideAlert() {
+        this.setState({
+          alert: null
+        });
+      }
+    
       async componentDidMount(){
    /*        const results = await axios.get('https://api-muhilibrary.herokuapp.com/books?limit=10')
           const {data} = results
           this.setState(data)  */
           const param = qs.parse(this.props.location.search.slice(1))
           await this.fetchData(param)
-      }
 
+      }
+      
     render(){
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
-
-        const {genreid, genrename} = this.state
+        const {bookid, bookdescription, authordescription} = this.state
         let addModalClose = () => this.setState({addModalShow:false})
         let editModalClose = () => this.setState({editModalShow:false})
         return(
             <>
-                <Row className="no-gutters w-100 h-100">
+               <Row className="no-gutters w-100 h-100">
                     <div className="d-flex flex-row w-100">
                         <Sidebar/>           
                             <div className="w-100 d-flex flex-column">
@@ -96,45 +108,48 @@ class Genre extends Component {
                                 </div>
                                <Container fluid className="mt-4">
                                <Card>
-                                <Card.Header>Genre</Card.Header>
+                                <Card.Header><p style={{color: 'green'}}>{this.state.addMsg}</p></Card.Header>
                                 <Card.Body>
                                 <button onClick={()=> this.setState({addModalShow: true})} className="btn btn-success mb-2">Add</button>
                                     
-                                    <AddGenre
+                                    <AddAuthor
                                         show={this.state.addModalShow}
                                         onHide={addModalClose}
                                         refreshdata={() => this.fetchData()}
                                     />
 
-                                     <EditGenre
+                                     <EditAuthor
                                         show={this.state.editModalShow}
                                         onHide={editModalClose}
                                         refreshdata={() => this.fetchData()}
-                                        genreid = {genreid}
-                                        genrename = {genrename}
+                                        authorid = {authorid}
+                                        authorname = {authorname}
+                                        authordescription = {authordescription}
                                          />
                                     <Table striped bordered hover>
                                     <thead align="center">
                                         <tr>
                                         <th>No</th>
-                                        <th>Name Genre</th>
+                                        <th>Name Author</th>
                                         <th>Action</th>
                                         </tr>
                                     </thead>
                                     {this.state.data.length !== 0 &&(
                                     <tbody align="center">
-                                         {this.state.data.map((genre, index) => (  
-                                        <tr>
+                                         {this.state.data.map((author, index) => (  
+                                        <tr  key={author.id.toString()} >
                                         <td>{index + 1}</td>
-                                        <td>{genre.name}</td>                                
+                                        <td>{author.name}</td>                                
                                         <td align="center">
                                         <button  onClick={() =>  {  this.setState({editModalShow: true, 
-                                                                                    genreid: genre.id, 
-                                                                                    genrename: genre.name, 
-                                                                                    })} } className="btn btn-warning ml-2">Edit</button>                  
-                                       <button onClick={() =>  {  this.onConfirmDelete(genre.id)} } className="btn btn-danger ml-2">Delete</button> 
+                                                                                    authorid: author.id, 
+                                                                                    authorname: author.name, 
+                                                                                    authordescription: author.description})} } className="btn btn-warning ml-2">Edit</button>
+                        
+                                       <button onClick={() =>  {  this.onDelete(author.id)} } className="btn btn-danger ml-2">Delete</button> 
+                                      {/*   <button onClick={() =>  { if (window.confirm('Are you sure you wish to delete this item?')) this.deleteAuthor(author.id)} } className="btn btn-danger ml-2">Delete</button> */}
                                         </td> 
-                                        {this.state.alert}                                    
+                                        {this.state.alert}                               
                                         </tr>   
                                          ))}                           
                                     </tbody>
@@ -167,4 +182,4 @@ class Genre extends Component {
     };
 }
 
-export default Genre
+export default Author

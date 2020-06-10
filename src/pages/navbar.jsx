@@ -11,7 +11,34 @@ import {
    import brand from '../assets/img/bookshelf.png'
 
 class TopNavbar extends Component {
+
+    constructor(props){
+        super(props)
+        this.state = {
+            query: ''
+        }
+    }
+    
+
+  /*   onChangeHandler = (e) => {
+        this.props.search(
+            { search: this.state.query } 
+        )
+      
+      }; */
+
+    search = (e) => {
+        if(e.keyCode === 13) {
+            this.props.search(
+                { search: this.state.query } 
+            )
+        }
+    }
+
+    
+
     render(){
+
         return(
             <>
          <Navbar bg="light" expand="sm" className="w-100 h-100 top-navbar">
@@ -33,8 +60,8 @@ class TopNavbar extends Component {
                         <NavDropdown.Divider />
                         <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
                     </NavDropdown>
-                    <Form inline>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+                    <Form inline onSubmit={(e) => e.preventDefault()}>
+                    <FormControl type="text" placeholder="Search" onKeyDown={(e) => this.search(e)} onChange={(e) => this.setState({ query: e.target.value })} className="mr-sm-2" />
                     </Form>
                     </Nav>
                     <div className="navbar-brand d-flex">

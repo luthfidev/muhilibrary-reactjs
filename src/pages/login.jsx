@@ -5,12 +5,72 @@ import {
   Form,
   Button
  } from 'react-bootstrap'
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
+import qs from 'querystring'
 import brand from '../assets/img/bookshelf.png'
 
+
+
+import axios from 'axios'
+const {REACT_APP_URL} = process.env
+
+
+
 class Login extends Component {
+
+
+  constructor(props) {
+    super(props)
+    this.state = {
+        email: '',
+        password: '',
+        loggedIn: false
+    }
+    this.handlePost = this.handlePost.bind(this)
+}
+
+
+handleChange = event => {
+    this.setState({[  event.target.name]: event.target.value})
+}
+
+
+handlePost = (event) => {
+    event.preventDefault()
+    this.setState({isLoading: true})
+    const authorData = {
+        email: this.state.email,
+        password: this.state.password
+    }
+    const url = `${REACT_APP_URL}auth/`
+    axios.post(url, qs.stringify(authorData)).then( (response) => {
+        console.log(response);
+    
+      if (response.data.token) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+      }
+      })
+      .catch(function (error) {
+        console.log(error.response);
+  
+        /*    console.log(response)
+           console.log(response.data.message) */
+       }) 
+     /*  if (this.props.success == true) {
+        this.props.history.push('/dashboards')
+
+      } else {
+       this.props.history.push('/')
+      }  */
+     /*  return <Redirect to="/dashboard" />; */
+     
+}
+
     render(){
+      if (localStorage.getItem('user')) {
+        this.props.history.push('/dashboard')
+    }
         return(
         <>
           <Row className="h-100 no-gutters">
@@ -30,16 +90,16 @@ class Login extends Component {
                           <img alt="brand" className="ml-auto mr-3 mt-2" src={brand}/>
                       </div>
                       <div className="h-75 m-4 d-flex justify-content-center align-items-center">
-                        <Form >
+                        <Form onSubmit={ this.handlePost}>
                         <h1>Login</h1>
                           <p>Welcome Back, Please Login to your account</p>
                           <Form.Group>
                             <Form.Label>Email address</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" />
+                            <Form.Control name="email" type="email" placeholder="Enter email" onChange={this.handleChange} />
                           </Form.Group>
                           <Form.Group>
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" />
+                            <Form.Control name="password" type="password" placeholder="Password" onChange={this.handleChange} />
                           </Form.Group>
                           <Form.Group className="d-flex justify-content-between">
                             <Form.Check type="checkbox" label="Check me out" />

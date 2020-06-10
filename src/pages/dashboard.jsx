@@ -4,6 +4,7 @@ import axios from 'axios'
 import TopNavbar from './navbar'
 import Sidebar from './sidebar'
 import Spiner from '../components/Loader'
+import SpinerContent from '../components/LoaderContent'
 import { Container, Row, Col, Jumbotron, Card, Carousel, Pagination, Dropdown } from 'react-bootstrap';
 import qs from 'querystring'
 import AsyncSelect from 'react-select/async'
@@ -47,8 +48,6 @@ class Dashboard extends Component {
           await this.fetchData(param)
       }
 
-    
-    
 
     /*  filterColors = (inputValue) => {
         return this.fetchData.genreName.filter(i =>
@@ -64,6 +63,7 @@ class Dashboard extends Component {
             }, 1000);
         });  */
 
+
     render(){
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
@@ -71,11 +71,12 @@ class Dashboard extends Component {
         return(
             <>
                 <Row className="no-gutters w-100 h-100">
-                             {this.state.isLoading &&
-                                <div className='d-flex justify-content-center align-items-center'>
-                                <Spiner/>
-                                </div>
-                                 }
+            {this.state.isLoading &&
+                <div className='d-flex w-100 h-100 justify-content-center align-items-center'>
+                <Spiner/>
+                
+                </div>
+                }
                  {!this.state.isLoading &&(         
                     <div className="d-flex flex-row w-100">
                         <Sidebar/>           
@@ -84,7 +85,7 @@ class Dashboard extends Component {
                                     <TopNavbar search={(query) => this.fetchData(query)}/>
                                 </div>
                                <Container fluid className="mt-4">
-                                    <Jumbotron>
+                                    <Jumbotron className="jumbotron-dashboard">
                                     <Carousel>
                                     {this.state.data.map((book, index) => (  
                                         <Carousel.Item key={book.id.toString()}>
@@ -125,6 +126,9 @@ class Dashboard extends Component {
                                     />
                                     {this.state.data.length !== 0 &&(
                                     <Row>
+
+                                        
+
                                         {this.state.data.map((book, index) => (  
                                         <Link key={book.id.toString()} to="/detail" className="text-dark text-decoration-none"> 
                                             <Card className="shadow m-2" style={{ width: '18rem' }}>
@@ -164,7 +168,7 @@ class Dashboard extends Component {
                                </Container>
                             </div>
                     </div> 
-                     )}       
+                )}       
                 </Row>
             </>
         )

@@ -1,19 +1,24 @@
 import React, {Component} from 'react';
-import TopNavbar from '../navbar'
-import Sidebar from '../sidebar'
 import { Container, Row, Table, Card, Pagination} from 'react-bootstrap';
 import axios from 'axios'
 import qs from 'querystring'
+import Swal from 'sweetalert2'
 
-import SweetAlert from 'react-bootstrap-sweetalert'
+import TopNavbar from '../navbar'
+import Sidebar from '../sidebar'
+import Spiner from '../../components/Loader'
 
-import {AddAuthor} from '../../components/author/AddAuthor'
+// file form modal Add
+import {AddAuthor} from '../../components/author/AddAuthor' 
+// file form modal edit
 import {EditAuthor} from '../../components/author/EditAuthor'
 
-class Author extends Component {
 
+
+class Author extends Component {
     constructor(props){
         super(props)
+        // initial state
         this.state = {
           data: [],
           pageInfo: [],
@@ -24,6 +29,7 @@ class Author extends Component {
 
       }
 
+      // get data 
       fetchData = async (params) => {
             this.setState({isLoading: true})
             const {REACT_APP_URL} = process.env
@@ -39,6 +45,7 @@ class Author extends Component {
             }
       }
 
+      // props delete
       deleteAuthor = async(id) => {
         const {REACT_APP_URL} = process.env
         const url = `${REACT_APP_URL}authors/${id}`
@@ -46,60 +53,57 @@ class Author extends Component {
         this.fetchData()
       }
 
-      showModal = () => {
-        this.setState({ show: true });
-      };
-    
-      hideModal = () => {
-        this.setState({ show: false });
-      };
-    
-
-      onDelete = (id)  => {
-        const getAlert = () => (
-            <SweetAlert
-                warning
-                showCancel
-                confirmBtnText="Yes, delete it!"
-                confirmBtnBsStyle="danger"
-                title="Are you sure?"
-                onConfirm={() => this.deleteAuthor(id) && this.hideAlert()}
-                onCancel={() => this.hideAlert()}
-                focusCancelBtn
-                >
-             Delete this id {id}
-                </SweetAlert>
-          );
-      
-          this.setState({
-            alert: getAlert()
-          });
+      // modal confirmation delete
+      onConfirmDelete = (id) => {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "After delete you can't revert this data",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.value) {
+            this.deleteAuthor(id)
+            Swal.fire(
+              'Deleted!',
+              'Your data has been deleted.',
+              'success'
+            )
+          }
+        })
       }
 
-      hideAlert() {
-        this.setState({
-          alert: null
-        });
-      }
-    
+      // mount get data
       async componentDidMount(){
-   /*        const results = await axios.get('https://api-muhilibrary.herokuapp.com/books?limit=10')
-          const {data} = results
-          this.setState(data)  */
           const param = qs.parse(this.props.location.search.slice(1))
           await this.fetchData(param)
-
       }
       
     render(){
+
+        // pagination
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
+        
+        // state for edit modal close
         const {authorid, authorname, authordescription} = this.state
+
+        // set state addModal
         let addModalClose = () => this.setState({addModalShow:false})
+
+        // set edit editModal close
         let editModalClose = () => this.setState({editModalShow:false})
         return(
             <>
                <Row className="no-gutters w-100 h-100">
+                {this.state.isLoading &&
+                  <div className='d-flex w-100 h-100 justify-content-center align-items-center'>
+                  <Spiner/>
+                  </div>
+                  }
+                   {!this.state.isLoading &&( 
                     <div className="d-flex flex-row w-100">
                         <Sidebar/>           
                             <div className="w-100 d-flex flex-column">
@@ -111,13 +115,14 @@ class Author extends Component {
                                 <Card.Header><p style={{color: 'green'}}>{this.state.addMsg}</p></Card.Header>
                                 <Card.Body>
                                 <button onClick={()=> this.setState({addModalShow: true})} className="btn btn-success mb-2">Add</button>
-                                    
+                                    {/* component modal add */}
                                     <AddAuthor
                                         show={this.state.addModalShow}
                                         onHide={addModalClose}
                                         refreshdata={() => this.fetchData()}
                                     />
 
+                                      {/* component modal edit */}
                                      <EditAuthor
                                         show={this.state.editModalShow}
                                         onHide={editModalClose}
@@ -146,7 +151,7 @@ class Author extends Component {
                                                                                     authorname: author.name, 
                                                                                     authordescription: author.description})} } className="btn btn-warning ml-2">Edit</button>
                         
-                                       <button onClick={() =>  {  this.onDelete(author.id)} } className="btn btn-danger ml-2">Delete</button> 
+                                       <button onClick={() =>  {  this.onConfirmDelete(author.id)} } className="btn btn-danger ml-2">Delete</button> 
                                       {/*   <button onClick={() =>  { if (window.confirm('Are you sure you wish to delete this item?')) this.deleteAuthor(author.id)} } className="btn btn-danger ml-2">Delete</button> */}
                                         </td> 
                                         {this.state.alert}                               
@@ -175,7 +180,8 @@ class Author extends Component {
                                 </Card>
                                </Container>
                             </div>
-                    </div>        
+                    </div> 
+                   )}         
                 </Row>
             </>
         )

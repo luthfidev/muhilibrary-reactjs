@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
 
 
-import SweetAlert from 'react-bootstrap-sweetalert'
 
 import axios from 'axios'
 const {REACT_APP_URL} = process.env
@@ -23,24 +22,24 @@ export class EditAuthor extends Component {
     handleChange = event => {
         this.setState({[  event.target.name]: event.target.value})
     }
-       
-    handlePost = (event) => {
+        
+    handlePost = async (event) => {
         event.preventDefault()
         this.setState({isLoading: true})
  
         const authorData = {
-            name: this.state.name,
-            description: this.state.description
+            name: this.state.name || this.props.authorname,
+            description: this.state.description  || this.props.authordescription
         }
 
         const url = `${REACT_APP_URL}authors/${this.props.authorid}`
-        axios.patch(url, authorData).then( (response) => {
+        await axios.patch(url, authorData).then( (response) => {
           })
           .catch(function (error) {
             console.log(error.response);
            }) 
           
-           this.props.refreshdata()
+          await this.props.refreshdata()
            this.props.onHide()
 
     }

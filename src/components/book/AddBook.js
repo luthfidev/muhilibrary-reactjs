@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
-import SweetAlert from 'react-bootstrap-sweetalert'
 
 import axios from 'axios'
 const {REACT_APP_URL} = process.env
@@ -17,11 +16,27 @@ export class AddBook extends Component {
             authorid: '',
             releasedate: '',
             statusid: '',
-            alert: ''
+            alert: '',
+            data:[]
         }
         this.handlePost = this.handlePost.bind(this)
     }
     
+
+      // get data 
+      fetchDataGenre = async (params) => {
+        this.setState({isLoading: true})
+        const url = `${REACT_APP_URL}genres`
+        const results = await axios.get(url)
+        const {data} = results.data
+        this.setState({data, isLoading: false})
+     }
+
+  // mount get data
+  async componentDidMount(){
+      await this.fetchDataGenre()
+  }
+
 
     handleChange = event => {
         this.setState({[  event.target.name]: event.target.value})
@@ -85,12 +100,10 @@ export class AddBook extends Component {
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                 <Form.Label>Genre</Form.Label>
-                    <Form.Control as="select" custom>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
+                    <Form.Control as="select" >
+                        {this.state.data.map((genre, index) => (  
+                             <option value={genre.id} key={genre.id.toString()}>{genre.name}</option>
+                         ))}           
                     </Form.Control>
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">

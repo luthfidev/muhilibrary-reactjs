@@ -4,7 +4,7 @@ import Sidebar from '../sidebar'
 import { Container, Row, Table, Card, Pagination} from 'react-bootstrap';
 import axios from 'axios'
 import qs from 'querystring'
-import SweetAlert from 'react-bootstrap-sweetalert'
+import Swal from 'sweetalert2'
 
 import {AddGenre} from '../../components/genre/AddGenre'
 import {EditGenre} from '../../components/genre/EditGenre'
@@ -47,39 +47,26 @@ class Genre extends Component {
         this.fetchData()
       }
 
-      showModal = () => {
-        this.setState({ show: true });
-      };
-    
-      hideModal = () => {
-        this.setState({ show: false });
-      };
-
-      onDelete = (id)  => {
-        const getAlert = () => (
-            <SweetAlert
-                warning
-                showCancel
-                confirmBtnText="Yes, delete it!"
-                confirmBtnBsStyle="danger"
-                title="Are you sure?"
-                onConfirm={() => this.deleteGenre(id) && this.hideAlert()}
-                onCancel={() => this.hideAlert()}
-                focusCancelBtn
-                >
-             Delete this id {id}
-                </SweetAlert>
-          );
       
-          this.setState({
-            alert: getAlert()
-          });
-      }
-
-      hideAlert() {
-        this.setState({
-          alert: null
-        });
+      onConfirmDelete = (id) => {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "After delete you can't revert this data",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.value) {
+            this.deleteGenre(id)
+            Swal.fire(
+              'Deleted!',
+              'Your data has been deleted.',
+              'success'
+            )
+          }
+        })
       }
 
 
@@ -145,7 +132,7 @@ class Genre extends Component {
                                                                                     genreid: genre.id, 
                                                                                     genrename: genre.name, 
                                                                                     })} } className="btn btn-warning ml-2">Edit</button>                  
-                                       <button onClick={() =>  {  this.onDelete(genre.id)} } className="btn btn-danger ml-2">Delete</button> 
+                                       <button onClick={() =>  {  this.onConfirmDelete(genre.id)} } className="btn btn-danger ml-2">Delete</button> 
                                         </td> 
                                         {this.state.alert}                                    
                                         </tr>   

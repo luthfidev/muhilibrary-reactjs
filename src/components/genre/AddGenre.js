@@ -1,20 +1,58 @@
 import React, { Component } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
+import Swal from 'sweetalert2'
 
 import axios from 'axios'
 const {REACT_APP_URL} = process.env
 
+
+function ValidationMessage(props) {
+  if (!props.valid) {
+    return(
+      <div className='error-msg text-danger'>{props.message}</div>
+    )
+  } else {
+    return(
+      <div className='error-msg text-success'>Look Goods!</div>
+    )
+  }
+}
 
 export class AddGenre extends Component {
     constructor(props) {
         super(props)
         this.state = {
             name: '',
-            alert: ''
+            alert: '',
+            formValid: false,
+            errorMsg: {},
         }
         this.handlePost = this.handlePost.bind(this)
     }
     
+    validateForm = () => {
+      const {nameValid} = this.state;
+      this.setState({
+        formValid: nameValid 
+      })
+    }
+
+    updateName = (name) => {
+      this.setState({name}, this.validateName)
+    }
+
+    validateName = () => {
+      const {name} = this.state;
+      let nameValid = true;
+      let errorMsg = {...this.state.errorMsg}
+  
+      if (name.length < 3) {
+        nameValid = false;
+        errorMsg.name = 'Must be at least 3 characters long'
+      }
+  
+      this.setState({nameValid, errorMsg}, this.validateForm)
+    }
 
     handleChange = event => {
         this.setState({[  event.target.name]: event.target.value})
@@ -27,8 +65,15 @@ export class AddGenre extends Component {
         }
         const url = `${REACT_APP_URL}genres`
         axios.post(url, genreData).then( (response) => {
-            this.setState({addMsg: "User is successfully added to the database"})
+            this.setState({Msg: response.data.message})
             console.log(response)
+            Swal.fire({
+              title: 'Done !',
+              text: this.state.Msg,
+              icon: 'success',
+              timer: 2000
+            })
+            this.setState({ redirect: this.state.redirect === false });
           })
           .catch(function (error) {
             console.log(error.response);
@@ -58,9 +103,9 @@ export class AddGenre extends Component {
                 <Form onSubmit={ this.handlePost}>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Name Genre</Form.Label>
-                    <Form.Control name="name" onChange={this.handleChange} type="text" placeholder="Name Genre" />
+                    <Form.Control name="name" value={this.state.name} onChange={(e) => this.updateName(e.target.value)} type="text" placeholder="Name Genre" />
                     <Form.Text className="text-muted">
-                    Please text mode
+                    < ValidationMessage valid={this.state.nameValid} message={this.state.errorMsg.name} />
                     </Form.Text>
                 </Form.Group>
                 <Button variant="primary" type="submit">

@@ -6,7 +6,6 @@ import SpinerContent from '../components/LoaderContent'
 import { Row, Navbar, Nav, NavDropdown, Form, FormControl, Button, Carousel } from 'react-bootstrap';
 import qs from 'querystring'
 
-import bgLanding from '../assets/img/bg-landing.jpg'
 
 class Landing extends Component {
 
@@ -102,9 +101,9 @@ class Landing extends Component {
                     </Carousel.Item>
                     </Carousel>
                     </div>
-                    <div className="search-book d-flex w-100 justify-content-center align-content-center">
+                    <div className="landing-search-book d-flex w-100 justify-content-center align-content-center">
                             <Form inline onSubmit={(e) => e.preventDefault()}>
-                            <FormControl type="text" placeholder="Search" onKeyDown={(e) => this.search(e)} onChange={(e) => this.setState({ query: e.target.value })} className="mr-sm-2" />
+                            <FormControl type="text" placeholder="Search" onKeyDown={(e) => this.search(e)} onChange={(e) => this.setState({ query: e.target.value })} className="input-search mr-sm-2 " />
                             </Form>
                     </div>
                 </Row>

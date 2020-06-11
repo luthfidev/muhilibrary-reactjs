@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
-
+import Swal from 'sweetalert2'
 
 
 import axios from 'axios'
@@ -34,9 +34,20 @@ export class EditAuthor extends Component {
 
         const url = `${REACT_APP_URL}authors/${this.props.authorid}`
         await axios.patch(url, authorData).then( (response) => {
+
+            this.setState({Msg: response.data.message})
+            console.log(response)
+            Swal.fire({
+              title: 'Done !',
+              text: this.state.Msg,
+              icon: 'success',
+              timer: 2000
+            })
+            this.setState({ redirect: this.state.redirect === false });
           })
           .catch(function (error) {
             console.log(error.response);
+            
            }) 
           
           await this.props.refreshdata()

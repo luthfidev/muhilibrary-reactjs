@@ -61,7 +61,7 @@ class TopNavbar extends Component {
                         <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
                     </NavDropdown>
                     <Form inline onSubmit={(e) => e.preventDefault()}>
-                    <FormControl type="text" placeholder="Search" onKeyDown={(e) => this.search(e)} onChange={(e) => this.setState({ query: e.target.value })} className="mr-sm-2" />
+                    <FormControl type="text" placeholder="Search" onKeyDown={(e) => this.search(e)} onChange={(e) => this.setState({ query: e.target.value })} className="input-search mr-sm-2" />
                     </Form>
                     </Nav>
                     <div className="navbar-brand d-flex">

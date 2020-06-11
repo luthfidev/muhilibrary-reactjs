@@ -112,7 +112,7 @@ class Author extends Component {
                                 </div>
                                <Container fluid className="mt-4">
                                <Card>
-                                <Card.Header><p style={{color: 'green'}}>{this.state.addMsg}</p></Card.Header>
+                                <Card.Header>Author</Card.Header>
                                 <Card.Body>
                                 <button onClick={()=> this.setState({addModalShow: true})} className="btn btn-success mb-2">Add</button>
                                     {/* component modal add */}

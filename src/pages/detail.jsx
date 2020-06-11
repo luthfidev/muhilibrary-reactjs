@@ -10,9 +10,23 @@ import { Link } from 'react-router-dom';
 import cover from '../assets/img/cover-book.png'
 
 class Detail extends Component {
+
+    constructor(props){
+        super(props)
+        this.state = {
+            id: props.match.params.id,
+            booktitle: props.location.state.booktitle,
+            bookgenre: props.location.state.bookgenre,
+            bookimage: props.location.state.bookimage,
+            bookauthor: props.location.state.bookauthor,
+            bookstatus: props.location.state.bookstatus,
+        }
+    }
+    
     render(){
         return(
             <>  
+            {console.log(this.props)}
                 <Row className="h-100 w-100 no-gutters">
                     <div className="detail-header ">
                         <div className="btn-action p-3 w-100 d-flex justify-content-between"> 
@@ -29,10 +43,10 @@ class Detail extends Component {
                         <Row className="h-100 no-gutters">
                             <Col md={6}>
                                 <div className="left ml-5 mt-4">
-                                    <Badge variant="warning">Novel</Badge>
+                                    <Badge variant="warning">{this.state.bookgenre}</Badge>
                                     <div className="info d-flex d-flex-column justify-content-between align-items-center">
-                                        <div className="title font-weight-bold"><h1>Dilan</h1></div>
-                                        <div className="status text-success"><h5>Available</h5></div>
+                                        <div className="title font-weight-bold"><h1>{this.state.booktitle}</h1></div>
+                                        <div className="status text-success"><h5>{this.state.bookstatus}</h5></div>
                                     </div>
                                     <div className="release-date">
                                         <h5>30 Juni 2019</h5>
@@ -46,7 +60,7 @@ class Detail extends Component {
                             <Col md={6}>
                                 <div className="right mr-4 h-100 d-flex flex-column align-items-end justify-content-between">
                                     <div className="cover-img d-none d-sm-block">
-                                        <img src={cover} alt="cover"/>
+                                        <img src={this.state.bookimage} alt="cover"/>
                                     </div>
                                     <div className="borrow">
                                     <Link to="/borrow" className="mr-4 p-2 mb-5 btn btn-warning"> Borrow</Link>

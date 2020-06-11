@@ -130,7 +130,17 @@ class Dashboard extends Component {
                                         
 
                                         {this.state.data.map((book, index) => (  
-                                        <Link key={book.id.toString()} to="/detail" className="text-dark text-decoration-none"> 
+                                        <Link key={book.id.toString()} to={{
+                                                                            pathname: `/detail/${book.id}`,
+                                                                            state: {
+                                                                            bookid: `${book.id}`,
+                                                                            booktitle: `${book.title}`,
+                                                                            bookimage: `${book.image}`,
+                                                                            bookgenre: `${book.genreName}`,
+                                                                            bookauthor: `${book.authorName}`,
+                                                                            bookstatus: `${book.nameStatus}`,
+                                                                            }
+                                                                        }}  className="text-dark text-decoration-none"> 
                                             <Card className="shadow m-2" style={{ width: '18rem' }}>
                                                 <Card.Img variant="top" style={{ height: '200px' }} src={book.image} />
                                                 <Card.Body>

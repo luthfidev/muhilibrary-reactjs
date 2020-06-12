@@ -97,7 +97,6 @@ export class Register extends Component {
         }
         const url = `${REACT_APP_URL}auth/signup`
        await axios.post(url, registerData).then( (response) => {
-/*             this.setState({Msg: response.data.message}) */
             console.log(response)
            Swal.fire({
               title: 'Done !',
@@ -106,7 +105,6 @@ export class Register extends Component {
             })
            
             this.setState({ redirect: this.state.redirect === false });
-           /*  this.props.history.push('/login') */
           })
           .catch(function (error) {
              Swal.fire({
@@ -125,7 +123,7 @@ export class Register extends Component {
         return(
             <Modal
             {...this.props}
-            size="lg"
+            size="sm"
             aria-labelledby="contained-modal-title-vcenter"
             centered
           >

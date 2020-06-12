@@ -107,7 +107,7 @@ export class AddAuthor extends Component {
         return(
             <Modal
             {...this.props}
-            size="lg"
+            size="sm"
             aria-labelledby="contained-modal-title-vcenter"
             centered
           >

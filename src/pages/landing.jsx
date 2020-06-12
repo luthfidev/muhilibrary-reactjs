@@ -71,7 +71,7 @@ class Landing extends Component {
                 </div>
                 } 
                 {!this.state.isLoading &&(
-                <Row className="no-gutters w-100">
+                <Row className="no-gutters w-100 h-100">
                     {/* component modal add */}
                     <Register
                         show={this.state.addModalShow}

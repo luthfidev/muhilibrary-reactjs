@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Nav } from 'react-bootstrap'
+import { BsBook, BsBrush, BsCardList, BsFileText, BsPersonFill, BsCheckCircle } from 'react-icons/bs'
 
 import { Link } from 'react-router-dom';
 import avatar from '../assets/img/jono.png'
@@ -14,33 +15,25 @@ class Sidebar extends Component {
                     <h1>Jono</h1>
                 </div>
                 <Nav.Item className="mt-4">
-              <Link className="bg-info nav-link text-decoration-none text-white" to="/dashboard"> Dashboard</Link>
+              <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/dashboard"><BsBook/> Dashboard</Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Link className="bg-info nav-link text-decoration-none text-white" to="/author"> Author</Link>
+                  <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/author"><BsBrush/> Author</Link>
                 </Nav.Item>
                 <Nav.Item>
-                 <Link className="bg-info nav-link text-decoration-none text-white" to="/genre"> Genre</Link>
+                 <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/genre"><BsCardList/> Genre</Link>
                 </Nav.Item>
                 <Nav.Item>
-                <Link className="bg-info nav-link text-decoration-none text-white" to="/transaction"> Transaction</Link>
+                <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/transaction"><BsFileText/> Transaction</Link>
                 </Nav.Item>
                 <Nav.Item>
-                <Link className="bg-info nav-link text-decoration-none text-white" to="/user"> User</Link>
+                <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/user"><BsPersonFill/> User</Link>
                 </Nav.Item>
                 <Nav.Item>
-                <Link className="bg-info nav-link text-decoration-none text-white" to="/status"> Status</Link>
+                <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/status"><BsCheckCircle/> Status</Link>
                 </Nav.Item>
                 <Nav.Item>
-                <Link className="bg-danger nav-link text-decoration-none text-white" to="/logout"> Logout</Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="link-2">Link</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="disabled" disabled>
-                    Disabled
-                    </Nav.Link>
+                <Link className=" nav-link text-decoration-none text-dark font-weight-bold" to="/logout"> Logout</Link>
                 </Nav.Item>
             </Nav>
             </>

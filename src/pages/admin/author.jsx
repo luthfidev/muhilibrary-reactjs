@@ -14,7 +14,6 @@ import {AddAuthor} from '../../components/author/AddAuthor'
 import {EditAuthor} from '../../components/author/EditAuthor'
 
 
-
 class Author extends Component {
     constructor(props){
         super(props)

@@ -6,7 +6,8 @@ import {
    } from 'react-bootstrap'
 
 import { Link } from 'react-router-dom';
-
+import Swal from 'sweetalert2'
+import axios from 'axios'
 import cover from '../assets/img/cover-book.png'
 
 class Detail extends Component {
@@ -22,6 +23,36 @@ class Detail extends Component {
             bookstatus: props.location.state.bookstatus,
         }
     }
+
+     // props delete
+     deleteBook = async(id) => {
+        const {REACT_APP_URL} = process.env
+        const url = `${REACT_APP_URL}books/${id}`
+        await axios.delete(url)
+      }
+
+      // modal confirmation delete
+      onConfirmDelete = (id) => {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "After delete you can't revert this data",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.value) {
+            this.deleteBook(id)
+            this.props.history.push('/dashboard')
+            Swal.fire(
+              'Deleted!',
+              'Your data has been deleted.',
+              'success'
+            )
+          }
+        })
+      }
     
     render(){
         return(
@@ -35,7 +66,8 @@ class Detail extends Component {
                             </div>
                             <div className="action">
                                 <Link to="/edit" className="ml-2 btn btn-outline-dark"> Edit</Link>
-                                <Link to="/delete" className="ml-2 btn btn-outline-dark"> Delete</Link>
+                                <button onClick={() =>  {  this.onConfirmDelete(this.state.id)} } className="btn btn-outline-danger ml-2">Delete</button> 
+                                {/* <Link to="/delete" className="ml-2 btn btn-outline-dark"> Delete</Link> */}
                             </div>
                         </div>
                     </div>

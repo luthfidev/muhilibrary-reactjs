@@ -29,7 +29,7 @@ class Genre extends Component {
             const {REACT_APP_URL} = process.env
             const param = `${qs.stringify(params)}`
             const url = `${REACT_APP_URL}genres?${param}`
-            const results = await axios.get(url, { headers: authHeader() })
+            const results = await axios.get(url)
             const {data} = results.data
             
             const pageInfo = results.data.pageInfo
@@ -37,7 +37,6 @@ class Genre extends Component {
             if (params) {
                 this.props.history.push(`?${param}`)
             }
-            console.log(authHeader)
       }
 
       deleteGenre = async(id) => {

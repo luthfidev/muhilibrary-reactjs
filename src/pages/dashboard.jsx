@@ -4,13 +4,13 @@ import axios from 'axios'
 import TopNavbar from './navbar'
 import Sidebar from './sidebar'
 import Spiner from '../components/Loader'
-import SpinerContent from '../components/LoaderContent'
 import { Container, Row, Col, Jumbotron, Card, Carousel, Pagination, Dropdown } from 'react-bootstrap';
 import qs from 'querystring'
 import AsyncSelect from 'react-select/async'
 
 import {AddBook} from '../components/book/AddBook'
 
+const {REACT_APP_URL} = process.env
 
 class Dashboard extends Component {
 
@@ -18,6 +18,7 @@ class Dashboard extends Component {
         super(props)
         this.state = {
           data: [],
+          dataGenre: [],
           pageInfo: [],
           isLoading: false,
           addModalShow : false
@@ -26,7 +27,6 @@ class Dashboard extends Component {
 
       fetchData = async (params) => {
             this.setState({isLoading: true})
-            const {REACT_APP_URL} = process.env
             const param = `${qs.stringify(params)}`
             const url = `${REACT_APP_URL}books?${param}`
             const results = await axios.get(url)
@@ -39,6 +39,15 @@ class Dashboard extends Component {
             }
       }
 
+      fetchDataGenre = async (params) => {
+        this.setState({isLoading: true})
+        const url = `${REACT_APP_URL}genres`
+        const results = await axios.get(url)
+        const {data} = results.data
+    
+        this.setState({dataGenre: data, isLoading: false})
+  }
+
 
       async componentDidMount(){
    /*        const results = await axios.get('https://api-muhilibrary.herokuapp.com/books?limit=10')
@@ -46,6 +55,7 @@ class Dashboard extends Component {
           this.setState(data)  */
           const param = qs.parse(this.props.location.search.slice(1))
           await this.fetchData(param)
+          await this.fetchDataGenre()
       }
 
 
@@ -68,6 +78,7 @@ class Dashboard extends Component {
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
         let addModalClose = () => this.setState({addModalShow:false})
+
         return(
             <>
                 <Row className="no-gutters w-100 h-100">
@@ -85,7 +96,7 @@ class Dashboard extends Component {
                                     <TopNavbar search={(query) => this.fetchData(query)}/>
                                 </div>
                                <Container fluid className="mt-4">
-                                    <Jumbotron className="jumbotron-dashboard">
+                                    <Jumbotron className="jumbotron-dashboard shadow">
                                     <Carousel>
                                     {this.state.data.map((book, index) => (  
                                         <Carousel.Item key={book.id.toString()}>
@@ -96,7 +107,7 @@ class Dashboard extends Component {
                                             />
                                             <Carousel.Caption>
                                             <h3 className="text-dark">{book.title}</h3>
-                                            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                                            <p className="text-dark">{book.description}</p>
                                             </Carousel.Caption>
                                         </Carousel.Item>
                                         ))}
@@ -109,9 +120,19 @@ class Dashboard extends Component {
                                             Genre
                                         </Dropdown.Toggle>
                                             <Dropdown.Menu>
-                                            {this.state.data.map(gen => 
-                                                <Dropdown.Item key={gen.id}>{gen.genreName}</Dropdown.Item>
-                                                )}
+                                            <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: '' })}>All</Dropdown.Item>
+                                            {this.state.dataGenre.map(genre => 
+                                                <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: genre.name })}>{genre.name}</Dropdown.Item>
+                                            )}
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+                                        <Dropdown className="mb-4 ml-2">
+                                        <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                            Sort
+                                        </Dropdown.Toggle>
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 0 })}>A-z</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 1 })}>Z-a</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>
                                             <div className="ml-2">
@@ -126,8 +147,6 @@ class Dashboard extends Component {
                                     />
                                     {this.state.data.length !== 0 &&(
                                     <Row>
-
-                                        
 
                                         {this.state.data.map((book, index) => (  
                                         <Link key={book.id.toString()} to={{
@@ -148,30 +167,31 @@ class Dashboard extends Component {
                                                     <Card.Subtitle className="badge badge-primary">{book.genreName}</Card.Subtitle>
                                                     <Card.Subtitle className="ml-2 badge badge-success text-white">{book.nameStatus}</Card.Subtitle>
                                                     <Card.Text>
-                                                    Some quick example text to build on the card title and make up the bulk of
-                                                    the card's content.             
+                                                    {book.description}
                                                     </Card.Text>
                                                 </Card.Body>
                                                 </Card>
                                         </Link>
                                         ))}           
                                     </Row>
-                                         )}
-                                         {this.state.data.length===0 &&(
-                                             <h1>Data Not Available</h1>
-                                         )}
+                                    )}
+                                    {this.state.data.length===0 &&(
+                                        <h1>Data Not Available</h1>
+                                    )}
                                          
                                     </Col>
                                     <div className="d-flex justify-content-center">
                                     <Pagination>
                                             <Pagination.First onClick={()=>this.fetchData({...params, page: parseInt(params.page)-1})}/>
                                             <Pagination.Prev />
+                                            <Pagination.Ellipsis />
                                             {[...Array(this.state.pageInfo.totalPage)].map((o, i)=>{
                                              return (
                                             <Pagination.Item onClick={()=>this.fetchData({...params, page: params.page? i+1 : i+1})} className='mr-1 ml-1' key={i.toString()}>{i+1}</Pagination.Item>
                                              )
                                             })}
                                             <Pagination.Next onClick={()=>this.fetchData({...params, page: parseInt(params.page)+1})}/>
+                                            <Pagination.Ellipsis />
                                             <Pagination.Last />
                                     </Pagination>
                                     </div>

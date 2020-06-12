@@ -10,7 +10,7 @@ import { Link, Redirect } from 'react-router-dom';
 import qs from 'querystring'
 import brand from '../assets/img/bookshelf.png'
 
-
+import Swal from 'sweetalert2'
 
 import axios from 'axios'
 const {REACT_APP_URL} = process.env
@@ -46,6 +46,13 @@ handlePost = (event) => {
     const url = `${REACT_APP_URL}auth/`
     axios.post(url, qs.stringify(authorData)).then( (response) => {
         console.log(response);
+        Swal.fire({
+          title: 'Done !',
+          text: response.data.message,
+          icon: 'success',
+          timer: 2000
+        })
+        this.setState({ redirect: this.state.redirect === false });
     
       if (response.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data));
@@ -53,7 +60,12 @@ handlePost = (event) => {
       })
       .catch(function (error) {
         console.log(error.response);
-  
+        Swal.fire({
+          title: 'Done !',
+          text: error.response.data.message,
+          icon: 'warning',
+          timer: 2000
+        })
         /*    console.log(response)
            console.log(response.data.message) */
        }) 
@@ -68,9 +80,9 @@ handlePost = (event) => {
 }
 
     render(){
-      if (localStorage.getItem('user')) {
+  /*     if (localStorage.getItem('user')) {
         this.props.history.push('/dashboard')
-    }
+    } */
         return(
         <>
           <Row className="h-100 no-gutters">

@@ -7,8 +7,9 @@ import Spiner from '../components/Loader'
 import { Container, Row, Col, Jumbotron, Card, Carousel, Pagination, Dropdown } from 'react-bootstrap';
 import qs from 'querystring'
 import AsyncSelect from 'react-select/async'
-
+import authHeader from '../services/authHeader'
 import {AddBook} from '../components/book/AddBook'
+import Swal from 'sweetalert2'
 
 const {REACT_APP_URL} = process.env
 
@@ -23,26 +24,51 @@ class Dashboard extends Component {
           isLoading: false,
           addModalShow : false
         }
+        // check auth flow
+        this.checkToken = () => {
+            if(!localStorage.getItem('user')){
+                Swal.fire({
+                    title: 'Done !',
+                    text: 'You must be login !',
+                    icon: 'warning',
+                  })
+                props.history.push('/login')
+            } else {
+                props.history.push('/dashboard')
+            }
+        }
       }
 
       fetchData = async (params) => {
             this.setState({isLoading: true})
             const param = `${qs.stringify(params)}`
-            const url = `${REACT_APP_URL}books?${param}`
-            const results = await axios.get(url)
-            const {data} = results.data
-            
-            const pageInfo = results.data.pageInfo
-            this.setState({data, pageInfo, isLoading: false})
+           try {
+               const url = `${REACT_APP_URL}books?${param}`
+               const response = await axios.get(url, {headers: authHeader()})
+               const {data} = response.data
+               const pageInfo = response.data.pageInfo
+               this.setState({data, pageInfo, isLoading: false})       
+           } catch (error) {
+            if (error.response=== undefined) {
+                return false
+            } else {
+                Swal.fire({
+                    title: 'Done !',
+                    text: error.response.data.message,
+                    icon: 'warning',
+                  })
+            }
+           }
+           
             if (params) {
                 this.props.history.push(`?${param}`)
             }
       }
 
-      fetchDataGenre = async (params) => {
+      fetchDataGenre = async () => {
         this.setState({isLoading: true})
         const url = `${REACT_APP_URL}genres`
-        const results = await axios.get(url)
+        const results = await axios.get(url, {headers: authHeader()})
         const {data} = results.data
     
         this.setState({dataGenre: data, isLoading: false})
@@ -50,9 +76,7 @@ class Dashboard extends Component {
 
 
       async componentDidMount(){
-   /*        const results = await axios.get('https://api-muhilibrary.herokuapp.com/books?limit=10')
-          const {data} = results
-          this.setState(data)  */
+          await this.checkToken()
           const param = qs.parse(this.props.location.search.slice(1))
           await this.fetchData(param)
           await this.fetchDataGenre()
@@ -78,7 +102,10 @@ class Dashboard extends Component {
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
         let addModalClose = () => this.setState({addModalShow:false})
-
+       
+      /*  const parse = JSON.parse(localStorage.getItem('user'))
+     
+        {console.log(parse.userData.role)} */
         return(
             <>
                 <Row className="no-gutters w-100 h-100">
@@ -90,7 +117,7 @@ class Dashboard extends Component {
                 }
                  {!this.state.isLoading &&(         
                     <div className="d-flex flex-row w-100">
-                        <Sidebar/>           
+                        <Sidebar {...this.props}/>           
                             <div className="w-100 d-flex flex-column">
                                 <div className="top-navbar sticky-top">
                                     <TopNavbar search={(query) => this.fetchData(query)}/>
@@ -154,9 +181,14 @@ class Dashboard extends Component {
                                                                             state: {
                                                                             bookid: `${book.id}`,
                                                                             booktitle: `${book.title}`,
+                                                                            bookrelease: `${book.releaseDate}`,
                                                                             bookimage: `${book.image}`,
+                                                                            bookdesc: `${book.description}`,
+                                                                            bookgenreid: `${book.genreId}`,
                                                                             bookgenre: `${book.genreName}`,
+                                                                            bookauthorid: `${book.authorId}`,
                                                                             bookauthor: `${book.authorName}`,
+                                                                            bookstatusid: `${book.nameStatusId}`,
                                                                             bookstatus: `${book.nameStatus}`,
                                                                             }
                                                                         }}  className="text-dark text-decoration-none"> 

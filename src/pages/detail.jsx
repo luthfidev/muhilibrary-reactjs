@@ -4,11 +4,12 @@ import {
     Col,
     Badge
    } from 'react-bootstrap'
-
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from 'axios'
-import cover from '../assets/img/cover-book.png'
+import authHeader from '../services/authHeader'
+// file form modal edit book
+import {EditBook} from '../components/book/EditBook'
 
 class Detail extends Component {
 
@@ -16,19 +17,37 @@ class Detail extends Component {
         super(props)
         this.state = {
             id: props.match.params.id,
+            bookid: props.location.state.bookid,
             booktitle: props.location.state.booktitle,
-            bookgenre: props.location.state.bookgenre,
+            bookrelease: props.location.state.bookrelease,
             bookimage: props.location.state.bookimage,
+            bookdesc: props.location.state.bookdesc,
+            bookgenreid: props.location.state.bookgenreid,
+            bookgenre: props.location.state.bookgenre,
+            bookauthorid: props.location.state.bookauthorid,
             bookauthor: props.location.state.bookauthor,
+            bookstatusid: props.location.state.bookstatusid,
             bookstatus: props.location.state.bookstatus,
+
+            editModalShow: false
         }
+        const user = JSON.parse(localStorage.getItem('user'))
+        this.checkLogin = () => {
+          if(user){
+            this.setState({isLogin: true})
+            this.setState({isAdmin: user.userData.role})
+          }else{
+            this.setState({isLogin: false})
+          }
+        }
+
     }
 
      // props delete
      deleteBook = async(id) => {
         const {REACT_APP_URL} = process.env
         const url = `${REACT_APP_URL}books/${id}`
-        await axios.delete(url)
+        await axios.delete(url, {headers: authHeader()})
       }
 
       // modal confirmation delete
@@ -53,11 +72,19 @@ class Detail extends Component {
           }
         })
       }
+
+      componentDidMount(){
+        this.checkLogin()
+
+      }
     
     render(){
+        const {bookid, booktitle, bookrelease, bookgenre, bookgenreid, bookimage, bookdesc, bookauthor, bookauthorid, bookstatus, bookstatusid} = this.state
+
+       // set state editModal close
+        let editModalClose = () => this.setState({editModalShow:false})
         return(
             <>  
-            {console.log(this.props)}
                 <Row className="h-100 w-100 no-gutters">
                     <div className="detail-header ">
                         <div className="btn-action p-3 w-100 d-flex justify-content-between"> 
@@ -65,9 +92,37 @@ class Detail extends Component {
                             <Link to="/dashboard" className="ml-2 btn btn-outline-dark"> Back</Link>
                             </div>
                             <div className="action">
-                                <Link to="/edit" className="ml-2 btn btn-outline-dark"> Edit</Link>
+                            {this.state.isLogin && (<>
+                                <button  onClick={() =>  {  this.setState({editModalShow: true, 
+                                                                                    bookid: this.state.id, 
+                                                                                    booktitle: this.state.booktitle, 
+                                                                                    bookrelease: this.state.bookrelease,
+                                                                                    bookgenreid: this.state.bookgenreid,
+                                                                                    bookgenre: this.state.bookgenre,
+                                                                                    bookimage: this.state.bookimage,
+                                                                                    bookdesc: this.state.bookdesc,
+                                                                                    bookauthorid: this.state.bookauthorid,
+                                                                                    bookauthor: this.state.bookauthor,
+                                                                                    bookstatusid: this.state.bookstatusid,
+                                                                                    bookstatus: this.state.bookstatus,
+                                                                                    })} } className="btn btn-outline-warning ml-2">Edit</button>
                                 <button onClick={() =>  {  this.onConfirmDelete(this.state.id)} } className="btn btn-outline-danger ml-2">Delete</button> 
-                                {/* <Link to="/delete" className="ml-2 btn btn-outline-dark"> Delete</Link> */}
+                            </>)}
+                            <EditBook
+                                show={this.state.editModalShow}
+                                onHide={editModalClose}
+                                bookid = {bookid}
+                                booktitle = {booktitle}
+                                bookrelease = {bookrelease}
+                                bookgenreid = {bookgenreid}
+                                bookgenre = {bookgenre}
+                                bookimage = {bookimage}
+                                bookdesc = {bookdesc}
+                                bookauthorid = {bookauthorid}
+                                bookauthor = {bookauthor}
+                                bookstatusid = {bookstatusid}
+                                bookstatus = {bookstatus}
+                                    />
                             </div>
                         </div>
                     </div>
@@ -81,10 +136,10 @@ class Detail extends Component {
                                         <div className="status text-success"><h5>{this.state.bookstatus}</h5></div>
                                     </div>
                                     <div className="release-date">
-                                        <h5>30 Juni 2019</h5>
+                                        <h5>{this.state.bookrelease}</h5>
                                     </div>
                                     <div className="description">
-                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum pariatur non magni, placeat ea accusantium aspernatur nam tenetur rerum? Similique enim quis deleniti ex ducimus natus, asperiores et laudantium rerum corrupti repellat odit voluptates modi velit! Veritatis et incidunt iure, odit consectetur vitae illum, minima soluta commodi sed totam rerum?</p>
+                                        <p>{this.state.bookdesc}</p>
                                     </div>
                                 </div> 
 
@@ -95,10 +150,11 @@ class Detail extends Component {
                                         <img src={this.state.bookimage} alt="cover"/>
                                     </div>
                                     <div className="borrow">
+                                    { this.state.bookstatus == 'Available' && this.state.isAdmin == 'user' && 
                                     <Link to="/borrow" className="mr-4 p-2 mb-5 btn btn-warning"> Borrow</Link>
+                                    }
                                     </div>
                                 </div>
-
                             </Col>
                         </Row>
                     </div>

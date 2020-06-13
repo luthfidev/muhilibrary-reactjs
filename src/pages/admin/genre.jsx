@@ -29,7 +29,7 @@ class Genre extends Component {
             const {REACT_APP_URL} = process.env
             const param = `${qs.stringify(params)}`
             const url = `${REACT_APP_URL}genres?${param}`
-            const results = await axios.get(url)
+            const results = await axios.get(url, {headers: authHeader()})
             const {data} = results.data
             
             const pageInfo = results.data.pageInfo
@@ -45,8 +45,7 @@ class Genre extends Component {
         await axios.delete(url)
         this.fetchData()
       }
-
-      
+   
       onConfirmDelete = (id) => {
         Swal.fire({
           title: 'Are you sure?',
@@ -68,11 +67,7 @@ class Genre extends Component {
         })
       }
 
-
       async componentDidMount(){
-   /*        const results = await axios.get('https://api-muhilibrary.herokuapp.com/books?limit=10')
-          const {data} = results
-          this.setState(data)  */
           const param = qs.parse(this.props.location.search.slice(1))
           await this.fetchData(param)
       }
@@ -88,7 +83,7 @@ class Genre extends Component {
             <>
                 <Row className="no-gutters w-100 h-100">
                     <div className="d-flex flex-row w-100">
-                        <Sidebar/>           
+                        <Sidebar {...this.props}/>           
                             <div className="w-100 d-flex flex-column">
                                 <div className="top-navbar sticky-top">
                                     <TopNavbar/>

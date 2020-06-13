@@ -13,6 +13,8 @@ import slide3 from '../assets/img/landing/3.jpg'
 import {Register} from '../components/Register' 
 const {REACT_APP_URL} = process.env
 
+
+
 class Landing extends Component {
 
     constructor(props){
@@ -22,9 +24,21 @@ class Landing extends Component {
           dataGenre: [],
           pageInfo: [],
           isLoading: false,
-          addModalShow : false
+          addModalShow : false,
         }
-      }
+        
+        const user = JSON.parse(localStorage.getItem('user'))
+        this.checkLogin = () => {
+          if(user){
+            this.setState({isLogin: true})
+          }else{
+            this.setState({isLogin: false})
+          }
+        }
+
+    }
+
+
 
       fetchData = async (params) => {
             this.setState({isLoading: true})
@@ -50,6 +64,7 @@ class Landing extends Component {
 
       async componentDidMount(){
           const param = qs.parse(this.props.location.search.slice(1))
+          this.checkLogin()
           await this.fetchData(param)
           await this.fetchDataGenre()
       }
@@ -61,7 +76,6 @@ class Landing extends Component {
 
          // set state addModal
          let addModalClose = () => this.setState({addModalShow:false})
- 
         return(
             <>
                {this.state.isLoading &&
@@ -81,10 +95,15 @@ class Landing extends Component {
                 <Navbar.Brand href="#home">Muhilibrary</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
+               
                 <div className="action-landing w-100 d-flex justify-content-end">
+                {!this.state.isLogin && (<>
                     <Link to="/login" className="ml-2 mr-2 btn btn-outline-primary"> Login</Link>
-                    {/* <Link to="/register" className="ml-2 btn btn-outline-info"> Register</Link> */}
                     <button onClick={()=> this.setState({addModalShow: true})} className="btn btn-outline-info">Register</button>
+                </>)}
+                {this.state.isLogin && (
+                <Link to="/dashboard" className="ml-2 mr-2 btn btn-outline-info"> Dashboard</Link>
+                )}
                 </div>
                 </Navbar.Collapse>
                 </Navbar>

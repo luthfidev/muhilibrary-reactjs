@@ -7,6 +7,7 @@ import Swal from 'sweetalert2'
 import TopNavbar from '../navbar'
 import Sidebar from '../sidebar'
 import Spiner from '../../components/Loader'
+import authHeader from '../../services/authHeader'
 
 // file form modal Add
 import {AddAuthor} from '../../components/author/AddAuthor' 
@@ -34,9 +35,8 @@ class Author extends Component {
             const {REACT_APP_URL} = process.env
             const param = `${qs.stringify(params)}`
             const url = `${REACT_APP_URL}authors?${param}`
-            const results = await axios.get(url)
+            const results = await axios.get(url, {headers: authHeader()})
             const {data} = results.data
-            
             const pageInfo = results.data.pageInfo
             this.setState({data, pageInfo, isLoading: false})
             if (params) {
@@ -151,7 +151,6 @@ class Author extends Component {
                                                                                     authordescription: author.description})} } className="btn btn-warning ml-2">Edit</button>
                         
                                        <button onClick={() =>  {  this.onConfirmDelete(author.id)} } className="btn btn-danger ml-2">Delete</button> 
-                                      {/*   <button onClick={() =>  { if (window.confirm('Are you sure you wish to delete this item?')) this.deleteAuthor(author.id)} } className="btn btn-danger ml-2">Delete</button> */}
                                         </td> 
                                         {this.state.alert}                               
                                         </tr>   

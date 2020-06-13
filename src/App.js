@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 import './App.css';
@@ -17,28 +17,30 @@ import Notfound from './pages/notfound';
 
 
 
-function App() {
-  return (
-    <>
-    
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" exact component={Landing}/>
-          <Route path="/login" exact component={Login}/>
-          <Route path="/register" exact component={Register}/>
-          <Route path="/detail/:id" exact component={Detail}/>
-          <Route path="/dashboard" exact component={Dashboard}/>
-          <Route path="/author" exact component={Author}/>
-          <Route path="/genre" exact component={Genre}/>
-          <Route path="/transaction" exact component={Transaction}/>
-          <Route path="/user" exact component={User}/>
-          <Route path="/status" exact component={Status}/>
-          <Route component={Notfound} />
-        </Switch>
-      </BrowserRouter>
+class App extends Component {
+ 
+  render(){
 
-    </>
-  );
+      return (
+        <>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/" exact component={Landing}/>
+            <Route path="/login" exact component={Login}/>
+            <Route path="/register" exact component={Register}/>
+            <Route path="/detail/:id" exact component={Detail}/>
+            <Route path="/dashboard" exact component={Dashboard}/>
+            <Route path="/author" exact component={Author}/>
+            <Route path="/genre" exact component={Genre}/>
+            <Route path="/transaction" exact component={Transaction}/>
+            <Route path="/user" exact component={User}/>
+            <Route path="/status" exact component={Status}/>
+            <Route component={Notfound} />
+          </Switch>
+        </BrowserRouter>
+      </>
+    );
+  }
 }
 
 export default App;

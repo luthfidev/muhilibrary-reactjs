@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import { Modal, Button, Form, ProgressBar } from 'react-bootstrap'
 import Swal from 'sweetalert2' 
-import qs from 'querystring'
 import axios from 'axios'
 const {REACT_APP_URL} = process.env
-
 
 export class AddBook extends Component {
     constructor(props) {
@@ -18,28 +16,13 @@ export class AddBook extends Component {
             releasedate: '',
             statusid: '',
             alert: '',
-            data:[],
+            dataGenre:[],
+            dataAuthor:[],
             percentage: 0
         }
         this.handlePost = this.handlePost.bind(this)
     }
     
-
-      // get data 
-      fetchDataGenre = async (params) => {
-        this.setState({isLoading: true})
-        const url = `${REACT_APP_URL}genres`
-        const results = await axios.get(url)
-        const {data} = results.data
-        this.setState({data, isLoading: false})
-     }
-
-  // mount get data
-  async componentDidMount(){
-      await this.fetchDataGenre()
-  }
-
-
     handleChange = event => {
         this.setState({[  event.target.name]: event.target.value})
     }
@@ -98,6 +81,30 @@ export class AddBook extends Component {
           this.props.onHide() 
         //    this.props.refreshdata() 
     }
+    
+    // get data Genre
+    fetchDataGenre = async (params) => {
+    this.setState({isLoading: true})
+    const url = `${REACT_APP_URL}genres`
+    const results = await axios.get(url)
+    const {data} = results.data
+    this.setState({dataGenre: data, isLoading: false})
+    }
+
+    // get data Author
+    fetchDataAuthor = async (params) => {
+    this.setState({isLoading: true})
+    const url = `${REACT_APP_URL}authors`
+    const results = await axios.get(url)
+    const {data} = results.data
+    this.setState({dataAuthor: data, isLoading: false})
+    }
+
+    // mount get data
+    componentDidMount(){
+        this.fetchDataGenre()
+        this.fetchDataAuthor()
+    }
   
     render(){
         const {uploadPercentage} = this.state
@@ -132,16 +139,19 @@ export class AddBook extends Component {
                 <Form.Group controlId="formBasicEmail">
                 <Form.Label>Genre</Form.Label>
                     <Form.Control as="select" name="genreid" onChange={(e) => this.handleChange(e)}>
-                        {this.state.data.map((genre, index) => (  
+                        <option>Select Genre</option>
+                        {this.state.dataGenre.map((genre, index) => (  
                              <option value={genre.id} key={genre.id.toString()}>{genre.name}</option>
                          ))}           
                     </Form.Control>
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                 <Form.Label>Author</Form.Label>
-                    <Form.Control as="select" name="authorid" onChange={(e) => this.handleChange(e)} custom>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
+                    <Form.Control as="select" name="authorid" onChange={(e) => this.handleChange(e)}>
+                        <option>Select Author</option>
+                        {this.state.dataAuthor.map((author, index) => (  
+                             <option value={author.id} key={author.id.toString()}>NomorID: {author.id} Name: {author.name}</option>
+                         ))}           
                     </Form.Control>
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">

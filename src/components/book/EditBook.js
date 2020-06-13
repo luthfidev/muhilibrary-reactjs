@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
-import { Modal, Button, Form, ProgressBar } from 'react-bootstrap'
-import Swal from 'sweetalert2' 
+import { Modal, Button, Form } from 'react-bootstrap'
+import Swal from 'sweetalert2'
 import axios from 'axios'
+import qs from 'querystring'
+import authHeader from '../../services/authHeader'
 const {REACT_APP_URL} = process.env
 
-export class AddBook extends Component {
+
+export class EditBook extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -13,12 +16,12 @@ export class AddBook extends Component {
             image: '',
             genreid: '',
             authorid: '',
-            releasedate: '',
             statusid: '',
-            alert: '',
+            releasedate: '',
             dataGenre:[],
             dataAuthor:[],
-            percentage: 0
+            alert: '',
+
         }
         this.handlePost = this.handlePost.bind(this)
     }
@@ -26,62 +29,37 @@ export class AddBook extends Component {
     handleChange = event => {
         this.setState({[  event.target.name]: event.target.value})
     }
-        
-       handlePost = async (event) => {
-        event.preventDefault()
-      /*   this.setState({isLoading: true}) */
 
+    handlePost = (event) => {
+        event.preventDefault()
+        this.setState({isLoading: true})
         const formData = new FormData()
         formData.append('image', this.state.image)
-        formData.set('title', this.state.title)
-        formData.set('description', this.state.description)
-        formData.set('genreid', this.state.genreid)
-        formData.set('authorid', this.state.authorid)
-        formData.set('releasedate', this.state.releasedate)
-        formData.set('statusid', this.state.statusid)
-       
-        const options = {
-            onUploadProgress: (event) => {
-                const {loaded, total} = event
-                let percent = Math.floor( (loaded * 100) / total)
-                console.log(percent)
+        formData.set('title', this.state.title || this.props.booktitle)
+        formData.set('description', this.state.description || this.props.bookdesc)
+        formData.set('genreid', this.state.genreid || this.props.bookgenreid)
+        formData.set('authorid', this.state.authorid || this.props.bookauthorid)
+        formData.set('releasedate', this.state.releasedate || this.props.bookrelease)
+        formData.set('statusid', this.state.statusid || this.props.booktitle)
 
-                if (percent < 100){
-                   this.setState({ uploadPercentage: percent })
-                }
-            }
-        }
-
-        const url = `${REACT_APP_URL}books`
-        await axios.post(url, formData, options).then( (response) => {
-            this.setState({addMsg: "User is successfully added to the database"})
+        const url = `${REACT_APP_URL}books/${this.props.bookid}`
+        axios.patch(url, formData, {headers: authHeader()}).then( (response) => {
+            this.setState({Msg: response.data.message})
             console.log(response)
-            this.setState({ uploadPercentage: 100 }, () => {
-                setTimeout(()=> {
-                    this.setState({ uploadPercentage: 0})
-                }, 2000)
-                this.setState({Msg: response.data.message})
-                Swal.fire({
-                    title: 'Done !',
-                    text: this.state.addMsg,
-                    icon: 'success',
-                    timer: 2000
-                  })
-                  this.setState({ redirect: this.state.redirect === false });
+            Swal.fire({
+              title: 'Done !',
+              text: this.state.Msg,
+              icon: 'success',
+              timer: 2000
             })
+            this.setState({ redirect: this.state.redirect === false });
           })
           .catch(function (error) {
-            Swal.fire({
-                title: 'Done !',
-                text: error.response.data.message,
-                icon: 'warning',
-                timer: 3000
-              }) 
+            console.log(error.response);
            }) 
-          this.props.onHide() 
-        //    this.props.refreshdata() 
+           this.props.onHide()
     }
-    
+
     // get data Genre
     fetchDataGenre = async (params) => {
     this.setState({isLoading: true})
@@ -105,41 +83,44 @@ export class AddBook extends Component {
         this.fetchDataGenre()
         this.fetchDataAuthor()
     }
-  
+       
     render(){
-        const {uploadPercentage} = this.state
+        {console.log(this.props)}
         return(
             <Modal
             {...this.props}
-            size="lg"
+            size="md"
             aria-labelledby="contained-modal-title-vcenter"
             centered
           >
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter">
-                Add Book
+                Edit Book
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="contaniner">
                 <Form onSubmit={ this.handlePost}>
                 <Form.Group controlId="formBasicEmail">
+                    <Form.Label>Book ID</Form.Label>
+                    <Form.Control name="bookid" readOnly defaultValue={this.props.bookid} onChange={(e) => this.handleChange(e)} type="text" placeholder="Book ID" />
+                </Form.Group>
+                <Form.Group controlId="formBasicEmail">
                     <Form.Label>Name Book</Form.Label>
-                    <Form.Control name="title" onChange={(e) => this.handleChange(e)} type="text" placeholder="Title" />
+                    <Form.Control name="title" defaultValue={this.props.booktitle} onChange={(e) => this.handleChange(e)} type="text" placeholder="Title" />
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Description</Form.Label>
-                    <Form.Control name="description" onChange={(e) => this.handleChange(e)} type="text" placeholder="Description" />
+                    <Form.Control name="description" defaultValue={this.props.bookdesc} onChange={(e) => this.handleChange(e)} type="text" placeholder="Description" />
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Image</Form.Label>
                     <Form.Control type='file' name='image' className='mb-2' onChange={(e) => this.setState({image: e.target.files[0]})}/>
-                    { uploadPercentage > 0 && <ProgressBar now={uploadPercentage} label={uploadPercentage}/>}
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                 <Form.Label>Genre</Form.Label>
-                    <Form.Control as="select" name="genreid" onChange={(e) => this.handleChange(e)}>
-                        <option>Select Genre</option>
+                    <Form.Control as="select" name="genreid" defaultValue={this.props.genreid} onChange={(e) => this.handleChange(e)}>
+                        <option>{this.props.bookgenre}</option>
                         {this.state.dataGenre.map((genre, index) => (  
                              <option value={genre.id} key={genre.id.toString()}>{genre.name}</option>
                          ))}           
@@ -147,8 +128,8 @@ export class AddBook extends Component {
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                 <Form.Label>Author</Form.Label>
-                    <Form.Control as="select" name="authorid" onChange={(e) => this.handleChange(e)}>
-                        <option>Select Author</option>
+                    <Form.Control as="select" name="authorid" defaultValue={this.props.authorid} onChange={(e) => this.handleChange(e)}>
+                        <option>{this.props.bookauthor}</option>
                         {this.state.dataAuthor.map((author, index) => (  
                              <option value={author.id} key={author.id.toString()}>NomorID: {author.id} Name: {author.name}</option>
                          ))}           
@@ -160,7 +141,8 @@ export class AddBook extends Component {
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                 <Form.Label>Status</Form.Label>
-                    <Form.Control as="select" name="statusid" name="statusid" onChange={(e) => this.handleChange(e)} custom>
+                    <Form.Control as="select" name="statusid" defaultValue={this.props.statusid} name="statusid" onChange={(e) => this.handleChange(e)} custom>
+                        <option>{this.props.bookstatus}</option>
                     <option value="1">Available</option>
                     <option value="2">Unvailable</option>
                     </Form.Control>
@@ -176,7 +158,6 @@ export class AddBook extends Component {
               <Button varian="danger" onClick={this.props.onHide}>Close</Button>
             </Modal.Footer>
           </Modal>
-       
         )
     }
 }

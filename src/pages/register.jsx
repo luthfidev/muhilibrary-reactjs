@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import brand from '../assets/img/bookshelf.png'
 
 class Register extends Component {
+  
     render() { 
         return(
             <>

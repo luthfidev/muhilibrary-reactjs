@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
+import Swal from 'sweetalert2'
 
 import axios from 'axios'
 const {REACT_APP_URL} = process.env
@@ -20,24 +21,31 @@ export class EditGenre extends Component {
         this.setState({[  event.target.name]: event.target.value})
     }
        
-    handlePost = (event) => {
+    handlePost = async (event) => {
         event.preventDefault()
         this.setState({isLoading: true})
  
         const authorData = {
-            name: this.state.name,
+            name: this.state.name || this.props.genrename,
         }
 
         const url = `${REACT_APP_URL}genres/${this.props.genreid}`
-        axios.patch(url, authorData).then( (response) => {
-
-           
+        await axios.patch(url, authorData).then( (response) => {
+            this.setState({Msg: response.data.message})
+            console.log(response)
+            Swal.fire({
+              title: 'Done !',
+              text: this.state.Msg,
+              icon: 'success',
+              timer: 2000
+            })
+            this.setState({ redirect: this.state.redirect === false });
           })
           .catch(function (error) {
             console.log(error.response);
            }) 
           
-           this.props.refreshdata()
+          await this.props.refreshdata()
            this.props.onHide()
     }
 

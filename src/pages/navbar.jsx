@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import { Link } from 'react-router-dom';
 import {
     Form,
     Navbar,
@@ -46,28 +46,16 @@ class TopNavbar extends Component {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="d-flex w-100 justify-content-center">
-                    <NavDropdown title="All Category" id="basic-nav-dropdown">
-                        <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                    </NavDropdown>
-                    <NavDropdown title="All Time" id="basic-nav-dropdown">
-                        <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                    </NavDropdown>
                     <Form inline onSubmit={(e) => e.preventDefault()}>
-                    <FormControl type="text" placeholder="Search" onKeyDown={(e) => this.search(e)} onChange={(e) => this.setState({ query: e.target.value })} className="mr-sm-2" />
+                    <FormControl type="text" placeholder="Search" onKeyDown={(e) => this.search(e)} onChange={(e) => this.setState({ query: e.target.value })} className="input-search mr-sm-2" />
                     </Form>
                     </Nav>
-                    <div className="navbar-brand d-flex">
-                    <img src={brand} alt="brand"/>
-                        <h3 className="font-weight-bold align-self-end ml-2" >Library</h3>
-                    </div>
+                    <Link to="/" className="text-decoration-none">
+                        <div className="navbar-brand d-flex">
+                        <img src={brand} alt="brand"/>
+                            <h3 className="font-weight-bold align-self-end ml-2" >Library</h3>
+                        </div>
+                    </Link>
                 </Navbar.Collapse>
                 </Navbar>
             </>

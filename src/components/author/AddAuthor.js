@@ -85,11 +85,11 @@ export class AddAuthor extends Component {
         }
         const url = `${REACT_APP_URL}authors`
         axios.post(url, authorData).then( (response) => {
-            this.setState({addMsg: response.data.message})
+            this.setState({Msg: response.data.message})
             console.log(response)
             Swal.fire({
               title: 'Done !',
-              text: this.state.addMsg,
+              text: this.state.Msg,
               icon: 'success',
               timer: 2000
             })
@@ -107,7 +107,7 @@ export class AddAuthor extends Component {
         return(
             <Modal
             {...this.props}
-            size="lg"
+            size="sm"
             aria-labelledby="contained-modal-title-vcenter"
             centered
           >

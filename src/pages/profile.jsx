@@ -21,10 +21,10 @@ class Profile extends Component {
     constructor(props){
         super(props)
         this.state = {
-            name: '',
-            birthdate: '',
-            picture: '',
-            gender: '',
+            name: '' ,
+            birthdate: '' ,
+            picture: '' ,
+            gender: '' ,
             data: [],
             dataGenre: [],
             pageInfo: [],
@@ -88,7 +88,7 @@ class Profile extends Component {
             this.setState({data, pageInfo, isLoading: false})   
            
         } catch (error) {
-            if (error.response=== undefined) {
+            if (error.response === undefined) {
                 return false
             } else {
                 Swal.fire({
@@ -100,17 +100,14 @@ class Profile extends Component {
         }
     }
 
-
-
-  
-    async componentDidMount(){
-       await this.checkLogin()
-       await this.fetchData()
+     componentDidMount(){
+        this.checkLogin()
+        this.fetchData()
     }
     render(){
         return(
             <>
-             {console.log(this.state)}
+             {console.log()}
            
                 <Row className="no-gutters w-100 h-100">
                     {this.state.isLoading &&
@@ -131,6 +128,11 @@ class Profile extends Component {
                                         <Card.Body>
                                         <Form onSubmit={ this.handlePost}>
                                         {this.state.data.map((user, index) => ( <>
+                                     {/*    {this.setState({
+                                                        name: user.name, 
+                                                        picture: user.picture, 
+                                                        gender: user.gender,
+                                                        birthdate: user.birthdate})} */}
                                             <Form.Group controlId="formBasicEmail">
                                                 <Form.Label>Name</Form.Label>
                                                 <Form.Control required name="name" onChange={(e) => this.handleChange(e)} defaultValue={user.name} type="text" placeholder="Name" />

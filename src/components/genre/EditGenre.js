@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { Modal, Button, Form } from 'react-bootstrap'
+import {Modal, 
+        Button, 
+        Form} from 'react-bootstrap'
 import Swal from 'sweetalert2'
 
 import axios from 'axios'
@@ -32,7 +34,7 @@ export class EditGenre extends Component {
         const url = `${REACT_APP_URL}genres/${this.props.genreid}`
         await axios.patch(url, authorData).then( (response) => {
             this.setState({Msg: response.data.message})
-            console.log(response)
+
             Swal.fire({
               title: 'Done !',
               text: this.state.Msg,
@@ -42,7 +44,6 @@ export class EditGenre extends Component {
             this.setState({ redirect: this.state.redirect === false });
           })
           .catch(function (error) {
-            console.log(error.response);
            }) 
           
           await this.props.refreshdata()

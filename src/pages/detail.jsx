@@ -2,15 +2,16 @@ import React, {Component} from 'react';
 import {
     Row, 
     Col,
-    Badge
-   } from 'react-bootstrap'
+    Badge} from 'react-bootstrap'
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from 'axios'
+import moment from 'moment'
 import authHeader from '../services/authHeader'
+import qs from 'querystring'
 // file form modal edit book
 import {EditBook} from '../components/book/EditBook'
-
+const {REACT_APP_URL} = process.env
 class Detail extends Component {
 
     constructor(props){
@@ -28,6 +29,7 @@ class Detail extends Component {
             bookauthor: props.location.state.bookauthor,
             bookstatusid: props.location.state.bookstatusid,
             bookstatus: props.location.state.bookstatus,
+            transactiondate: moment().format('yyyy-MM-DD'),
 
             editModalShow: false
         }
@@ -36,12 +38,40 @@ class Detail extends Component {
           if(user){
             this.setState({isLogin: true})
             this.setState({isAdmin: user.userData.role})
+            
           }else{
             this.setState({isLogin: false})
           }
         }
+        this.handlePost = this.handlePost.bind(this)
+        
+      }
 
-    }
+          handlePost = () => {
+            
+              this.setState({isLoading: true})
+              const borrowData = {
+                  bookid: this.state.bookid,
+                  transactiondate: this.state.transactiondate
+              }
+              const url = `${REACT_APP_URL}transactions/user`
+              axios.post(url, qs.stringify(borrowData), {headers: authHeader()}).then( (response) => {
+                  Swal.fire({
+                    title: 'Done !',
+                    text:  response.data.message,
+                    icon: 'success',
+                    timer: 2000
+                  })
+                })
+                .catch(function (error) {
+                  Swal.fire({
+                    title: 'Done !',
+                    text:  'Please Update Name your profile first',
+                    icon: 'warning',
+                  })
+                 }) 
+                 this.props.history.push('/dashboard')
+          }
 
      // props delete
      deleteBook = async(id) => {
@@ -79,20 +109,36 @@ class Detail extends Component {
       }
     
     render(){
-        const {bookid, booktitle, bookrelease, bookgenre, bookgenreid, bookimage, bookdesc, bookauthor, bookauthorid, bookstatus, bookstatusid} = this.state
+        const {bookid, 
+              booktitle, 
+              bookrelease, 
+              bookgenre, 
+              bookgenreid, 
+              bookimage, 
+              bookdesc, 
+              bookauthor, 
+              bookauthorid, 
+              bookstatus, 
+              bookstatusid} = this.state
 
        // set state editModal close
         let editModalClose = () => this.setState({editModalShow:false})
         return(
             <>  
+           
                 <Row className="h-100 w-100 no-gutters">
                     <div className="detail-header ">
                         <div className="btn-action p-3 w-100 d-flex justify-content-between"> 
                             <div className="btn-back">
+                            {this.state.isLogin && (
                             <Link to="/dashboard" className="ml-2 btn btn-outline-dark"> Back</Link>
+                            )}
+                            {!this.state.isLogin && (
+                            <Link to="/" className="ml-2 btn btn-outline-dark"> Back</Link>
+                            )}
                             </div>
                             <div className="action">
-                            {this.state.isLogin && (<>
+                            {this.state.isLogin && this.state.isAdmin === 'admin' && (<>
                                 <button  onClick={() =>  {  this.setState({editModalShow: true, 
                                                                                     bookid: this.state.id, 
                                                                                     booktitle: this.state.booktitle, 
@@ -150,8 +196,8 @@ class Detail extends Component {
                                         <img src={this.state.bookimage} alt="cover"/>
                                     </div>
                                     <div className="borrow">
-                                    { this.state.bookstatus == 'Available' && this.state.isAdmin == 'user' && 
-                                    <Link to="/borrow" className="mr-4 p-2 mb-5 btn btn-warning"> Borrow</Link>
+                                    { this.state.bookstatus === 'Available' && this.state.isAdmin === 'user' && 
+                                   <button onClick={(e) => this.handlePost(e)} className="btn btn-outline-danger ml-2">Borrow</button> 
                                     }
                                     </div>
                                 </div>

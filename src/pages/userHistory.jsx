@@ -1,24 +1,19 @@
 import React, {Component} from 'react';
-import TopNavbar from '../navbar'
-import Sidebar from '../sidebar'
 import {Container, 
         Row, 
         Table, 
         Card, 
         Pagination, 
-        Badge, 
-        Dropdown} from 'react-bootstrap';
+        Badge} from 'react-bootstrap';
 import qs from 'querystring'
-import axios from 'axios'
-import Swal from 'sweetalert2'
-import Spiner from '../../components/Loader'
-import authHeader from '../../services/authHeader'
-// file form modal Add
-import {AddTransaction} from '../../components/transaction/AddTransaction' 
-const {REACT_APP_URL} = process.env
+import Swal from 'sweetalert2' // alert sweetalert
+import Spiner from '../components/Loader' // loader
+import TopNavbar from './navbar' // topnavbar
+import Sidebar from './sidebar' // sidebar
+import authHeader from '../services/authHeader'
+import axios from 'axios' // rest client
 
-class Transaction extends Component {
-
+class userHistory extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -29,23 +24,27 @@ class Transaction extends Component {
           alert: null
         }
       }
-
       // get data
-      fetchData = async (params) => {
-            this.setState({isLoading: true})
-            const {REACT_APP_URL} = process.env
-            const param = `${qs.stringify(params)}`
-            const url = `${REACT_APP_URL}transactions?${param}`
-            const results = await axios.get(url)
+      fetchData = async () => {
+        /* this.setState({isLoading: true}) */
+        const {REACT_APP_URL} = process.env
+        try {
+          const url = `${REACT_APP_URL}transactions/userstatus`
+          const results = await axios.get(url, {headers: authHeader()})
             const {data} = results.data
-            
-            const pageInfo = results.data.pageInfo
-            this.setState({data, pageInfo, isLoading: false})
-            if (params) {
-                this.props.history.push(`?${param}`)
-            }
+            this.setState({data, isLoading: false})
+        } catch (error) {
+            if (error.response=== undefined) {
+              return false
+          } else {
+            Swal.fire({
+              title: 'Done !',
+              text: error.response.data.message,
+              icon: 'warning',
+            })
+          }
+        }     
       }
-
        // props delete
        deleteTransaction = async(id) => {
         this.setState({isLoading: true})
@@ -74,7 +73,6 @@ class Transaction extends Component {
         await axios.patch(url, data)
         this.fetchData()
       }
-
       // modal confirmation delete
       onConfirmDelete = (id) => {
         Swal.fire({
@@ -138,15 +136,10 @@ class Transaction extends Component {
       }
 
     async componentDidMount(){
-        const param = qs.parse(this.props.location.search.slice(1))
-        await this.fetchData(param)
-
+       await this.fetchData()
     }
     
-    
     render(){
-        const params = qs.parse(this.props.location.search.slice(1))
-        params.page = params.page || 1
 
          // state for edit modal close
          const {transactionid, transactiondate, userid, bookid, statusid} = this.state
@@ -158,7 +151,6 @@ class Transaction extends Component {
          let editModalClose = () => this.setState({editModalShow:false})
         return(
             <>
-            
                 <Row className="no-gutters w-100 h-100">
                 {this.state.isLoading &&
                 <div className='d-flex w-100 h-100 justify-content-center align-items-center'>
@@ -170,34 +162,12 @@ class Transaction extends Component {
                         <Sidebar {...this.props}/>           
                             <div className="w-100 d-flex flex-column">
                                 <div className="top-navbar sticky-top">
-                                    <TopNavbar search={(query) => this.fetchData(query)}/>
+                                    <TopNavbar/>
                                 </div>
                                <Container fluid className="mt-4">
                                <Card>
                                 <Card.Header>Transactions</Card.Header>
-                                <Card.Body>
-                                    <div className="d-flex flex-row ">
-                                      <div className="action-btn mr-2">
-                                        <button onClick={()=> this.setState({addModalShow: true})} className="btn btn-success mb-2">Add</button>
-                                      </div>
-                                          {/* component modal add */}
-                                          <AddTransaction
-                                              show={this.state.addModalShow}
-                                              onHide={addModalClose}
-                                              refreshdata={() => this.fetchData()}
-                                          />
-                                          <Dropdown className="mb-4">
-                                              <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                                  Status
-                                              </Dropdown.Toggle>
-                                                  <Dropdown.Menu>
-                                                  <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: '' })}>All</Dropdown.Item>
-                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: 'Pending' })}>Pending</Dropdown.Item>
-                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: 'Return the Book' })}>Return the Book</Dropdown.Item>
-                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: 'Borrowed' })}>Borrowed</Dropdown.Item>
-                                                  </Dropdown.Menu>
-                                          </Dropdown>
-                                      </div>
+                                <Card.Body>                        
                                     <Table striped bordered hover>
                                     <thead align="center">
                                         <tr>
@@ -242,7 +212,7 @@ class Transaction extends Component {
                                     )}
                                     </Table>
                                     <div className="d-flex justify-content-center">
-                                    <Pagination>
+                                  {/*   <Pagination>
                                             <Pagination.First onClick={()=>this.fetchData({...params, page: parseInt(params.page)-1})}/>
                                             <Pagination.Prev />
                                             {[...Array(this.state.pageInfo.totalPage)].map((o, i)=>{
@@ -252,7 +222,7 @@ class Transaction extends Component {
                                             })}
                                             <Pagination.Next onClick={()=>this.fetchData({...params, page: parseInt(params.page)+1})}/>
                                             <Pagination.Last />
-                                    </Pagination>
+                                    </Pagination> */}
                                     </div>
                                 </Card.Body>
                                 </Card>
@@ -266,4 +236,4 @@ class Transaction extends Component {
     };
 }
 
-export default Transaction
+export default userHistory

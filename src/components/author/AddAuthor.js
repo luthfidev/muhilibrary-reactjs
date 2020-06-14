@@ -1,5 +1,7 @@
-import React, { Component } from 'react'
-import { Modal, Button, Form } from 'react-bootstrap'
+import React, {Component} from 'react'
+import {Modal, 
+        Button, 
+        Form} from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 const {REACT_APP_URL} = process.env
@@ -86,7 +88,6 @@ export class AddAuthor extends Component {
         const url = `${REACT_APP_URL}authors`
         axios.post(url, authorData).then( (response) => {
             this.setState({Msg: response.data.message})
-            console.log(response)
             Swal.fire({
               title: 'Done !',
               text: this.state.Msg,
@@ -96,7 +97,6 @@ export class AddAuthor extends Component {
             this.setState({ redirect: this.state.redirect === false });
           })
           .catch(function (error) {
-            console.log(error.response);
            }) 
            this.props.refreshdata()
            this.props.onHide()

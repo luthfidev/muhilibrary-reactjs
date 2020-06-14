@@ -1,16 +1,23 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios'
+import {Link} from 'react-router-dom';
+import {Container, 
+        Row, 
+        Col, 
+        Jumbotron, 
+        Card, 
+        Carousel, 
+        Pagination, 
+        Dropdown } from 'react-bootstrap';
+        import axios from 'axios'
+import authHeader from '../services/authHeader'
 import TopNavbar from './navbar'
 import Sidebar from './sidebar'
 import Spiner from '../components/Loader'
-import { Container, Row, Col, Jumbotron, Card, Carousel, Pagination, Dropdown } from 'react-bootstrap';
+import {AddBook} from '../components/book/AddBook'
 import qs from 'querystring'
 import AsyncSelect from 'react-select/async'
-import authHeader from '../services/authHeader'
-import {AddBook} from '../components/book/AddBook'
 import Swal from 'sweetalert2'
-
+import coverdummy from '../assets/img/coverdummy.jpg'
 const {REACT_APP_URL} = process.env
 
 class Dashboard extends Component {
@@ -39,16 +46,16 @@ class Dashboard extends Component {
         }
       }
 
-      fetchData = async (params) => {
-            this.setState({isLoading: true})
-            const param = `${qs.stringify(params)}`
-           try {
-               const url = `${REACT_APP_URL}books?${param}`
-               const response = await axios.get(url, {headers: authHeader()})
-               const {data} = response.data
-               const pageInfo = response.data.pageInfo
-               this.setState({data, pageInfo, isLoading: false})       
-           } catch (error) {
+    fetchData = async (params) => {
+    this.setState({isLoading: true})
+    const param = `${qs.stringify(params)}`
+        try {
+            const url = `${REACT_APP_URL}books?${param}`
+            const response = await axios.get(url, {headers: authHeader()})
+            const {data} = response.data
+            const pageInfo = response.data.pageInfo
+            this.setState({data, pageInfo, isLoading: false})       
+        } catch (error) {
             if (error.response=== undefined) {
                 return false
             } else {
@@ -56,32 +63,32 @@ class Dashboard extends Component {
                     title: 'Done !',
                     text: error.response.data.message,
                     icon: 'warning',
-                  })
+                })
             }
-           }
-           
-            if (params) {
-                this.props.history.push(`?${param}`)
-            }
-      }
+        }
+        if (params) {
+            this.props.history.push(`?${param}`)
+        }
+    }
 
-      fetchDataGenre = async () => {
-        this.setState({isLoading: true})
-        const url = `${REACT_APP_URL}genres`
-        const results = await axios.get(url, {headers: authHeader()})
-        const {data} = results.data
-    
-        this.setState({dataGenre: data, isLoading: false})
-  }
+    fetchDataGenre = async () => {
+    this.setState({isLoading: true})
+    const url = `${REACT_APP_URL}genres`
+    const results = await axios.get(url, {headers: authHeader()})
+    const {data} = results.data
+    this.setState({dataGenre: data, isLoading: false})
+    }
 
+    async componentDidMount(){
+        await this.checkToken()
+        const param = qs.parse(this.props.location.search.slice(1))
+        await this.fetchData(param)
+        await this.fetchDataGenre()
+    }
 
-      async componentDidMount(){
-          await this.checkToken()
-          const param = qs.parse(this.props.location.search.slice(1))
-          await this.fetchData(param)
-          await this.fetchDataGenre()
-      }
-
+    componentWillUnmount() {
+        this.fetchData()
+    }
 
     /*  filterColors = (inputValue) => {
         return this.fetchData.genreName.filter(i =>
@@ -103,9 +110,6 @@ class Dashboard extends Component {
         params.page = params.page || 1
         let addModalClose = () => this.setState({addModalShow:false})
        
-      /*  const parse = JSON.parse(localStorage.getItem('user'))
-     
-        {console.log(parse.userData.role)} */
         return(
             <>
                 <Row className="no-gutters w-100 h-100">
@@ -149,7 +153,7 @@ class Dashboard extends Component {
                                             <Dropdown.Menu>
                                             <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: '' })}>All</Dropdown.Item>
                                             {this.state.dataGenre.map(genre => 
-                                                <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: genre.name })}>{genre.name}</Dropdown.Item>
+                                                <Dropdown.Item key={genre.id.toString()} onClick={() => this.fetchData({ ...params, search: genre.name })}>{genre.name}</Dropdown.Item>
                                             )}
                                             </Dropdown.Menu>
                                         </Dropdown>

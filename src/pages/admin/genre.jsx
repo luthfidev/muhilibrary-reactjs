@@ -72,6 +72,7 @@ class Genre extends Component {
           await this.fetchData(param)
       }
 
+
     render(){
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
@@ -86,7 +87,7 @@ class Genre extends Component {
                         <Sidebar {...this.props}/>           
                             <div className="w-100 d-flex flex-column">
                                 <div className="top-navbar sticky-top">
-                                    <TopNavbar/>
+                                    <TopNavbar search={(query) => this.fetchData(query)}/>
                                 </div>
                                <Container fluid className="mt-4">
                                <Card>
@@ -118,7 +119,7 @@ class Genre extends Component {
                                     {this.state.data.length !== 0 &&(
                                     <tbody align="center">
                                          {this.state.data.map((genre, index) => (  
-                                        <tr>
+                                        <tr key={genre.id.toString()}>
                                         <td>{index + 1}</td>
                                         <td>{genre.name}</td>                                
                                         <td align="center">

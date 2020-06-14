@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { Modal, Button, Form } from 'react-bootstrap'
+import {Modal, 
+        Button, 
+        Form} from 'react-bootstrap'
 import Swal from 'sweetalert2'
 
 import axios from 'axios'
 const {REACT_APP_URL} = process.env
-
 
 function ValidationMessage(props) {
   if (!props.valid) {
@@ -66,7 +67,6 @@ export class AddGenre extends Component {
         const url = `${REACT_APP_URL}genres`
         axios.post(url, genreData).then( (response) => {
             this.setState({Msg: response.data.message})
-            console.log(response)
             Swal.fire({
               title: 'Done !',
               text: this.state.Msg,
@@ -76,16 +76,13 @@ export class AddGenre extends Component {
             this.setState({ redirect: this.state.redirect === false });
           })
           .catch(function (error) {
-            console.log(error.response);
            }) 
            this.props.refreshdata()
            this.props.onHide()
     }
    
-
        
     render(){
-      
         return(
             <Modal
             {...this.props}

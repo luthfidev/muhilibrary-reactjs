@@ -48,7 +48,7 @@ class User extends Component {
             <>
               <Row className="no-gutters w-100 h-100">
                     <div className="d-flex flex-row w-100">
-                        <Sidebar/>           
+                        <Sidebar {...this.props}/>           
                             <div className="w-100 d-flex flex-column">
                                 <div className="top-navbar sticky-top">
                                     <TopNavbar/>

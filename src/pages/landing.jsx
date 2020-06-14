@@ -1,9 +1,18 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import axios from 'axios'
 import Spiner from '../components/Loader'
 import SpinerContent from '../components/LoaderContent'
-import { Row, Navbar, Card, Col, Form, FormControl, Button, Carousel, Container, Dropdown } from 'react-bootstrap';
+import {Row, 
+        Navbar, 
+        Card, 
+        Col, 
+        Form, 
+        FormControl, 
+        Button, 
+        Carousel, 
+        Container, 
+        Dropdown} from 'react-bootstrap';
 import qs from 'querystring'
 import slide1 from '../assets/img/landing/1.jpg'
 import slide2 from '../assets/img/landing/2.jpg'
@@ -12,8 +21,6 @@ import slide3 from '../assets/img/landing/3.jpg'
 // file form modal Add
 import {Register} from '../components/Register' 
 const {REACT_APP_URL} = process.env
-
-
 
 class Landing extends Component {
 

@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
-import { Modal, Button, Form, ProgressBar } from 'react-bootstrap'
+import {Modal, 
+        Button, 
+        Form, 
+        ProgressBar} from 'react-bootstrap'
 import Swal from 'sweetalert2' 
 import axios from 'axios'
+import authHeader from '../../services/authHeader'
+
 const {REACT_APP_URL} = process.env
 
 export class AddBook extends Component {
@@ -53,7 +58,7 @@ export class AddBook extends Component {
         }
 
         const url = `${REACT_APP_URL}books`
-        await axios.post(url, formData, options).then( (response) => {
+        await axios.post(url, formData, {headers: authHeader()}).then( (response) => {
             this.setState({addMsg: "User is successfully added to the database"})
             console.log(response)
             this.setState({ uploadPercentage: 100 }, () => {
@@ -78,8 +83,8 @@ export class AddBook extends Component {
                 timer: 3000
               }) 
            }) 
-          this.props.onHide() 
-        //    this.props.refreshdata() 
+         // this.props.onHide() 
+        this.props.refreshdata() 
     }
     
     // get data Genre

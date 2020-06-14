@@ -1,16 +1,23 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios'
+import {Link} from 'react-router-dom';
+import {Container, 
+        Row, 
+        Col, 
+        Jumbotron, 
+        Card, 
+        Carousel, 
+        Pagination, 
+        Dropdown } from 'react-bootstrap';
+        import axios from 'axios'
+import authHeader from '../services/authHeader'
 import TopNavbar from './navbar'
 import Sidebar from './sidebar'
 import Spiner from '../components/Loader'
-import { Container, Row, Col, Jumbotron, Card, Carousel, Pagination, Dropdown } from 'react-bootstrap';
+import {AddBook} from '../components/book/AddBook'
 import qs from 'querystring'
 import AsyncSelect from 'react-select/async'
-import authHeader from '../services/authHeader'
-import {AddBook} from '../components/book/AddBook'
 import Swal from 'sweetalert2'
-
+import coverdummy from '../assets/img/coverdummy.jpg'
 const {REACT_APP_URL} = process.env
 
 class Dashboard extends Component {
@@ -39,16 +46,16 @@ class Dashboard extends Component {
         }
       }
 
-      fetchData = async (params) => {
-            this.setState({isLoading: true})
-            const param = `${qs.stringify(params)}`
-           try {
-               const url = `${REACT_APP_URL}books?${param}`
-               const response = await axios.get(url, {headers: authHeader()})
-               const {data} = response.data
-               const pageInfo = response.data.pageInfo
-               this.setState({data, pageInfo, isLoading: false})       
-           } catch (error) {
+    fetchData = async (params) => {
+    this.setState({isLoading: true})
+    const param = `${qs.stringify(params)}`
+        try {
+            const url = `${REACT_APP_URL}books?${param}`
+            const response = await axios.get(url, {headers: authHeader()})
+            const {data} = response.data
+            const pageInfo = response.data.pageInfo
+            this.setState({data, pageInfo, isLoading: false})       
+        } catch (error) {
             if (error.response=== undefined) {
                 return false
             } else {
@@ -56,31 +63,28 @@ class Dashboard extends Component {
                     title: 'Done !',
                     text: error.response.data.message,
                     icon: 'warning',
-                  })
+                })
             }
-           }
-           
-            if (params) {
-                this.props.history.push(`?${param}`)
-            }
-      }
+        }
+        if (params) {
+            this.props.history.push(`?${param}`)
+        }
+    }
 
-      fetchDataGenre = async () => {
-        this.setState({isLoading: true})
-        const url = `${REACT_APP_URL}genres`
-        const results = await axios.get(url, {headers: authHeader()})
-        const {data} = results.data
-    
-        this.setState({dataGenre: data, isLoading: false})
-  }
+    fetchDataGenre = async () => {
+    this.setState({isLoading: true})
+    const url = `${REACT_APP_URL}genres`
+    const results = await axios.get(url, {headers: authHeader()})
+    const {data} = results.data
+    this.setState({dataGenre: data, isLoading: false})
+    }
 
-
-      async componentDidMount(){
-          await this.checkToken()
-          const param = qs.parse(this.props.location.search.slice(1))
-          await this.fetchData(param)
-          await this.fetchDataGenre()
-      }
+    async componentDidMount(){
+        await this.checkToken()
+        const param = qs.parse(this.props.location.search.slice(1))
+        await this.fetchData(param)
+        await this.fetchDataGenre()
+    }
 
 
     /*  filterColors = (inputValue) => {
@@ -195,6 +199,7 @@ class Dashboard extends Component {
                                             <Card className="shadow m-2" style={{ width: '18rem' }}>
                                                 <Card.Img variant="top" style={{ height: '200px' }} src={book.image} />
                                                 <Card.Body>
+                                                    {console.log(coverdummy)}
                                                     <Card.Title>{book.title}</Card.Title>
                                                     <Card.Subtitle className="badge badge-primary">{book.genreName}</Card.Subtitle>
                                                     <Card.Subtitle className="ml-2 badge badge-success text-white">{book.nameStatus}</Card.Subtitle>

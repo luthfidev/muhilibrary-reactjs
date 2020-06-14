@@ -3,8 +3,7 @@ import {
     Row, 
     Col,
     Form,
-    Button
-   } from 'react-bootstrap'
+    Button} from 'react-bootstrap'
 import { Link } from 'react-router-dom';
 
 import brand from '../assets/img/bookshelf.png'

@@ -13,6 +13,7 @@ import Genre from './pages/admin/genre';
 import Transaction from './pages/admin/transaction';
 import User from './pages/admin/user';
 import Status from './pages/admin/status';
+import userHistory from './pages/userHistory';
 import Notfound from './pages/notfound';
 
 
@@ -35,6 +36,7 @@ class App extends Component {
             <Route path="/transaction" exact component={Transaction}/>
             <Route path="/user" exact component={User}/>
             <Route path="/status" exact component={Status}/>
+            <Route path="/userhistory" exact component={userHistory}/>
             <Route component={Notfound} />
           </Switch>
         </BrowserRouter>

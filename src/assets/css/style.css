@@ -6,9 +6,6 @@ html, body, #root {
     padding: 0;  
 }
 
-/* .nav-link:hover{
-  box-shadow: 1px 8px 20px grey;
-}
  */
 .bg-login{
     background-image: url('../img//bg-login.jpg');
@@ -91,7 +88,6 @@ nav .top-navbar{
   background-color: black;
   transition: 0.7s;
 }
-
 
 .avatar {
   vertical-align: middle;

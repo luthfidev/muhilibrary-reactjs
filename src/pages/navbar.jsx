@@ -1,14 +1,13 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom';
+import React, {Component} from 'react'
+import {Link} from 'react-router-dom';
 import {
     Form,
     Navbar,
     Nav,
-    NavDropdown,
     FormControl
    } from 'react-bootstrap'
 
-   import brand from '../assets/img/bookshelf.png'
+import brand from '../assets/img/bookshelf.png'
 
 class TopNavbar extends Component {
 

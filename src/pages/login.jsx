@@ -1,31 +1,30 @@
 import React, {Component} from 'react';
-import {
-  Row, 
-  Col,
-  Form,
-  Button
- } from 'react-bootstrap'
- import { Link, Redirect } from 'react-router-dom';
- import qs from 'querystring'
- import Swal from 'sweetalert2'
- import brand from '../assets/img/bookshelf.png'
- import axios from 'axios'
-const {REACT_APP_URL} = process.env
+import {Row, 
+        Col,
+        Form,
+        Button,
+        Spinner} from 'react-bootstrap' 
+import {Link} from 'react-router-dom';
+import qs from 'querystring'
+import Swal from 'sweetalert2'
+import brand from '../assets/img/bookshelf.png'
+import axios from 'axios'
+const  {REACT_APP_URL } = process.env
+ 
 
-
-
-class Login extends Component {
-
+ class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
+        data:[],
         email: '',
         password: '',
         loggedIn: false,
         isLoading: false
     }
     this.handlePost = this.handlePost.bind(this)
-     // check auth flow
+     
+    // check auth flow
      this.checkToken = () => {
       if(!localStorage.getItem('user')){
           props.history.push('/login')
@@ -51,41 +50,50 @@ handleChange = event => {
 }
 
 handlePost = async (event) => {
-    event.preventDefault()
-      this.setState({isLoading: true})
-      const userData = {
-          email: this.state.email,
-          password: this.state.password
-      }
-      const url = `${REACT_APP_URL}auth/`
-     await axios.post(url, qs.stringify(userData)).then( (response) => {
-          Swal.fire({
-            title: 'Done !',
-            text: response.data.message,
-            icon: 'success',
-            timer: 2000
-          })
-          this.setState({ redirect: this.state.redirect === false });
-        
-        if (response.data.token) {
-          localStorage.setItem("user", JSON.stringify(response.data));
-          this.props.history.push('/dashboard')
-        }
+  event.preventDefault()
+    this.setState({isLoading: true})
+    const userData = {
+        email: this.state.email,
+        password: this.state.password
+    }
+    const url = `${REACT_APP_URL}auth/`
+    await axios.post(url, qs.stringify(userData)).then( (response) => {
+        Swal.fire({
+          title: 'Done !',
+          text: response.data.message,
+          icon: 'success',
+          timer: 2000
         })
-        .catch(function (error) {
-          console.log(error.response);
+        this.setState({ redirect: this.state.redirect === false });
+      
+      if (response.data.token) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+        this.props.history.push('/dashboard')
+      }
+      })
+      .catch(function (error) {
+          if(typeof error.response !== 'undefined'){
           Swal.fire({
             title: 'Done !',
-            text: error.response.data.message,
+            text: 'Login Failed',
             icon: 'warning',
             timer: 2000
           })
-        }) 
-     await this.resetForm()
+        } else {
+          Swal.fire({
+            title: 'Done !',
+            text: error,
+            icon: 'warning',
+            timer: 2000
+          })
+        }
+      }) 
+      this.setState({isLoading: false})
+    this.resetForm()
 }
-        async componentDidMount(){
-           await this.checkToken()
-       }
+    async componentDidMount(){
+        await this.checkToken()
+    }
       
     render(){
       const {isLoading} = this.state
@@ -104,29 +112,39 @@ handlePost = async (event) => {
               </Col>
               <Col md={4} className="h-100">
                   <div className="content-login h-100">
+                      <Link to="/" className="text-decoration-none">
                       <div className="brand d-flex">
                           <img alt="brand" className="ml-auto mr-3 mt-2" src={brand}/>
                       </div>
+                      </Link>
                       <div className="h-75 m-4 d-flex justify-content-center align-items-center">
                         <Form onSubmit={ this.handlePost}>
                         <h1>Login</h1>
                           <p>Welcome Back, Please Login to your account</p>
                           <Form.Group>
                             <Form.Label>Email address</Form.Label>
-                            <Form.Control name="email" type="email" placeholder="Enter email" onChange={this.handleChange} />
+                            <Form.Control name="email" type="email" value={this.state.email} placeholder="Enter email" onChange={this.handleChange} />
                           </Form.Group>
                           <Form.Group>
                             <Form.Label>Password</Form.Label>
-                            <Form.Control name="password" type="password" placeholder="Password" onChange={this.handleChange} />
+                            <Form.Control name="password" type="password" value={this.state.password} placeholder="Password" onChange={this.handleChange} />
                           </Form.Group>
                           <Form.Group className="d-flex justify-content-between">
                             <Form.Check type="checkbox" label="Check me out" />
                             <Link to="/register" className="text-decoration-none"> Forgot Password</Link>
                           </Form.Group>
                           <Button variant="primary" type="submit" disabled={isLoading}>
-                            Login
+                          {isLoading &&(
+                          <Spinner 
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                          />)} Login
                           </Button>
                           <Link to="/register" className="ml-2 btn btn-outline-dark"> Sign Up</Link>
+                          <Link to="/" className="ml-2 btn btn-outline-info">Back</Link>
                         </Form>
                       </div>
                       <Col className="footer-login d-flex justify-content-center align-content-center">

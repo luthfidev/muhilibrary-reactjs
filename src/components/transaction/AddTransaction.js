@@ -1,10 +1,11 @@
-import React, { Component } from 'react'
-import { Modal, Button, Form } from 'react-bootstrap'
+import React, {Component} from 'react'
+import {Modal, 
+        Button, 
+        Form} from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import qs from 'querystring'
 const {REACT_APP_URL} = process.env
-
 
 export class AddTransaction extends Component {
     constructor(props) {

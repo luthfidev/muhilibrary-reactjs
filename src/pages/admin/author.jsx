@@ -104,10 +104,10 @@ class Author extends Component {
                   }
                    {!this.state.isLoading &&( 
                     <div className="d-flex flex-row w-100">
-                        <Sidebar/>           
+                        <Sidebar {...this.props}/>           
                             <div className="w-100 d-flex flex-column">
                                 <div className="top-navbar sticky-top">
-                                    <TopNavbar/>
+                                    <TopNavbar search={(query) => this.fetchData(query)}/>
                                 </div>
                                <Container fluid className="mt-4">
                                <Card>

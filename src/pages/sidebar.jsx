@@ -1,6 +1,11 @@
-import React, { Component } from 'react'
-import { Nav, Button, Spinner } from 'react-bootstrap'
-import { BsBook, BsBrush, BsCardList, BsFileText, BsPersonFill, BsCheckCircle } from 'react-icons/bs'
+import React, {Component} from 'react'
+import {Nav, Button, Spinner} from 'react-bootstrap'
+import {BsBook, 
+        BsBrush, 
+        BsCardList, 
+        BsFileText, 
+        BsPersonFill, 
+        BsCheckCircle } from 'react-icons/bs'
 import Spiner from '../components/Loader'
 import { Link } from 'react-router-dom';
 import axios from 'axios'
@@ -20,6 +25,7 @@ class Sidebar extends Component {
         this.checkLogin = () => {
           if(user){
             this.setState({isLogin: true})
+            this.setState({isAdmin: user.userData.role})
           }else{
             this.setState({isLogin: false})
           }
@@ -42,9 +48,11 @@ class Sidebar extends Component {
             })
           }
     }
-      componentDidMount(){
-        this.checkLogin()
-      }
+
+    componentDidMount(){
+      this.checkLogin()
+    }
+    
     render(){
       const {isLoading} = this.state
         return(
@@ -54,9 +62,11 @@ class Sidebar extends Component {
                     <img src={avatar} alt="avatar"/>
                     <h1>Jono</h1>
                 </div>
+             
                 <Nav.Item className="mt-4">
                 <Link Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/dashboard"><BsBook/> Dashboard</Link>
                 </Nav.Item>
+                { this.state.isAdmin === 'admin' && (<>
                 <Nav.Item>
                   <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/author"><BsBrush/> Author</Link>
                 </Nav.Item>
@@ -72,9 +82,15 @@ class Sidebar extends Component {
                 <Nav.Item>
                 <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/status"><BsCheckCircle/> Status</Link>
                 </Nav.Item>
+               </>)}
+                { this.state.isAdmin === 'user' && (<>
+                <Nav.Item>
+                <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/userhistory"><BsCheckCircle/>History</Link>
+                </Nav.Item>
+                </>)}
                 <Nav.Item>
                {/*  <Link className="nav-link text-decoration-none text-dark font-weight-bold" onClick={this.onLogout}> Logout</Link> */}
-               <Button onClick={this.onLogout} className="ml-2" variant="info" disabled={isLoading}>
+               <Button onClick={this.onLogout} className="ml-2 mt-2" variant="info" disabled={isLoading}>
                {isLoading &&(
                 <Spinner 
                   as="span"

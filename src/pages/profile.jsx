@@ -60,6 +60,10 @@ class Profile extends Component {
         
         const url = `${REACT_APP_URL}users/biodata`
         await axios.patch(url, formData, {headers: authHeader()}).then((response) => {
+            if (response.data.token) {
+                localStorage.setItem("user", JSON.stringify(response.data));
+                this.props.history.push('/dashboard')
+              }
             Swal.fire({
                 title: 'Done !',
                 text: response.data.message,

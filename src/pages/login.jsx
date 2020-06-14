@@ -8,19 +8,34 @@ import {Link} from 'react-router-dom';
 import qs from 'querystring'
 import Swal from 'sweetalert2'
 import brand from '../assets/img/bookshelf.png'
+import {Register} from '../components/Register' 
 import axios from 'axios'
 const  {REACT_APP_URL } = process.env
  
+function ValidationMessage(props) {
+  if (!props.valid) {
+    return(
+      <div className='error-msg text-danger'>{props.message}</div>
+    )
+  } else {
+    return(
+      <div className='error-msg text-success'>Look Goods!</div>
+    )
+  }
+}
 
  class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
         data:[],
-        email: '',
-        password: '',
+        email: '', emailValid: false,
+        password: '', passwordValid: false,
         loggedIn: false,
-        isLoading: false
+        isLoading: false,
+        addModalShow : false,
+        errorMsg: {},
+        formValid: false
     }
     this.handlePost = this.handlePost.bind(this)
      
@@ -38,6 +53,7 @@ const  {REACT_APP_URL } = process.env
           props.history.push('/dashboard')
       }
     }
+    this.handlePost = this.handlePost.bind(this)
     this.baseState = this.state 
 }
 
@@ -47,6 +63,51 @@ resetForm = () => {
 
 handleChange = event => {
     this.setState({[  event.target.name]: event.target.value})
+}
+
+validateForm = () => {
+  const {emailValid, passwordValid} = this.state;
+  this.setState({
+    formValid: emailValid && passwordValid,
+  })
+}
+
+updateEmail = (email) => {
+  this.setState({email}, this.validateEmail)
+}
+
+validateEmail = () => {
+  const {email} = this.state;
+  let emailValid = true;
+  let errorMsg = {...this.state.errorMsg}
+
+  if (email.length < 3) {
+    emailValid = false;
+    errorMsg.email = 'Must be at least 3 characters long'
+  } else if (!email.includes('@')) {
+    emailValid = false;
+    errorMsg.email = 'Invalid Email'
+  }
+
+  this.setState({emailValid, errorMsg}, this.validateForm)
+}
+
+
+updatePassword = (password) => {
+  this.setState({password}, this.validatePassword)
+}
+
+validatePassword = () => {
+  const {password} = this.state;
+  let passwordValid = true;
+  let errorMsg = {...this.state.errorMsg}
+
+  if (password.length < 4) {
+    passwordValid = false;
+    errorMsg.password = 'Must be at least 4 characters long'
+  }
+
+  this.setState({passwordValid, errorMsg}, this.validateForm)
 }
 
 handlePost = async (event) => {
@@ -64,7 +125,6 @@ handlePost = async (event) => {
           icon: 'success',
           timer: 2000
         })
-        this.setState({ redirect: this.state.redirect === false });
       
       if (response.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data));
@@ -74,15 +134,15 @@ handlePost = async (event) => {
       .catch(function (error) {
           if(typeof error.response !== 'undefined'){
           Swal.fire({
-            title: 'Done !',
-            text: error.response.message,
+            title: 'Warning !',
+            text: error.response,
             icon: 'warning',
             timer: 2000
           })
         } else {
           Swal.fire({
-            title: 'Done !',
-            text: error,
+            title: 'Warning !',
+            text: 'Error',
             icon: 'warning',
             timer: 2000
           })
@@ -100,10 +160,15 @@ handlePost = async (event) => {
     } */
       
     render(){
-      const {isLoading} = this.state
+      let addModalClose = () => this.setState({addModalShow:false})
+      const {formValid, isLoading} = this.state
         return(
         <>
           <Row className="h-100 no-gutters">
+          <Register
+            show={this.state.addModalShow}
+            onHide={addModalClose}
+          />
               <Col md={8} className="bg-login">
                   <div className="text w-100 h-100 ml-3 d-flex flex-column justify-content-between">
                     <div className="bg-text-login">
@@ -127,17 +192,24 @@ handlePost = async (event) => {
                           <p>Welcome Back, Please Login to your account</p>
                           <Form.Group>
                             <Form.Label>Email address</Form.Label>
-                            <Form.Control name="email" type="email" value={this.state.email} placeholder="Enter email" onChange={this.handleChange} />
+                            <Form.Control name="email" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} type="email" placeholder="Enter email" />
+                            <Form.Text className="text-muted">
+                            <ValidationMessage valid={this.state.emailValid} message={this.state.errorMsg.email} />
+
+                            </Form.Text>
                           </Form.Group>
                           <Form.Group>
                             <Form.Label>Password</Form.Label>
-                            <Form.Control name="password" type="password" value={this.state.password} placeholder="Password" onChange={this.handleChange} />
+                            <Form.Control name="password" value={this.state.password} onChange={(e) => this.updatePassword(e.target.value)} type="password" placeholder="Password" />
+                            <Form.Text className="text-muted">
+                            < ValidationMessage valid={this.state.passwordValid} message={this.state.errorMsg.password} />
+                            </Form.Text>
                           </Form.Group>
                           <Form.Group className="d-flex justify-content-between">
                             <Form.Check type="checkbox" label="Check me out" />
                             <Link to="/register" className="text-decoration-none"> Forgot Password</Link>
                           </Form.Group>
-                          <Button variant="primary" type="submit" disabled={isLoading}>
+                          <Button variant="primary" type="submit" disabled={isLoading || !formValid}>
                           {isLoading &&(
                           <Spinner 
                             as="span"
@@ -147,15 +219,15 @@ handlePost = async (event) => {
                             aria-hidden="true"
                           />)} Login
                           </Button>
-                          <Link to="/register" className="ml-2 btn btn-outline-dark"> Sign Up</Link>
-                          <Link to="/" className="ml-2 btn btn-outline-info">Back</Link>
+                          <Link onClick={()=> this.setState({addModalShow: true})} className="ml-2 btn btn-outline-info">Register</Link>
+                          <Link to="/" className="ml-2 btn btn-outline-dark">Back</Link>
                         </Form>
                       </div>
                       <Col className="footer-login d-flex justify-content-center align-content-center">
                         <div>
                         <div>By signing up, you agree to Book’s</div>
-                        <Link to="/register"> Terms and Conditions</Link> & 
-                        <Link to="/register"> Privacy Policy</Link>
+                        <Link to="#"> Terms and Conditions</Link> & 
+                        <Link to="#"> Privacy Policy</Link>
                         </div>
                       </Col>
                   </div>

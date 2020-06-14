@@ -32,6 +32,7 @@ class Landing extends Component {
           pageInfo: [],
           isLoading: false,
           addModalShow : false,
+          query: ''
         }
         
         const user = JSON.parse(localStorage.getItem('user'))
@@ -74,13 +75,21 @@ class Landing extends Component {
           await this.fetchDataGenre()
       }
 
+      
+    search = (e) => {
+        if(e.keyCode === 13) {
+            this.props.search(
+                { search: this.state.query } 
+            )
+        }
+    }
 
     render(){
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
-
          // set state addModal
          let addModalClose = () => this.setState({addModalShow:false})
+    
         return(
             <>
                {this.state.isLoading &&
@@ -137,11 +146,11 @@ class Landing extends Component {
                     </Carousel.Item>
                     </Carousel>
                     </div>
-                    <Form inline onSubmit={(e) => e.preventDefault()} className="landing-search-book d-flex w-100 justify-content-center align-content-center">
-                    <FormControl style={{width: 400, height: 50}} type="text" placeholder="Search book title"  className="input-search shadow mr-sm-2 " />
-                    </Form>
+                   {/*  <Form inline onSubmit={(e) => e.preventDefault()} className="landing-search-book d-flex w-100 justify-content-center align-content-center">
+                    <FormControl style={{width: 400, height: 50}} onKeyDown={(e) => this.search(e)} onChange={(e) => this.setState({ query: e.target.value })} search={(query) => this.fetchData(query)} type="text" placeholder="Search book title"  className="input-search shadow mr-sm-2 " />
+                    </Form> */}
                     <div className="w-100 d-flex justify-content-center mt-2">    
-                    <Row>
+                    <Col className="md-4">
                     <div className="d-flex flex-row ">
                    
                     <Dropdown className="mb-4">
@@ -166,9 +175,9 @@ class Landing extends Component {
                                         </Dropdown>
                     </div>
                   
-                    <div className="d-flex flex-row">
+                    <div className="d-flex flex-row justify-content-center"> 
+                  <Row className="w-50">
                     {this.state.data.map((book, index) => (  
-                        
                         <Link key={book.id.toString()} to={{
                                                             pathname: `/detail/${book.id}`,
                                                             state: {
@@ -189,8 +198,9 @@ class Landing extends Component {
                         </Link>
                 
                         ))}
-                        </div> 
-                        </Row>  
+                        </Row>
+                       </div> 
+                        </Col>  
                     </div> 
                     
                     <div className="">
@@ -198,14 +208,11 @@ class Landing extends Component {
                     </div>
                     <div className="landing-footer bg-light no-gutters">
                         <Row className="no-gutters">
-                           <Container className="text-muted">
-                                <Col>
-                                    <ul>
-                                        <li>Book</li>
-                                    </ul>
-                                </Col>
-                                <Col>
-                                </Col>
+                           <Container className="text-muted d-flex flex-row justify-content-center">
+                            
+                                <div>By signing up, you agree to Book’s</div>
+                             
+                    
                            </Container>
                         </Row>
                     </div>

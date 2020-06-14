@@ -172,6 +172,7 @@ export class AddBook extends Component {
                 <Form.Group controlId="formBasicEmail">
                 <Form.Label>Status</Form.Label>
                     <Form.Control as="select" name="statusid" name="statusid" onChange={(e) => this.handleChange(e)} custom>
+                    <option>Select</option>
                     <option value="1">Available</option>
                     <option value="2">Unvailable</option>
                     </Form.Control>

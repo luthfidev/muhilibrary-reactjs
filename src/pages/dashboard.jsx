@@ -32,17 +32,15 @@ class Dashboard extends Component {
           addModalShow : false
         }
         // check auth flow
-        this.checkToken = () => {
-            if(!localStorage.getItem('user')){
-                Swal.fire({
-                    title: 'Done !',
-                    text: 'You must be login !',
-                    icon: 'warning',
-                  })
-                props.history.push('/login')
-            } else {
-                props.history.push('/dashboard')
-            }
+        const user = JSON.parse(localStorage.getItem('user'))
+        this.checkLogin = () => {
+          if(user){
+            this.setState({isLogin: true})
+            this.setState({isAdmin: user.userData.role})
+          }else{
+              props.history.push('/login')
+            this.setState({isLogin: false})
+          }
         }
       }
 
@@ -80,7 +78,7 @@ class Dashboard extends Component {
     }
 
     async componentDidMount(){
-        await this.checkToken()
+        await this.checkLogin()
         const param = qs.parse(this.props.location.search.slice(1))
         await this.fetchData(param)
         await this.fetchDataGenre()
@@ -166,9 +164,11 @@ class Dashboard extends Component {
                                                 <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 1 })}>Z-a</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>
+                                            {this.state.isAdmin === 'admin' && 
                                             <div className="ml-2">
                                                 <button onClick={()=> this.setState({addModalShow: true})} className="btn btn-primary mb-2">Add Book</button>
                                             </div>
+                                            }
                                         </div>
                                     
                                     <AddBook

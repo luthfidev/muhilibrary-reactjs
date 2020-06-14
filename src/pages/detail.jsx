@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 import {
     Row, 
     Col,
-    Badge} from 'react-bootstrap'
+    Badge,
+    OverlayTrigger,
+    Tooltip,
+    Button} from 'react-bootstrap'
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from 'axios'
@@ -46,9 +49,7 @@ class Detail extends Component {
         this.handlePost = this.handlePost.bind(this)
         
       }
-
           handlePost = () => {
-            
               this.setState({isLoading: true})
               const borrowData = {
                   bookid: this.state.bookid,
@@ -123,6 +124,8 @@ class Detail extends Component {
 
        // set state editModal close
         let editModalClose = () => this.setState({editModalShow:false})
+
+        let tooltip1 = <Tooltip><strong>Login First to Borrow </strong> Book</Tooltip>;
         return(
             <>  
            
@@ -182,7 +185,7 @@ class Detail extends Component {
                                         <div className="status text-success"><h5>{this.state.bookstatus}</h5></div>
                                     </div>
                                     <div className="release-date">
-                                        <h5>{this.state.bookrelease}</h5>
+                                        <h5>{moment(this.state.bookrelease).format('yyyy-MM-DD')}</h5>
                                     </div>
                                     <div className="description">
                                         <p>{this.state.bookdesc}</p>
@@ -197,8 +200,14 @@ class Detail extends Component {
                                     </div>
                                     <div className="borrow">
                                     { this.state.bookstatus === 'Available' && this.state.isAdmin === 'user' && 
-                                   <button onClick={(e) => this.handlePost(e)} className="btn btn-outline-danger ml-2">Borrow</button> 
+                                   <button onClick={(e) => this.handlePost(e)} className="btn btn-outline-success mb-5 ml-2">Borrow</button> 
                                     }
+                                    {!this.state.isLogin &&
+                                     <OverlayTrigger placement="top" overlay={tooltip1}>
+                                     <button className="btn btn-outline-success mb-5 ml-2">Borrow</button> 
+                                     </OverlayTrigger>
+                                    }
+    
                                     </div>
                                 </div>
                             </Col>

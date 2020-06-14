@@ -4,7 +4,8 @@ import {BsBook,
         BsBrush, 
         BsCardList, 
         BsFileText, 
-        BsPersonFill, 
+        BsPersonFill,
+        BsPeopleFill, 
         BsCheckCircle } from 'react-icons/bs'
 import Spiner from '../components/Loader'
 import { Link } from 'react-router-dom';
@@ -66,7 +67,7 @@ class Sidebar extends Component {
                 <Link Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/dashboard"><BsBook/> Dashboard</Link>
                 </Nav.Item>
                 <Nav.Item>
-                <Link Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/profile"><BsBook/> Profile</Link>
+                <Link Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/profile"><BsPersonFill/> Profile</Link>
                 </Nav.Item>
                 { this.state.isAdmin === 'admin' && (<>
                 <Nav.Item>
@@ -79,7 +80,7 @@ class Sidebar extends Component {
                 <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/transaction"><BsFileText/> Transaction</Link>
                 </Nav.Item>
                 <Nav.Item>
-                <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/user"><BsPersonFill/> User</Link>
+                <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/user"><BsPeopleFill/> User</Link>
                 </Nav.Item>
                 <Nav.Item>
                 <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/status"><BsCheckCircle/> Status</Link>

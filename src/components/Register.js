@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Modal, Button, Form, ProgressBar } from 'react-bootstrap'
 import Swal from 'sweetalert2'
+import { useForm } from "react-hook-form";
 import axios from 'axios'
 const {REACT_APP_URL} = process.env
 
@@ -18,6 +19,7 @@ function ValidationMessage(props) {
 }
 
 export class Register extends Component {
+
     constructor(props) {
         super(props)
         this.state = {
@@ -35,17 +37,10 @@ export class Register extends Component {
         this.setState(this.baseState)
       }
 
-      progress = () => {
-        var completed = 30;
-        var target = 30;
-        var progress = Math.ceil(completed / target * 100);
-        return (<ProgressBar now={progress} />)
-      }
-
     validateForm = () => {
       const {emailValid, passwordValid} = this.state;
       this.setState({
-        formValid: emailValid && passwordValid
+        formValid: emailValid && passwordValid,
       })
     }
 
@@ -61,6 +56,9 @@ export class Register extends Component {
       if (email.length < 3) {
         emailValid = false;
         errorMsg.email = 'Must be at least 3 characters long'
+      } else if (!email.includes('@')) {
+        emailValid = false;
+        errorMsg.email = 'Invalid Email'
       }
   
       this.setState({emailValid, errorMsg}, this.validateForm)
@@ -76,9 +74,9 @@ export class Register extends Component {
       let passwordValid = true;
       let errorMsg = {...this.state.errorMsg}
   
-      if (password.length < 3) {
+      if (password.length < 4) {
         passwordValid = false;
-        errorMsg.password = 'Must be at least 3 characters long'
+        errorMsg.password = 'Must be at least 4 characters long'
       }
   
       this.setState({passwordValid, errorMsg}, this.validateForm)
@@ -117,7 +115,7 @@ export class Register extends Component {
     }
        
     render(){
-      
+      const {formValid} = this.state
         return(
             <Modal
             {...this.props}
@@ -127,7 +125,7 @@ export class Register extends Component {
           >
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter">
-                Register for new User
+                Register
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -137,7 +135,7 @@ export class Register extends Component {
                     <Form.Label>Email</Form.Label>
                     <Form.Control required name="email" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} type="email" placeholder="Email" />
                     <Form.Text className="text-muted">
-                    < ValidationMessage valid={this.state.emailValid} message={this.state.errorMsg.name} />
+                    < ValidationMessage valid={this.state.emailValid} message={this.state.errorMsg.email} />
                     </Form.Text>
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
@@ -147,7 +145,7 @@ export class Register extends Component {
                     < ValidationMessage valid={this.state.passwordValid} message={this.state.errorMsg.password} />
                     </Form.Text>
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Button variant="primary" disabled={!formValid} type="submit">
                     Register
                 </Button>
                 </Form>

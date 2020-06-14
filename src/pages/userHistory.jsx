@@ -3,15 +3,16 @@ import {Container,
         Row, 
         Table, 
         Card, 
-        Pagination, 
         Badge} from 'react-bootstrap';
 import qs from 'querystring'
 import Swal from 'sweetalert2' // alert sweetalert
 import Spiner from '../components/Loader' // loader
 import TopNavbar from './navbar' // topnavbar
 import Sidebar from './sidebar' // sidebar
+import moment from 'moment'
 import authHeader from '../services/authHeader'
 import axios from 'axios' // rest client
+const {REACT_APP_URL} = process.env
 
 class userHistory extends Component {
     constructor(props){
@@ -34,7 +35,7 @@ class userHistory extends Component {
             const {data} = results.data
             this.setState({data, isLoading: false})
         } catch (error) {
-            if (error.response=== undefined) {
+            if (error.response === undefined) {
               return false
           } else {
             Swal.fire({
@@ -45,96 +46,39 @@ class userHistory extends Component {
           }
         }     
       }
-       // props delete
-       deleteTransaction = async(id) => {
+       // props cancel
+       cancelTransaction = async(id) => {
         this.setState({isLoading: true})
-        const {REACT_APP_URL} = process.env
-        const url = `${REACT_APP_URL}transactions/${id}`
-        await axios.delete(url)
-        this.fetchData()
-      }
-       // props delete
-       prosesBook = async(id) => {
-        const {REACT_APP_URL} = process.env
         const url = `${REACT_APP_URL}transactions/${id}`
         const data = {
-          statusid: 2
+          statusid: 4
         }
-        await axios.patch(url, data)
+        await axios.patch(url,  data)
         this.fetchData()
       }
-       // props delete
-       returnBook = async(id) => {
-        const {REACT_APP_URL} = process.env
-        const url = `${REACT_APP_URL}transactions/${id}`
-        const data = {
-          statusid: 1
-        }
-        await axios.patch(url, data)
-        this.fetchData()
-      }
-      // modal confirmation delete
-      onConfirmDelete = (id) => {
+     
+      // modal confirmation cancel
+      onConfirmCancel = (id) => {
         Swal.fire({
           title: 'Are you sure?',
-          text: "After delete you can't revert this data",
+          text: "After cancel you can't revert this data",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
+          confirmButtonText: 'Yes, cancel it!'
         }).then((result) => {
           if (result.value) {
-            this.deleteTransaction(id)
+            this.cancelTransaction(id)
             Swal.fire(
-              'Deleted!',
-              'Your data has been deleted.',
+              'Canceled!',
+              'Your book canceled.',
               'success'
             )
           }
         })
       }
-      onConfirmProses = (id) => {
-        Swal.fire({
-          title: 'Are you sure?',
-          text: "After prosess you can't revert this",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, prosess it!'
-        }).then((result) => {
-          if (result.value) {
-            this.prosesBook(id)
-            Swal.fire(
-              'Prosess it!',
-              'Prosess success!',
-              'success'
-            )
-          }
-        })
-      }
-      onConfirmReturn = (id) => {
-        Swal.fire({
-          title: 'Are you sure?',
-          text: "After prosess you can't revert this",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, prosess it!'
-        }).then((result) => {
-          if (result.value) {
-            this.returnBook(id)
-            Swal.fire(
-              'Prosess it!',
-              'Prosess success!',
-              'success'
-            )
-          }
-        })
-      }
-
+    
     async componentDidMount(){
        await this.fetchData()
     }
@@ -184,10 +128,10 @@ class userHistory extends Component {
                                          {this.state.data.map((transaction, index) => (  
                                         <tr key={transaction.id.toString()}>
                                         <td >{index + 1}</td>
-                                        <td>{transaction.transaction_date}</td>                                
+                                        <td>{moment(transaction.transaction_date).format('yyyy-MM-DD')}</td>                                
                                         <td>{transaction.name}</td>                                
                                         <td>{transaction.title}</td>                                
-                                        <td><Badge variant="info" className="font-weight-bold">{transaction.statusName}</Badge></td>                                
+                                        <td><Badge variant="primary" className="font-weight-bold">{transaction.statusName}</Badge></td>                                
                                         <td align="center">
                                        {/*  <button onClick={() =>  {  this.setState({editModalShow: true, 
                                                                                     transactionid: transaction.id, 
@@ -195,13 +139,15 @@ class userHistory extends Component {
                                                                                     userid: transaction.userid, 
                                                                                     bookid: transaction.bookid, 
                                                                                     statusid: transaction.statusid})} } className="btn btn-warning ml-2">Edit</button> */}
-                                         {transaction.statusName === 'Pending' && 
+                                       {/*   {transaction.statusName === 'Pending' && 
                                          <button onClick={() =>  {  this.onConfirmProses(transaction.id)} } className="btn btn-warning ml-2">Proses</button>
                                          }
                                          {transaction.statusName === 'Borrowed' && 
                                          <button onClick={() =>  {  this.onConfirmReturn(transaction.id)} } className="btn btn-success ml-2">Return Book</button>
-                                         }
-                                         <button onClick={() =>  {  this.onConfirmDelete(transaction.id)} } className="btn btn-danger ml-2">Delete</button>
+                                         } */}
+                                         {transaction.statusName === 'Pending' && 
+                                         <button onClick={() =>  {  this.onConfirmCancel(transaction.id)} } className="btn btn-warning ml-2">Cancel</button>
+                                        }
                                         </td>                                
                                         </tr>   
                                          ))}                           

@@ -110,9 +110,15 @@ export class AddBook extends Component {
         this.fetchDataGenre()
         this.fetchDataAuthor()
     }
+
+    componentWillUnmount(){
+        this.fetchDataGenre()
+        this.fetchDataAuthor()
+    }
   
     render(){
         const {uploadPercentage} = this.state
+        {console.log(this.state)}
         return(
             <Modal
             {...this.props}

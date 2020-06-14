@@ -6,8 +6,6 @@ import axios from 'axios'
 import qs from 'querystring'
 
 class User extends Component {
-
-
     constructor(props){
         super(props)
         this.state = {
@@ -31,12 +29,7 @@ class User extends Component {
                 this.props.history.push(`?${param}`)
             }
       }
-
-
       async componentDidMount(){
-   /*        const results = await axios.get('https://api-muhilibrary.herokuapp.com/books?limit=10')
-          const {data} = results
-          this.setState(data)  */
           const param = qs.parse(this.props.location.search.slice(1))
           await this.fetchData(param)
       }
@@ -65,6 +58,7 @@ class User extends Component {
                                         <th>Email</th>
                                         <th>Name</th>
                                         <th>Gender</th>
+                                        <th>Name Role</th>
                                         <th>Action</th>
                                         </tr>
                                     </thead>
@@ -76,6 +70,7 @@ class User extends Component {
                                         <td>{user.email}</td>                                
                                         <td>{user.name}</td>                                
                                         <td>{user.gender}</td>                                
+                                        <td>{user.nameRole}</td>                                
                                         <td align="center">
                                         <button className="btn btn-warning ml-2">Edit</button>
                                         <button className="btn btn-danger ml-2">Delete</button>

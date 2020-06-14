@@ -86,6 +86,9 @@ class Dashboard extends Component {
         await this.fetchDataGenre()
     }
 
+    componentWillUnmount() {
+        this.fetchData()
+    }
 
     /*  filterColors = (inputValue) => {
         return this.fetchData.genreName.filter(i =>
@@ -107,9 +110,6 @@ class Dashboard extends Component {
         params.page = params.page || 1
         let addModalClose = () => this.setState({addModalShow:false})
        
-      /*  const parse = JSON.parse(localStorage.getItem('user'))
-     
-        {console.log(parse.userData.role)} */
         return(
             <>
                 <Row className="no-gutters w-100 h-100">
@@ -153,7 +153,7 @@ class Dashboard extends Component {
                                             <Dropdown.Menu>
                                             <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: '' })}>All</Dropdown.Item>
                                             {this.state.dataGenre.map(genre => 
-                                                <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: genre.name })}>{genre.name}</Dropdown.Item>
+                                                <Dropdown.Item key={genre.id.toString()} onClick={() => this.fetchData({ ...params, search: genre.name })}>{genre.name}</Dropdown.Item>
                                             )}
                                             </Dropdown.Menu>
                                         </Dropdown>
@@ -199,7 +199,6 @@ class Dashboard extends Component {
                                             <Card className="shadow m-2" style={{ width: '18rem' }}>
                                                 <Card.Img variant="top" style={{ height: '200px' }} src={book.image} />
                                                 <Card.Body>
-                                                    {console.log(coverdummy)}
                                                     <Card.Title>{book.title}</Card.Title>
                                                     <Card.Subtitle className="badge badge-primary">{book.genreName}</Card.Subtitle>
                                                     <Card.Subtitle className="ml-2 badge badge-success text-white">{book.nameStatus}</Card.Subtitle>

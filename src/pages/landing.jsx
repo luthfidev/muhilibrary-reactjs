@@ -45,8 +45,6 @@ class Landing extends Component {
 
     }
 
-
-
       fetchData = async (params) => {
             this.setState({isLoading: true})
             const param = `${qs.stringify(params)}`
@@ -143,7 +141,9 @@ class Landing extends Component {
                     <FormControl style={{width: 400, height: 50}} type="text" placeholder="Search book title"  className="input-search shadow mr-sm-2 " />
                     </Form>
                     <div className="w-100 d-flex justify-content-center mt-2">    
+                    <Row>
                     <div className="d-flex flex-row ">
+                   
                     <Dropdown className="mb-4">
                                         <Dropdown.Toggle variant="success" id="dropdown-basic">
                                             Genre
@@ -165,8 +165,10 @@ class Landing extends Component {
                                             </Dropdown.Menu>
                                         </Dropdown>
                     </div>
-                    <div className="landing-book d-flex flex-row">
+                  
+                    <div className="d-flex flex-row">
                     {this.state.data.map((book, index) => (  
+                        
                         <Link key={book.id.toString()} to={{
                                                             pathname: `/detail/${book.id}`,
                                                             state: {
@@ -177,7 +179,7 @@ class Landing extends Component {
                                                             bookauthor: `${book.authorName}`,
                                                             bookstatus: `${book.nameStatus}`,
                                                             }
-                                                        }}  className="landing-card-book text-dark text-decoration-none"> 
+                                                        }}  className="text-dark text-decoration-none"> 
                             <Card className="shadow m-2" style={{ width: '10rem' }}>
                                 <Card.Img variant="top" style={{ height: '200px' }} src={book.image} />
                                 {/* <Card.Body>
@@ -185,9 +187,12 @@ class Landing extends Component {
                                 </Card.Body> */}
                                 </Card>
                         </Link>
+                
                         ))}
-                        </div>    
+                        </div> 
+                        </Row>  
                     </div> 
+                    
                     <div className="">
 
                     </div>

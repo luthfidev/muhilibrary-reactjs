@@ -75,7 +75,7 @@ handlePost = async (event) => {
           if(typeof error.response !== 'undefined'){
           Swal.fire({
             title: 'Done !',
-            text: 'Login Failed',
+            text: error.response.message,
             icon: 'warning',
             timer: 2000
           })
@@ -94,6 +94,10 @@ handlePost = async (event) => {
     async componentDidMount(){
         await this.checkToken()
     }
+
+  /*   componentWillUnmount(){
+      this.checkToken()
+    } */
       
     render(){
       const {isLoading} = this.state

@@ -38,7 +38,6 @@ class Sidebar extends Component {
                 axios.delete(url,{headers: authHeader()}).then((response) => {
                 })
                 .catch(function (error) {
-                  console.log(error.response);
                  }) 
                 this.setState({isLoading: false}, ()=>{
                   localStorage.removeItem('user')
@@ -52,7 +51,7 @@ class Sidebar extends Component {
     componentDidMount(){
       this.checkLogin()
     }
-    
+
     render(){
       const {isLoading} = this.state
         return(
@@ -65,6 +64,9 @@ class Sidebar extends Component {
              
                 <Nav.Item className="mt-4">
                 <Link Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/dashboard"><BsBook/> Dashboard</Link>
+                </Nav.Item>
+                <Nav.Item>
+                <Link Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/profile"><BsBook/> Profile</Link>
                 </Nav.Item>
                 { this.state.isAdmin === 'admin' && (<>
                 <Nav.Item>

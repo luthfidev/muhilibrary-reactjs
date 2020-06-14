@@ -97,13 +97,12 @@ export class Register extends Component {
         }
         const url = `${REACT_APP_URL}auth/signup`
        await axios.post(url, registerData).then( (response) => {
-            console.log(response)
            Swal.fire({
               title: 'Done !',
               text: response.data.message,
               icon: 'success',
             })
-           
+          
             this.setState({ redirect: this.state.redirect === false });
           })
           .catch(function (error) {
@@ -113,7 +112,6 @@ export class Register extends Component {
                 icon: 'warning',
               }) 
            }) 
-
           await this.resetForm()
            this.props.onHide()
     }

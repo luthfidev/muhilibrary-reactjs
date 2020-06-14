@@ -33,7 +33,6 @@ export class EditAuthor extends Component {
         const url = `${REACT_APP_URL}authors/${this.props.authorid}`
         await axios.patch(url, authorData).then( (response) => {
         this.setState({Msg: response.data.message})
-        console.log(response)
         Swal.fire({
             title: 'Done !',
             text: this.state.Msg,
@@ -43,7 +42,6 @@ export class EditAuthor extends Component {
         this.setState({ redirect: this.state.redirect === false });
         })
         .catch(function (error) {
-        console.log(error.response);
             
         })     
           await this.props.refreshdata()

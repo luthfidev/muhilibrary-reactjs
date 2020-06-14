@@ -38,6 +38,7 @@ class Detail extends Component {
           if(user){
             this.setState({isLogin: true})
             this.setState({isAdmin: user.userData.role})
+            
           }else{
             this.setState({isLogin: false})
           }
@@ -53,21 +54,21 @@ class Detail extends Component {
                   bookid: this.state.bookid,
                   transactiondate: this.state.transactiondate
               }
-              console.log(borrowData)
               const url = `${REACT_APP_URL}transactions/user`
               axios.post(url, qs.stringify(borrowData), {headers: authHeader()}).then( (response) => {
-                  this.setState({Msg: response.data.message})
-                  console.log(response.data)
                   Swal.fire({
                     title: 'Done !',
-                    text: this.state.Msg,
+                    text:  response.data.message,
                     icon: 'success',
                     timer: 2000
                   })
-                  this.setState({ redirect: this.state.redirect === false });
                 })
                 .catch(function (error) {
-                  console.log(error.response);
+                  Swal.fire({
+                    title: 'Done !',
+                    text:  'Please Update Name your profile first',
+                    icon: 'warning',
+                  })
                  }) 
                  this.props.history.push('/dashboard')
           }
@@ -124,6 +125,7 @@ class Detail extends Component {
         let editModalClose = () => this.setState({editModalShow:false})
         return(
             <>  
+           
                 <Row className="h-100 w-100 no-gutters">
                     <div className="detail-header ">
                         <div className="btn-action p-3 w-100 d-flex justify-content-between"> 

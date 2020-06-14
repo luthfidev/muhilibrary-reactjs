@@ -6,6 +6,9 @@ html, body, #root {
     padding: 0;  
 }
 
+/* .nav-link:hover{
+  box-shadow: 1px 8px 20px grey;
+}
  */
 .bg-login{
     background-image: url('../img//bg-login.jpg');
@@ -22,12 +25,12 @@ html, body, #root {
     z-index: 2;
   }
 
-  .landing-card-book:hover {
+/*   .landing-card-book:hover {
     box-shadow: 1px 8px 20px grey;
     -webkit-transition:  box-shadow .6s ease-in;
     border-radius: 5px;
   }
-
+ */
   .landing-footer {
     width: 100%;
     height: 200px;
@@ -88,6 +91,7 @@ nav .top-navbar{
   background-color: black;
   transition: 0.7s;
 }
+
 
 .avatar {
   vertical-align: middle;

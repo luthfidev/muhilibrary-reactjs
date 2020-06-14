@@ -45,7 +45,6 @@ export class EditBook extends Component {
         const url = `${REACT_APP_URL}books/${this.props.bookid}`
         axios.patch(url, formData, {headers: authHeader()}).then( (response) => {
             this.setState({Msg: response.data.message})
-            console.log(response)
             Swal.fire({
               title: 'Done !',
               text: this.state.Msg,
@@ -55,7 +54,6 @@ export class EditBook extends Component {
             this.setState({ redirect: this.state.redirect === false });
           })
           .catch(function (error) {
-            console.log(error.response);
            }) 
            this.props.onHide()
     }

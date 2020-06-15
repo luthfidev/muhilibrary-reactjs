@@ -39,6 +39,7 @@ class Profile extends Component {
             this.setState({isid: user.userData.id})
             
           }else{
+            props.history.push('/login')
             this.setState({isLogin: false})
           }
         }

@@ -135,7 +135,7 @@ handlePost = async (event) => {
           if(typeof error.response !== 'undefined'){
           Swal.fire({
             title: 'Warning !',
-            text: error.response,
+            text: 'Login Failed',
             icon: 'warning',
             timer: 2000
           })

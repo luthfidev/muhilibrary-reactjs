@@ -50,8 +50,11 @@ export class AddGenre extends Component {
       if (name.length < 3) {
         nameValid = false;
         errorMsg.name = 'Must be at least 3 characters long'
+      } else if (name.length > 25) {
+        nameValid = false;
+        errorMsg.name = 'Too long characters'
       }
-  
+
       this.setState({nameValid, errorMsg}, this.validateForm)
     }
 
@@ -83,6 +86,7 @@ export class AddGenre extends Component {
    
        
     render(){
+      const {formValid, isLoading} = this.state
         return(
             <Modal
             {...this.props}
@@ -105,7 +109,7 @@ export class AddGenre extends Component {
                     < ValidationMessage valid={this.state.nameValid} message={this.state.errorMsg.name} />
                     </Form.Text>
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Button disabled={!formValid} variant="primary" type="submit">
                     Save
                 </Button>
                 </Form>

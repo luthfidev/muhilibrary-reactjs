@@ -9,12 +9,24 @@ import authHeader from '../../services/authHeader'
 
 const {REACT_APP_URL} = process.env
 
+function ValidationMessage(props) {
+    if (!props.valid) {
+      return(
+        <div className='error-msg text-danger'>{props.message}</div>
+      )
+    } else {
+      return(
+        <div className='error-msg text-success'>Look Goods!</div>
+      )
+    }
+  }
+
 export class AddBook extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            title: '',
-            description: '',
+            title: '', titleValid: false,
+            description: '', descriptionValid: false,
             image: '',
             genreid: '',
             authorid: '',
@@ -23,10 +35,61 @@ export class AddBook extends Component {
             alert: '',
             dataGenre:[],
             dataAuthor:[],
-            percentage: 0
+            percentage: 0,
+            formValid: false,
+            errorMsg: {}
+
         }
         this.handlePost = this.handlePost.bind(this)
     }
+
+    validateForm = () => {
+        const {titleValid, descriptionValid} = this.state;
+        this.setState({
+          formValid: titleValid && descriptionValid
+        })
+      }
+
+      updateTitle = (title) => {
+        this.setState({title}, this.validateTitle)
+      }
+  
+      validateTitle = () => {
+        const {title} = this.state;
+        let titleValid = true;
+        let errorMsg = {...this.state.errorMsg}
+    
+        if (title.length < 3) {
+          titleValid = false;
+          errorMsg.title = 'Must be at least 3 characters long'
+        } else if (title.length > 25) {
+          titleValid = false;
+          errorMsg.title = 'Too long characters'
+        }
+    
+        this.setState({titleValid, errorMsg}, this.validateForm)
+      }
+  
+  
+      updateDescription = (description) => {
+        this.setState({description}, this.validateDescription)
+      }
+  
+      validateDescription = () => {
+        const {description} = this.state;
+        let descriptionValid = true;
+        let errorMsg = {...this.state.errorMsg}
+    
+        if (description.length < 3) {
+          descriptionValid = false;
+          errorMsg.description = 'Must be at least 3 characters long'
+        } else if (description.length > 50) {
+          descriptionValid = false;
+          errorMsg.description = 'Too long characters'
+        }
+    
+        this.setState({descriptionValid, errorMsg}, this.validateForm)
+      }
     
     handleChange = event => {
         this.setState({[  event.target.name]: event.target.value})
@@ -117,8 +180,7 @@ export class AddBook extends Component {
     }
   
     render(){
-        const {uploadPercentage} = this.state
-        {console.log(this.state)}
+        const {uploadPercentage, isLoading, formValid} = this.state
         return(
             <Modal
             {...this.props}
@@ -136,11 +198,17 @@ export class AddBook extends Component {
                 <Form onSubmit={ this.handlePost}>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Name Book</Form.Label>
-                    <Form.Control name="title" onChange={(e) => this.handleChange(e)} type="text" placeholder="Title" />
+                    <Form.Control name="title" value={this.state.title} onChange={(e) => this.updateTitle(e.target.value)} type="text" placeholder="Title" />
+                    <Form.Text className="text-muted">
+                    < ValidationMessage valid={this.state.titleValid} message={this.state.errorMsg.title} />
+                    </Form.Text>
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Description</Form.Label>
-                    <Form.Control name="description" onChange={(e) => this.handleChange(e)} type="text" placeholder="Description" />
+                    <Form.Control name="description" value={this.state.description} onChange={(e) => this.updateDescription(e.target.value)} type="text" placeholder="Description" />
+                    <Form.Text className="text-muted">
+                    < ValidationMessage valid={this.state.descriptionValid} message={this.state.errorMsg.description} />
+                    </Form.Text>
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Image</Form.Label>
@@ -177,7 +245,7 @@ export class AddBook extends Component {
                     <option value="2">Unvailable</option>
                     </Form.Control>
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Button disabled={!formValid} variant="primary" type="submit">
                     Save
                 </Button>
                 </Form>

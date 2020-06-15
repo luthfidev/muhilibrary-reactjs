@@ -39,7 +39,7 @@ html, body, #root {
  
     /*detail*/
   .detail-header {
-    background-image: url(../img//cover-half.png);
+    background-image: url(../img//cover-half.jpg);
     background-size: cover;
     width: 100%;
     height: 480px;
@@ -80,6 +80,11 @@ nav .top-navbar{
 .avatar-img {
   margin-top: 50px;
   margin-left: 20px;
+}
+
+.avatar-img img {
+  width: 200px;
+  height: 200px;
 }
 .avatar-img h1 {
   margin-left: 20px;

@@ -134,10 +134,10 @@ class Detail extends Component {
                         <div className="btn-action p-3 w-100 d-flex justify-content-between"> 
                             <div className="btn-back">
                             {this.state.isLogin && (
-                            <Link to="/dashboard" className="ml-2 btn btn-outline-dark"> Back</Link>
+                            <Link to="/dashboard" className="ml-2 btn btn-info"> Back</Link>
                             )}
                             {!this.state.isLogin && (
-                            <Link to="/" className="ml-2 btn btn-outline-dark"> Back</Link>
+                            <Link to="/" className="ml-2 btn btn-info"> Back</Link>
                             )}
                             </div>
                             <div className="action">
@@ -154,8 +154,8 @@ class Detail extends Component {
                                                                                     bookauthor: this.state.bookauthor,
                                                                                     bookstatusid: this.state.bookstatusid,
                                                                                     bookstatus: this.state.bookstatus,
-                                                                                    })} } className="btn btn-outline-warning ml-2">Edit</button>
-                                <button onClick={() =>  {  this.onConfirmDelete(this.state.id)} } className="btn btn-outline-danger ml-2">Delete</button> 
+                                                                                    })} } className="btn btn-warning ml-2">Edit</button>
+                                <button onClick={() =>  {  this.onConfirmDelete(this.state.id)} } className="btn btn-danger ml-2">Delete</button> 
                             </>)}
                             <EditBook
                                 show={this.state.editModalShow}

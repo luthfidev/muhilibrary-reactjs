@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import {Provider} from 'react-redux'
 
 import './App.css';
 
@@ -28,6 +29,7 @@ class App extends Component {
 
       return (
         <>
+        <Provider store={store}>
         <BrowserRouter>
           <Switch>
             <Route path="/" exact component={Landing}/>
@@ -46,6 +48,7 @@ class App extends Component {
             <Route component={Notfound} />
           </Switch>
         </BrowserRouter>
+        </Provider>
       </>
     );
   }

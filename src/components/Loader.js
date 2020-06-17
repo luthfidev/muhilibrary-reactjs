@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
+// import { connect } from 'react-redux'
 import { Spinner } from 'react-bootstrap'
 
-class Spiner extends Component{
+class Loader extends Component{
     
     render() {
 
@@ -19,10 +19,10 @@ class Spiner extends Component{
     }
 }
 
-const mapStateToProps = state => ({
+/* const mapStateToProps = state => ({
     loading: state.loader.loading
 })
 
-export default connect(mapStateToProps)(Spiner)
+export default connect(mapStateToProps)(Loader) */
 
-// export default Spiner
+export default Loader

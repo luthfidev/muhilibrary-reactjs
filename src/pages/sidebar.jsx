@@ -98,6 +98,9 @@ class Sidebar extends Component {
                 <Link Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/dashboard"><BsBook/> Dashboard</Link>
                 </Nav.Item>
                 <Nav.Item>
+                <Link Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/book"><BsBook/> Book</Link>
+                </Nav.Item>
+                <Nav.Item>
                 <Link Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/profile"><BsPersonFill/> Profile</Link>
                 </Nav.Item>
                 { this.state.isAdmin === 'admin' && (<>

@@ -18,6 +18,7 @@ import qs from 'querystring'
 import AsyncSelect from 'react-select/async'
 import Swal from 'sweetalert2'
 import coverdummy from '../assets/img/coverdummy.jpg'
+import Chart from 'react-apexcharts'
 const {REACT_APP_URL} = process.env
 
 class Dashboard extends Component {
@@ -29,7 +30,22 @@ class Dashboard extends Component {
           dataGenre: [],
           pageInfo: [],
           isLoading: false,
-          addModalShow : false
+          addModalShow : false,
+          options: {
+            chart: {
+              id: "basic-bar"
+            },
+            xaxis: {
+              categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
+            }
+          },
+          series: [
+            {
+              name: "series-1",
+              data: [30, 40, 45, 50, 49, 60, 70, 91]
+            }
+          ]
+          
         }
         // check auth flow
         const user = JSON.parse(localStorage.getItem('user'))
@@ -88,153 +104,54 @@ class Dashboard extends Component {
         this.fetchData()
     }
 
-    /*  filterColors = (inputValue) => {
-        return this.fetchData.genreName.filter(i =>
-          i.label.toLowerCase().includes(inputValue.toLowerCase())
-        );
-      };
-    */
-   
- /*     promiseOptions = inputValue =>
-        new Promise(resolve => {
-            setTimeout(() => {
-            resolve(filterColors(inputValue));
-            }, 1000);
-        });  */
-
-
+  
     render(){
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
-        let addModalClose = () => this.setState({addModalShow:false})
        
         return(
             <>
                 <Row className="no-gutters w-100 h-100">
-            {this.state.isLoading &&
-                <div className='d-flex w-100 h-100 justify-content-center align-items-center'>
-                <Spiner/>
-                
-                </div>
-                }
-                 {!this.state.isLoading &&(         
-                    <div className="d-flex flex-row w-100">
-                        <Sidebar {...this.props}/>           
-                            <div className="w-100 d-flex flex-column">
-                                <div className="top-navbar sticky-top">
-                                    <TopNavbar search={(query) => this.fetchData(query)}/>
-                                </div>
-                               <Container fluid className="mt-4">
-                                    <Jumbotron className="jumbotron-dashboard shadow">
-                                    <Carousel>
-                                    {this.state.data.map((book, index) => (  
-                                        <Carousel.Item key={book.id.toString()}>
-                                            <img  style={{ height: '200px' }}
-                                            className="d-block"
-                                            src={book.image}
-                                            alt="Slider"
-                                            />
-                                            <Carousel.Caption>
-                                            <h3 className="text-dark">{book.title}</h3>
-                                            <p className="text-dark">{book.description}</p>
-                                            </Carousel.Caption>
-                                        </Carousel.Item>
-                                        ))}
-                                        </Carousel>
-                                    </Jumbotron>
-                                    <Col>
-                                        <div className="d-flex flex-row ">
-                                        <Dropdown className="mb-4">
-                                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                            Genre
-                                        </Dropdown.Toggle>
-                                            <Dropdown.Menu>
-                                            <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: '' })}>All</Dropdown.Item>
-                                            {this.state.dataGenre.map(genre => 
-                                                <Dropdown.Item key={genre.id.toString()} onClick={() => this.fetchData({ ...params, search: genre.name })}>{genre.name}</Dropdown.Item>
-                                            )}
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-                                        <Dropdown className="mb-4 ml-2">
-                                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                            Sort
-                                        </Dropdown.Toggle>
-                                            <Dropdown.Menu>
-                                                <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 0 })}>A-z</Dropdown.Item>
-                                                <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 1 })}>Z-a</Dropdown.Item>
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-                                            {this.state.isAdmin === 'admin' && 
-                                            <div className="ml-2">
-                                                <button onClick={()=> this.setState({addModalShow: true})} className="btn btn-primary mb-2">Add Book</button>
-                                            </div>
-                                            }
-                                        </div>
-                                    
-                                    <AddBook
-                                        show={this.state.addModalShow}
-                                        onHide={addModalClose}
-                                        refreshdata={() => this.fetchData()}
-                                    />
-                                    {this.state.data.length !== 0 &&(
-                                    <Row>
-
-                                        {this.state.data.map((book, index) => (  
-                                        <Link key={book.id.toString()} to={{
-                                                                            pathname: `/detail/${book.id}`,
-                                                                            state: {
-                                                                            bookid: `${book.id}`,
-                                                                            booktitle: `${book.title}`,
-                                                                            bookrelease: `${book.releaseDate}`,
-                                                                            bookimage: `${book.image}`,
-                                                                            bookdesc: `${book.description}`,
-                                                                            bookgenreid: `${book.genreId}`,
-                                                                            bookgenre: `${book.genreName}`,
-                                                                            bookauthorid: `${book.authorId}`,
-                                                                            bookauthor: `${book.authorName}`,
-                                                                            bookstatusid: `${book.nameStatusId}`,
-                                                                            bookstatus: `${book.nameStatus}`,
-                                                                            }
-                                                                        }}  className="text-dark text-decoration-none"> 
-                                            <Card className="shadow m-2" style={{ width: '18rem' }}>
-                                                <Card.Img variant="top" style={{ height: '200px' }} src={book.image} />
-                                                <Card.Body>
-                                                    <Card.Title>{book.title}</Card.Title>
-                                                    <Card.Subtitle className="badge badge-primary">{book.genreName}</Card.Subtitle>
-                                                    <Card.Subtitle className="ml-2 badge badge-success text-white">{book.nameStatus}</Card.Subtitle>
-                                                    <Card.Text>
-                                                    {book.description}
-                                                    </Card.Text>
-                                                </Card.Body>
-                                                </Card>
-                                        </Link>
-                                        ))}           
-                                    </Row>
-                                    )}
-                                    {this.state.data.length===0 &&(
-                                        <h1>Data Not Available</h1>
-                                    )}
-                                         
-                                    </Col>
-                                    <div className="d-flex justify-content-center">
-                                    <Pagination>
-                                            <Pagination.First onClick={()=>this.fetchData({...params, page: parseInt(params.page)-1})}/>
-                                            <Pagination.Prev />
-                                            <Pagination.Ellipsis />
-                                            {[...Array(this.state.pageInfo.totalPage)].map((o, i)=>{
-                                             return (
-                                            <Pagination.Item onClick={()=>this.fetchData({...params, page: params.page? i+1 : i+1})} className='mr-1 ml-1' key={i.toString()}>{i+1}</Pagination.Item>
-                                             )
-                                            })}
-                                            <Pagination.Next onClick={()=>this.fetchData({...params, page: parseInt(params.page)+1})}/>
-                                            <Pagination.Ellipsis />
-                                            <Pagination.Last />
-                                    </Pagination>
+                    {this.state.isLoading &&
+                        <Spiner/>  
+                    }
+                    {!this.state.isLoading &&(         
+                        <div className="d-flex flex-row w-100">
+                            <Sidebar {...this.props}/>           
+                                <div className="w-100 d-flex flex-column">
+                                    <div className="top-navbar sticky-top">
+                                        <TopNavbar search={(query) => this.fetchData(query)}/>
                                     </div>
-                               </Container>
-                            </div>
-                    </div> 
-                )}       
+                                <Container fluid className="mt-4">
+                                        <Jumbotron className="jumbotron-dashboard shadow">
+
+                                        </Jumbotron>
+                                        <Col>
+                                        
+                                    
+                                        {this.state.data.length !== 0 &&(
+                                        <Row>
+
+                                        
+                                        </Row>
+                                        )}
+                                        {this.state.data.length===0 &&(
+                                            <h1>Data Not Available</h1>
+                                        )}
+                                            
+                                        </Col>
+                                        <div className="d-flex justify-content-center">
+                                        <Chart
+                                            options={this.state.options}
+                                            series={this.state.series}
+                                            type="line"
+                                            width="500"
+                                        />
+                                        </div>
+                                </Container>
+                                </div>
+                        </div> 
+                    )}       
                 </Row>
             </>
         )

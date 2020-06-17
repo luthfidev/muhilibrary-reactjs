@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
 import {Container, 
         Row,
         Form, 
-        Col, 
         Card, 
-        Button,
-        Dropdown} from 'react-bootstrap';
+        Button} from 'react-bootstrap';
         import axios from 'axios'
 import authHeader from '../services/authHeader'
 import TopNavbar from './navbar'

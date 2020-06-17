@@ -150,70 +150,68 @@ class Landing extends Component {
                     <FormControl style={{width: 400, height: 50}} onKeyDown={(e) => this.search(e)} onChange={(e) => this.setState({ query: e.target.value })} search={(query) => this.fetchData(query)} type="text" placeholder="Search book title"  className="input-search shadow mr-sm-2 " />
                     </Form> */}
                     <div className="w-100 d-flex justify-content-center mt-2">    
-                    <Col className="md-4">
-                    <div className="d-flex flex-row ">
-                   
-                    <Dropdown className="mb-4">
-                                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                            Genre
-                                        </Dropdown.Toggle>
-                                            <Dropdown.Menu>
-                                            <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: '' })}>All</Dropdown.Item>
-                                            {this.state.dataGenre.map(genre => 
-                                                <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: genre.name })}>{genre.name}</Dropdown.Item>
-                                            )}
-                                            </Dropdown.Menu>
-                                        </Dropdown>
+                        <div className="d-flex flex-row mr-5">
+                                            
+                        </div>
+                        <Row className="md-4">
+                            <div className="btn-action d-flex flex-row ">
+                                    <Dropdown className="mb-4">
+                                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                        Genre
+                                    </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                        <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: '' })}>All</Dropdown.Item>
+                                        {this.state.dataGenre.map(genre => 
+                                            <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: genre.name })}>{genre.name}</Dropdown.Item>
+                                        )}
+                                        </Dropdown.Menu>
+                                    </Dropdown>
                                         <Dropdown className="mb-4 ml-2">
                                         <Dropdown.Toggle variant="success" id="dropdown-basic">
                                             Sort
                                         </Dropdown.Toggle>
                                             <Dropdown.Menu>
-                                                <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 0 })}>A-z</Dropdown.Item>
-                                                <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 1 })}>Z-a</Dropdown.Item>
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-                    </div>
-                  
-                    <div className="d-flex flex-row justify-content-center"> 
-                  <Row className="w-50">
-                    {this.state.data.map((book, index) => (  
-                        <Link key={book.id.toString()} to={{
-                                                            pathname: `/detail/${book.id}`,
-                                                            state: {
-                                                            bookid: `${book.id}`,
-                                                            booktitle: `${book.title}`,
-                                                            bookimage: `${book.image}`,
-                                                            bookgenre: `${book.genreName}`,
-                                                            bookauthor: `${book.authorName}`,
-                                                            bookstatus: `${book.nameStatus}`,
-                                                            }
-                                                        }}  className="text-dark text-decoration-none"> 
-                            <Card className="shadow m-2" style={{ width: '10rem' }}>
-                                <Card.Img variant="top" style={{ height: '200px' }} src={book.image} />
-                                {/* <Card.Body>
-                                    <Card.Subtitle className="ml-2 badge badge-success text-white">{book.nameStatus}</Card.Subtitle>
-                                </Card.Body> */}
-                                </Card>
-                        </Link>
-                
-                        ))}
+                                            <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 0 })}>A-z</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 1 })}>Z-a</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>    
+                            </div>
+                            
+                        </Row> 
+                        <Col md="6" lg="6">
+                        <Row className="md-6 ml-5 ">
+                                {this.state.data.map((book, index) => (  
+                                    <Link key={book.id.toString()} to={{
+                                                                        pathname: `/detail/${book.id}`,
+                                                                        state: {
+                                                                        bookid: `${book.id}`,
+                                                                        booktitle: `${book.title}`,
+                                                                        bookimage: `${book.image}`,
+                                                                        bookgenre: `${book.genreName}`,
+                                                                        bookauthor: `${book.authorName}`,
+                                                                        bookstatus: `${book.nameStatus}`,
+                                                                        }
+                                                                    }}  className="text-dark text-decoration-none"> 
+                                        <Card className="shadow m-2" style={{ width: '10rem' }}>
+                                            <Card.Img variant="top" style={{ height: '200px' }} src={book.image} />
+                                            {/* <Card.Body>
+                                                <Card.Subtitle className="ml-2 badge badge-success text-white">{book.nameStatus}</Card.Subtitle>
+                                            </Card.Body> */}
+                                            </Card>
+                                    </Link>
+                                ))}
+                           
                         </Row>
-                       </div> 
-                        </Col>  
+                        </Col>
+                       
                     </div> 
                     
                     <div className="">
 
                     </div>
                     <div className="landing-footer bg-light no-gutters">
-                        <Row className="no-gutters">
-                           <Container className="text-muted d-flex flex-row justify-content-center">
-                            
+                        <Row className="no-gutters text-muted d-flex flex-row justify-content-center">
                                 <div>By signing up, you agree to Book’s</div>
-                             
-                    
-                           </Container>
                         </Row>
                     </div>
                 </Row>

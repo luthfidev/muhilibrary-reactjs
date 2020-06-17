@@ -110,9 +110,7 @@ class Author extends Component {
             <>
                <Row className="no-gutters w-100 h-100">
                 {this.state.isLoading &&
-                  <div className='d-flex w-100 h-100 justify-content-center align-items-center'>
                   <Spiner/>
-                  </div>
                   }
                    {!this.state.isLoading &&( 
                     <div className="d-flex flex-row w-100">

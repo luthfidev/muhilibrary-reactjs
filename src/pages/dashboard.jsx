@@ -19,6 +19,10 @@ import AsyncSelect from 'react-select/async'
 import Swal from 'sweetalert2'
 import coverdummy from '../assets/img/coverdummy.jpg'
 import Chart from 'react-apexcharts'
+
+import { connect } from 'react-redux'
+import { showLoader, hideLoader } from '../redux/actions/loader'
+
 const {REACT_APP_URL} = process.env
 
 class Dashboard extends Component {
@@ -61,7 +65,10 @@ class Dashboard extends Component {
       }
 
     fetchData = async (params) => {
-    this.setState({isLoading: true})
+    
+       
+    // this.props.dispatch( showLoader())
+        
     const param = `${qs.stringify(params)}`
         try {
             const url = `${REACT_APP_URL}books?${param}`
@@ -112,10 +119,10 @@ class Dashboard extends Component {
         return(
             <>
                 <Row className="no-gutters w-100 h-100">
-                    {this.state.isLoading &&
+                  
                         <Spiner/>  
-                    }
-                    {!this.state.isLoading &&(         
+            
+                      
                         <div className="d-flex flex-row w-100">
                             <Sidebar {...this.props}/>           
                                 <div className="w-100 d-flex flex-column">
@@ -151,7 +158,7 @@ class Dashboard extends Component {
                                 </Container>
                                 </div>
                         </div> 
-                    )}       
+                
                 </Row>
             </>
         )

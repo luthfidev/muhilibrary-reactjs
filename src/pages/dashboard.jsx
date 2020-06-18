@@ -51,10 +51,12 @@ class Dashboard extends Component {
 
     fetchData = async () => {
       try {
+        this.props.showLoader()
         const url = `${REACT_APP_URL}transactions/chart`;
         const response =  await axios.get(url, { headers: authHeader() });
         const {data} = response.data 
         this.setState({data})
+        this.props.hideLoader()
        var dataChart = []
         for (var i = 0; i < data.length; i++) {
             dataChart.push({

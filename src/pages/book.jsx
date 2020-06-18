@@ -53,10 +53,6 @@ class Book extends Component {
         this.fetchDataGenre()
     }
 
- 
-    componentWillUnmount() {
-        this.fetchData()
-    }
 
      fetchData = async (params) => {
     const param = `${qs.stringify(params)}`

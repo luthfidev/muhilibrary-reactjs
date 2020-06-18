@@ -107,18 +107,6 @@ export class AddBook extends Component {
         formData.set('authorid', this.state.authorid)
         formData.set('releasedate', this.state.releasedate)
         formData.set('statusid', this.state.statusid)
-       
-        const options = {
-            onUploadProgress: (event) => {
-                const {loaded, total} = event
-                let percent = Math.floor( (loaded * 100) / total)
-                console.log(percent)
-
-                if (percent < 100){
-                   this.setState({ uploadPercentage: percent })
-                }
-            }
-        }
 
         const url = `${REACT_APP_URL}books`
         await axios.post(url, formData, {headers: authHeader()}).then( (response) => {
@@ -180,7 +168,7 @@ export class AddBook extends Component {
     }
   
     render(){
-        const {uploadPercentage, isLoading, formValid} = this.state
+        const {uploadPercentage, formValid} = this.state
         return(
             <Modal
             {...this.props}
@@ -239,7 +227,7 @@ export class AddBook extends Component {
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                 <Form.Label>Status</Form.Label>
-                    <Form.Control as="select" name="statusid" name="statusid" onChange={(e) => this.handleChange(e)} custom>
+                    <Form.Control as="select" name="statusid" onChange={(e) => this.handleChange(e)} custom>
                     <option>Select</option>
                     <option value="1">Available</option>
                     <option value="2">Unvailable</option>

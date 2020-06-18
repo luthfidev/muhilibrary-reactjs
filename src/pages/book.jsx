@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
-import {Container, 
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { Container, 
         Row, 
         Col, 
         Jumbotron, 
@@ -8,26 +8,28 @@ import {Container,
         Carousel, 
         Pagination, 
         Dropdown } from 'react-bootstrap';
-        import axios from 'axios'
+import axios from 'axios'
 import authHeader from '../services/authHeader'
 import TopNavbar from './navbar'
 import Sidebar from './sidebar'
 import Spiner from '../components/Loader'
-import {AddBook} from '../components/book/AddBook'
+import { AddBook } from '../components/book/AddBook'
 import qs from 'querystring'
 import Swal from 'sweetalert2'
-import coverdummy from '../assets/img/coverdummy.jpg'
-const {REACT_APP_URL} = process.env
+
+import { connect } from 'react-redux'
+
+import { getAllBooks } from '../redux/actions/book'
+
+const { REACT_APP_URL } = process.env
 
 class Book extends Component {
-
     constructor(props){
         super(props)
         this.state = {
           data: [],
           dataGenre: [],
           pageInfo: [],
-          isLoading: false,
           addModalShow : false
         }
         // check auth flow
@@ -43,8 +45,20 @@ class Book extends Component {
         }
       }
 
-    fetchData = async (params) => {
-    this.setState({isLoading: true})
+
+    componentDidMount(){
+        this.checkLogin()
+        const param = qs.parse(this.props.location.search.slice(1))
+        this.fetchData(param)
+        this.fetchDataGenre()
+    }
+
+ 
+    componentWillUnmount() {
+        this.fetchData()
+    }
+
+     fetchData = async (params) => {
     const param = `${qs.stringify(params)}`
         try {
             const url = `${REACT_APP_URL}books?${param}`
@@ -53,7 +67,7 @@ class Book extends Component {
             const pageInfo = response.data.pageInfo
             this.setState({data, pageInfo, isLoading: false})       
         } catch (error) {
-            if (error.response=== undefined) {
+            if (error.response === undefined) {
                 return false
             } else {
                 Swal.fire({
@@ -75,18 +89,6 @@ class Book extends Component {
     const {data} = results.data
     this.setState({dataGenre: data, isLoading: false})
     }
-
-    async componentDidMount(){
-        await this.checkLogin()
-        const param = qs.parse(this.props.location.search.slice(1))
-        await this.fetchData(param)
-        await this.fetchDataGenre()
-    }
-
-    componentWillUnmount() {
-        this.fetchData()
-    }
-
   
     render(){
         const params = qs.parse(this.props.location.search.slice(1))
@@ -226,4 +228,14 @@ class Book extends Component {
     };
 }
 
-export default Book
+const mapStateToProps = (state) => ({
+    books: state.books
+})
+
+const mapDispatchToProps = {
+    getAllBooks
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Book)
+
+// export default Book

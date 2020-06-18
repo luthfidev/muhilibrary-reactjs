@@ -138,7 +138,7 @@ export class EditBook extends Component {
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                 <Form.Label>Status</Form.Label>
-                    <Form.Control as="select" name="statusid" defaultValue={this.props.statusid} name="statusid" onChange={(e) => this.handleChange(e)} custom>
+                    <Form.Control as="select" name="statusid" defaultValue={this.props.statusid} onChange={(e) => this.handleChange(e)} custom>
                         <option>{this.props.bookstatus}</option>
                     <option value="1">Available</option>
                     <option value="2">Unvailable</option>

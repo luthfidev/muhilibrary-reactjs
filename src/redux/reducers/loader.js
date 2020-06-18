@@ -6,17 +6,15 @@ const loader = (state = initialState, action) => {
     switch (action.type) {
         case 'SHOW_LOADER': {
             return { 
-                ...state, 
-                loading: false
+                ...state,
+                loading: true
             }
-            break
         }
         case 'HIDE_LOADER': {
             return {
                 ...state,
-                loading: true
+                loading: false
             }
-            break
         }
         default: {
             return state

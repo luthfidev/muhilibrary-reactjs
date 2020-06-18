@@ -9,7 +9,6 @@ import authHeader from '../services/authHeader'
 import TopNavbar from './navbar'
 import Sidebar from './sidebar'
 import Spiner from '../components/Loader'
-import qs from 'querystring'
 import Swal from 'sweetalert2'
 import moment from 'moment'
 const {REACT_APP_URL} = process.env
@@ -149,7 +148,7 @@ class Profile extends Component {
                                             </Form.Group>
                                             <Form.Group>
                                             <Form.Label>Status</Form.Label>
-                                                <Form.Control as="select" name="gender" defaultValue={user.gender} onChange={(e) => this.handleChange(e)} onChange={(e) => this.handleChange(e)}>
+                                                <Form.Control as="select" name="gender" defaultValue={user.gender}  onChange={(e) => this.handleChange(e)}>
                                                     <option >Select</option>
                                                     <option value="Male">Male</option>
                                                     <option value="Female">Female</option>

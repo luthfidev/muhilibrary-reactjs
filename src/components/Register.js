@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { Modal, Button, Form, ProgressBar } from 'react-bootstrap'
+import { Modal, Button, Form } from 'react-bootstrap'
 import Swal from 'sweetalert2'
-import { useForm } from "react-hook-form";
 import axios from 'axios'
 const {REACT_APP_URL} = process.env
 

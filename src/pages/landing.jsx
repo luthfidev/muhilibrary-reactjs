@@ -2,16 +2,11 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios'
 import Spiner from '../components/Loader'
-import SpinerContent from '../components/LoaderContent'
 import {Row, 
         Navbar, 
         Card, 
         Col, 
-        Form, 
-        FormControl, 
-        Button, 
         Carousel, 
-        Container, 
         Dropdown} from 'react-bootstrap';
 import qs from 'querystring'
 import slide1 from '../assets/img/landing/1.jpg'

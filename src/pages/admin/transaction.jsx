@@ -195,13 +195,13 @@ class Transaction extends Component {
         params.page = params.page || 1
 
          // state for edit modal close
-         const {transactionid, transactiondate, userid, bookid, statusid} = this.state
+        //  const {transactionid, transactiondate, userid, bookid, statusid} = this.state
 
          // set state addModal
          let addModalClose = () => this.setState({addModalShow:false})
  
          // set edit editModal close
-         let editModalClose = () => this.setState({editModalShow:false})
+        //  let editModalClose = () => this.setState({editModalShow:false})
         return(
             <>
             

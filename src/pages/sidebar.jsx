@@ -5,12 +5,9 @@ import {BsBook,
         BsCardList, 
         BsFileText, 
         BsPersonFill,
-        BsPeopleFill, 
         BsCheckCircle } from 'react-icons/bs'
-import Spiner from '../components/Loader'
 import { Link } from 'react-router-dom';
 import axios from 'axios'
-import avatar from '../assets/img/jono.png'
 import authHeader from '../services/authHeader'
 import Swal from 'sweetalert2'
 const {REACT_APP_URL} = process.env
@@ -90,7 +87,7 @@ class Sidebar extends Component {
             <Nav className="d-none d-md-block sidebar bg-light shadow">
             {this.state.data.map((user, index) => (
                 <div className="avatar-img">
-                    <img src={`${REACT_APP_URL}`+user.picture} alt="avatar"/>
+                    <img key={user.id} src={`${REACT_APP_URL}`+user.picture} alt="avatar"/>
                     <h1>{user.name}</h1>
                 </div>
                 ))}   
@@ -113,7 +110,7 @@ class Sidebar extends Component {
                 <Nav.Item>
                 <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/transaction"><BsFileText/> Transaction</Link>
                 </Nav.Item>
-           {/*      <Nav.Item>
+           {/*   <Nav.Item>
                 <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/user"><BsPeopleFill/> User</Link>
                 </Nav.Item>
                 <Nav.Item>

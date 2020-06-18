@@ -109,7 +109,7 @@ export class AddAuthor extends Component {
     }
        
     render(){
-      const {formValid, isLoading} = this.state
+      const {formValid} = this.state
         return(
             <Modal
             {...this.props}

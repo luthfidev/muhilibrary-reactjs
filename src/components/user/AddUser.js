@@ -7,7 +7,7 @@ import axios from 'axios'
 const {REACT_APP_URL} = process.env
 
 
-function ValidationMessage(props) {
+/* function ValidationMessage(props) {
   if (!props.valid) {
     return(
       <div className='error-msg text-danger'>{props.message}</div>
@@ -17,7 +17,7 @@ function ValidationMessage(props) {
       <div className='error-msg text-success'>Look Goods!</div>
     )
   }
-}
+} */
 
 export class AddUser extends Component {
     constructor(props) {
@@ -99,7 +99,7 @@ export class AddUser extends Component {
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                 <Form.Label>Role</Form.Label>
-                    <Form.Control as="select" name="statusid" name="roleid" onChange={(e) => this.handleChange(e)} custom>
+                    <Form.Control as="select" name="roleid" onChange={(e) => this.handleChange(e)} custom>
                     <option>Select</option>
                     <option value="1">Admin</option>
                     <option value="2">User</option>

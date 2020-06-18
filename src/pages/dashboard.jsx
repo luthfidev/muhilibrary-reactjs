@@ -1,168 +1,134 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
-import {Container, 
-        Row, 
-        Col, 
-        Jumbotron, 
-        Card, 
-        Carousel, 
-        Pagination, 
-        Dropdown } from 'react-bootstrap';
-        import axios from 'axios'
-import authHeader from '../services/authHeader'
-import TopNavbar from './navbar'
-import Sidebar from './sidebar'
-import Spiner from '../components/Loader'
-import {AddBook} from '../components/book/AddBook'
-import qs from 'querystring'
-import AsyncSelect from 'react-select/async'
-import Swal from 'sweetalert2'
-import coverdummy from '../assets/img/coverdummy.jpg'
-import Chart from 'react-apexcharts'
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
+import React, { Component } from 'react';
+import {
+  Container,
+  Row,
+  Col,
+  Jumbotron,
+} from 'react-bootstrap';
+import axios from 'axios';
+import qs from 'querystring';
+import Swal from 'sweetalert2';
+import Chart from 'react-apexcharts';
+import { connect } from 'react-redux';
+import authHeader from '../services/authHeader';
+import TopNavbar from './navbar';
+import Sidebar from './sidebar';
+import Spiner from '../components/Loader';
 
-import { connect } from 'react-redux'
-import { showLoader, hideLoader } from '../redux/actions/loader'
+import { showLoader, hideLoader } from '../redux/actions/loader';
 
-const {REACT_APP_URL} = process.env
+const { REACT_APP_URL } = process.env;
 
 class Dashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+      options: {
+        chart: {
+          id: 'basic-bar',
+        },
+        xaxis: {
+          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
+        },
+      },
+      series: [
+        {
+          name: 'series-1',
+          data: [30, 40, 45, 50, 49, 60, 70, 91],
+        },
+      ],
 
-    constructor(props){
-        super(props)
-        this.state = {
-          data: [],
-          dataGenre: [],
-          pageInfo: [],
-          isLoading: false,
-          addModalShow : false,
-          options: {
-            chart: {
-              id: "basic-bar"
-            },
-            xaxis: {
-              categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
-            }
-          },
-          series: [
-            {
-              name: "series-1",
-              data: [30, 40, 45, 50, 49, 60, 70, 91]
-            }
-          ]
-          
-        }
-        // check auth flow
-        const user = JSON.parse(localStorage.getItem('user'))
-        this.checkLogin = () => {
-          if(user){
-            this.setState({isLogin: true})
-            this.setState({isAdmin: user.userData.role})
-          }else{
-              props.history.push('/login')
-            this.setState({isLogin: false})
-          }
-        }
-      }
-
-    fetchData = async (params) => {
-    
-       
-    // this.props.dispatch( showLoader())
-        
-    const param = `${qs.stringify(params)}`
-        try {
-            const url = `${REACT_APP_URL}books?${param}`
-            const response = await axios.get(url, {headers: authHeader()})
-            const {data} = response.data
-            const pageInfo = response.data.pageInfo
-            this.setState({data, pageInfo, isLoading: false})       
-        } catch (error) {
-            if (error.response=== undefined) {
-                return false
-            } else {
-                Swal.fire({
-                    title: 'Done !',
-                    text: error.response.data.message,
-                    icon: 'warning',
-                })
-            }
-        }
-        if (params) {
-            this.props.history.push(`?${param}`)
-        }
-    }
-
-    fetchDataGenre = async () => {
-    this.setState({isLoading: true})
-    const url = `${REACT_APP_URL}genres`
-    const results = await axios.get(url, {headers: authHeader()})
-    const {data} = results.data
-    this.setState({dataGenre: data, isLoading: false})
-    }
-
-    async componentDidMount(){
-        await this.checkLogin()
-        const param = qs.parse(this.props.location.search.slice(1))
-        await this.fetchData(param)
-        await this.fetchDataGenre()
-    }
-
-    componentWillUnmount() {
-        this.fetchData()
-    }
-
-  
-    render(){
-        const params = qs.parse(this.props.location.search.slice(1))
-        params.page = params.page || 1
-       
-        return(
-            <>
-                <Row className="no-gutters w-100 h-100">
-                  
-                        <Spiner/>  
-            
-                      
-                        <div className="d-flex flex-row w-100">
-                            <Sidebar {...this.props}/>           
-                                <div className="w-100 d-flex flex-column">
-                                    <div className="top-navbar sticky-top">
-                                        <TopNavbar search={(query) => this.fetchData(query)}/>
-                                    </div>
-                                <Container fluid className="mt-4">
-                                        <Jumbotron className="jumbotron-dashboard shadow">
-
-                                        </Jumbotron>
-                                        <Col>
-                                        
-                                    
-                                        {this.state.data.length !== 0 &&(
-                                        <Row>
-
-                                        
-                                        </Row>
-                                        )}
-                                        {this.state.data.length===0 &&(
-                                            <h1>Data Not Available</h1>
-                                        )}
-                                            
-                                        </Col>
-                                        <div className="d-flex justify-content-center">
-                                        <Chart
-                                            options={this.state.options}
-                                            series={this.state.series}
-                                            type="line"
-                                            width="500"
-                                        />
-                                        </div>
-                                </Container>
-                                </div>
-                        </div> 
-                
-                </Row>
-            </>
-        )
     };
+  }
+
+  componentDidMount() {
+    this.fetchData();
+  }
+
+    fetchData = async () => {
+      try {
+        const url = `${REACT_APP_URL}transactions/chart`;
+        const response =  await axios.get(url, { headers: authHeader() });
+        const {data} = response.data 
+        this.setState({data})
+       var dataChart = []
+        for (var i = 0; i < data.length; i++) {
+            dataChart.push({
+                categories: new Date(data[i].transaction_date),
+                series: data[i].Borrowed
+            })
+        }
+      
+      } catch (error) {
+        if (error.response === undefined) {
+          return false;
+        }
+        Swal.fire({
+          title: 'Done !',
+          text: error.response.data.message,
+          icon: 'warning',
+        });
+      }
+      return true
+    }
+
+    render() {
+      const params = qs.parse(this.props.location.search.slice(1));
+      params.page = params.page || 1;
+     
+      return (
+        <>
+          <Spiner />
+          <Row className="no-gutters w-100 h-100">
+            <div className="d-flex flex-row w-100">
+              <Sidebar {...this.props} />
+              <div className="w-100 d-flex flex-column">
+                <div className="top-navbar sticky-top">
+                  <TopNavbar search={(query) => this.fetchData(query)} />
+                </div>
+                <Container fluid className="mt-4">
+                  <Jumbotron className="jumbotron-dashboard shadow" />
+                  <Col>
+
+                    {this.state.data.length !== 0 && (
+                    <Row />
+                    )}
+                    {this.state.data.length === 0 && (
+                    <h1>Data Not Available</h1>
+                    )}
+
+                  </Col>
+                  <div className="d-flex justify-content-center">
+                    <Chart
+                      options={this.state.options}
+                      series={this.state.series}
+                      type="line"
+                      width="500"
+                    />
+                  </div>
+                </Container>
+              </div>
+            </div>
+
+          </Row>
+        </>
+      );
+    }
 }
 
-export default Dashboard
+const mapStateToProps = (state) => ({
+  loader: state.loader,
+});
+
+const mapDispatchToProps = {
+  showLoader,
+  hideLoader,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+
+// export default Dashboard

@@ -4,7 +4,6 @@ import {Container,
         Table, 
         Card, 
         Badge} from 'react-bootstrap';
-import qs from 'querystring'
 import Swal from 'sweetalert2' // alert sweetalert
 import Spiner from '../components/Loader' // loader
 import TopNavbar from './navbar' // topnavbar
@@ -85,14 +84,6 @@ class userHistory extends Component {
     
     render(){
 
-         // state for edit modal close
-         const {transactionid, transactiondate, userid, bookid, statusid} = this.state
-
-         // set state addModal
-         let addModalClose = () => this.setState({addModalShow:false})
- 
-         // set edit editModal close
-         let editModalClose = () => this.setState({editModalShow:false})
         return(
             <>
                 <Row className="no-gutters w-100 h-100">

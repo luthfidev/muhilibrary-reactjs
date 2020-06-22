@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { 
     Row,
-    Col, 
     Navbar, 
     Nav, 
     Form, 
@@ -92,9 +91,16 @@ const ListAuthor = () => {
 const CardBook = () => {
     return(
         <>
-       
         <div className="card-book">
-
+            <img style={{ width: 250 }} src={require('../assets/img/dashboard/1.jpg')}/>
+            <div className="card-book-text">
+                <p className="m-2">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                </p>
+            </div>
+            <div className="card-book-btn d-flex justify-content-center mt-5">
+                <a href="#">Borrow</a>
+            </div>
         </div>
         </>
     ) 
@@ -115,6 +121,10 @@ export default class test extends Component {
                             </div>
                             <div className="landing-card d-flex col-md-12">
                                 <Row className="w-100 d-flex justify-content-center">
+                                    <CardBook/>
+                                    <CardBook/>
+                                    <CardBook/>
+                                    <CardBook/>
                                     <CardBook/>
                                     <CardBook/>
                                     <CardBook/>

@@ -24,7 +24,36 @@ html, body, #root {
     background-color: #E0E5EC;
   }
 
+  .landing-title-author {
+    margin-top: 15px;
+    align-items: center;
+    background-color:#E0E5EC;
+    box-shadow: 9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px    rgba(255,255,255, 0.5);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    height: 50px;
+    margin-right: 4rem;
+    width: 400px;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: -0.2px;
+    color: #333333;
+    text-shadow: 1px 1px 1px #FFF
+  }
+
   .landing-list-author {
+    margin-top: 15px;
+    align-items: center;
+    background-color:#E0E5EC;
+    box-shadow: inset 9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px    inset rgba(255,255,255, 0.5);
+    border-radius: 15px;
+    display: flex;
+    height: 50px;
+    margin-right: 4rem;
+    width: 400px;
+  }
+
+  .landing-card-title {
     margin-top: 15px;
     align-items: center;
     background-color:#E0E5EC;
@@ -33,7 +62,13 @@ html, body, #root {
     display: flex;
     height: 50px;
     margin-right: 4rem;
-    width: 400px;
+  }
+
+  .landing-card-title h2{
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: -0.2px;
+    color: #BABECC;
+    text-shadow: 1px 1px 1px #FFF
   }
 
   .card-book {
@@ -55,6 +90,7 @@ html, body, #root {
     background: #E0E5EC;
     box-shadow: inset 20px 20px 60px #bec3c9, 
             inset -20px -20px 60px #ffffff;
+            transform: scale(0.98);
   }
 
   .card-book-text {
@@ -77,6 +113,7 @@ html, body, #root {
 
   .card-book-btn  a:hover{
     box-shadow: inset -4px -4px 10px rgba(255,255,255,0.5), inset 4px 4px 10px rgba(0,0,0,0.1);
+    
   }
 
 

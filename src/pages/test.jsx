@@ -77,11 +77,11 @@ const ListAuthor = () => {
         <>
        
         <div className="d-flex flex-column">
-        <div className="landing-tittle-author">List Author</div>
             <ul>
-                <li className="landing-list-author">Bibit</li>
-                <li className="landing-list-author">Bibit</li>
-                <li className="landing-list-author">Bibit</li>
+            <div className="landing-title-author">List Author</div>
+                <li className="landing-list-author"></li>
+                <li className="landing-list-author"></li>
+                <li className="landing-list-author"></li>
             </ul>
             </div>
         </>
@@ -119,6 +119,9 @@ export default class test extends Component {
                             <div className="mt-3 col-md-6">
                                 <ListAuthor/>
                             </div>
+                            <div className="landing-card-title col-md-12 mt-5 d-flex justify-content-center">
+                                <h2>Browse your favorite book </h2>
+                            </div>
                             <div className="landing-card d-flex col-md-12">
                                 <Row className="w-100 d-flex justify-content-center">
                                     <CardBook/>
@@ -132,7 +135,6 @@ export default class test extends Component {
                                 </Row>
                             </div>
                         </Row>
-          
             </>
         )
     }

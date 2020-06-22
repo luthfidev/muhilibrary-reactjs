@@ -6,6 +6,7 @@ import './App.css';
 
 import Login from './pages/login';
 import Landing from './pages/landing';
+import Test from './pages/test';
 import Register from './pages/register';
 import Detail from './pages/detail';
 import Dashboard from './pages/dashboard';
@@ -33,6 +34,7 @@ class App extends Component {
         <BrowserRouter>
           <Switch>
             <Route path="/" exact component={Landing}/>
+            <Route path="/test" exact component={Test}/>
             <Route path="/login" exact component={Login}/>
             <Route path="/register" exact component={Register}/>
             <Route path="/detail/:id" exact component={Detail}/>

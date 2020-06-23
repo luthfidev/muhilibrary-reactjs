@@ -27,6 +27,7 @@ html, body, #root {
   .landing-title-author {
     margin-top: 15px;
     align-items: center;
+    font-weight: bold;
     background-color:#E0E5EC;
     box-shadow: 9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px    rgba(255,255,255, 0.5);
     border-radius: 15px;
@@ -37,7 +38,7 @@ html, body, #root {
     width: 100%;
     font-family: 'Montserrat', sans-serif;
     letter-spacing: -0.2px;
-    color: #333333;
+    color: #342ead;
     text-shadow: 1px 1px 1px #FFF
   }
 
@@ -66,8 +67,9 @@ html, body, #root {
 
   .landing-card-title h2{
     font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
     letter-spacing: -0.2px;
-    color: #BABECC;
+    color: #342ead;
     text-shadow: 1px 1px 1px #FFF
   }
 
@@ -94,7 +96,7 @@ html, body, #root {
   }
 
   .card-book-text {
-    color: #32a3b1;
+    color: black;
   }
 
   .card-book-btn {
@@ -103,16 +105,21 @@ html, body, #root {
 
   .card-book-btn  .btn-borrow{
     display: inline-block;
+    color:#342ead;
+    font-family: sans-serif;
+    font-weight: bold;
     padding: 10px 20px;
     margin-top: 15px;
     border-radius: 40px;
-    color: #32a3b1;
+    background-color: #e0e5ec;
     font-size: 16px;
     text-decoration: none;
-    box-shadow: -4px -4px 15px rgba(255,255,255,1), 4px 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 9px 9px 16px rgb(163,177,198,0.6),
+                 -9px -9px 16px rgba(255,255,255,0.5);
   }
 
   .card-book-btn  .btn-borrow:hover{
+    
     box-shadow: inset -4px -4px 10px rgba(255,255,255,0.5), inset 4px 4px 10px rgba(0,0,0,0.1);
     
   }

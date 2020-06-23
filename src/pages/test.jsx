@@ -8,6 +8,7 @@ import {
     Button, 
     Carousel, 
 } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import slide1 from '../assets/img/landing/1.jpg'
 import slide2 from '../assets/img/landing/2.jpg'
 import slide3 from '../assets/img/landing/3.jpg'
@@ -99,11 +100,34 @@ const CardBook = () => {
                 </p>
             </div>
             <div className="card-book-btn d-flex justify-content-center mt-5">
-                <a href="#">Borrow</a>
+            <Link className="btn-borrow" to="/borrow">Borrow</Link>
             </div>
         </div>
         </>
     ) 
+}
+
+const FormLogin = () => {
+    return (
+        <>
+            <div className="card-login">
+                <div className="card-login-title d-flex justify-content-center mt-2">
+                    <h2>Login</h2>
+                    </div>
+                    <form className="card-form-login w-100">
+                        <div className="field d-flex justify-content-center mt-4 mb-3">
+                            <input type="text" placeholder="Email"/>
+                        </div>
+                        <div className="field d-flex justify-content-center">
+                            <input type="text" placeholder="Password"/>
+                        </div>
+                        <div className="d-flex justify-content-center mt-5">
+                            <button className="btn-login text-danger">Login</button>
+                        </div>
+                    </form>
+            </div>
+        </>
+    )
 }
 
 export default class test extends Component {
@@ -134,6 +158,9 @@ export default class test extends Component {
                                     <CardBook/>
                                 </Row>
                             </div>
+                            <FormLogin>
+
+                            </FormLogin>
                         </Row>
             </>
         )

@@ -187,7 +187,7 @@ handlePost = async (event) => {
                       </div>
                       </Link>
                       <div className="h-75 m-4 d-flex justify-content-center align-items-center">
-                        <Form onSubmit={ this.handlePost}>
+                       {/*  <Form onSubmit={ this.handlePost}>
                         <h1>Login</h1>
                           <p>Welcome Back, Please Login to your account</p>
                           <Form.Group>
@@ -221,7 +221,23 @@ handlePost = async (event) => {
                           </Button>
                           <Link onClick={()=> this.setState({addModalShow: true})} className="ml-2 btn btn-outline-info">Register</Link>
                           <Link to="/" className="ml-2 btn btn-outline-dark">Back</Link>
-                        </Form>
+                        </Form> */}
+                        <div className="card-login">
+                            <div className="card-login-title d-flex justify-content-center mt-2">
+                                <h2>Login</h2>
+                                </div>
+                                <form className="card-form-login w-100" onSubmit={ this.handlePost}>
+                                    <div className="field d-flex justify-content-center mt-4 mb-3">
+                                        <input name="email" type="text" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} placeholder="Email"/>
+                                    </div>
+                                    <div className="field d-flex justify-content-center">
+                                        <input name="password" type="text" value={this.state.password} onChange={(e) => this.updatePassword(e.target.value)} placeholder="Password"/>
+                                    </div>
+                                    <div className="d-flex justify-content-center mt-5">
+                                        <button className="btn-login text-danger">Login</button>
+                                    </div>
+                                </form>
+                        </div>
                       </div>
                       <Col className="footer-login d-flex justify-content-center align-content-center">
                         <div>

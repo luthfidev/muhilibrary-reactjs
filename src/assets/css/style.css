@@ -4,6 +4,7 @@ html, body, #root {
     height: 100%;
     margin:0;
     padding: 0;  
+    background-color: #E0E5EC;
 }
 
 .divider {
@@ -24,6 +25,73 @@ html, body, #root {
     background-color: #E0E5EC;
   }
 
+/*form login */
+
+.card-login {
+  position: relative;
+    margin: 30px;
+    height: 350px;
+    width: 250px;
+    border-radius: 20px;
+    background-color:#E0E5EC;
+    box-shadow: 9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px    rgba(255,255,255, 0.5);
+}
+
+.card-login-title h2{
+ text-shadow: 1px 1px 1px #fff;
+ color: #342ead;
+ font-weight: bold;
+}
+
+.card-form-login .field input{
+  outline: 0;
+  font-size: 16px;
+  border-radius: 25px;
+  padding: 16px;
+  background-color: #ebecf0;
+  text-shadow: 1px 1px 0 #fff;
+  margin-right: 8px;
+  box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 10px #fff;
+  width: 200px;
+  height: 40px;
+  box-sizing: border-box;
+  transition: all 0.2s ease-in-out;
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+}
+
+.card-form-login .field input:focus {
+  box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #fff;
+}
+
+.card-form-login .btn-login {
+  width: 100px;
+  height: 50px;
+  border: 0;
+  outline: 0;
+  font-size: 16px;
+  border-radius: 20px;
+  background-color: #ebecf0;
+  text-shadow: 1px 1px 0 #fff;
+  text-align: center;
+}
+
+.btn-login {
+  color: #61677c;
+  font-weight: bold;
+  box-shadow: -5px -5px 20px #fff, 5px 5px 20px #babecc;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+.btn-login:hover {
+  box-shadow: -2px -2px 5px #fff, 2px 2px 5px #babecc;
+}
+.btn-login:active {
+  box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #fff;
+}
+
+/*landing */
   .landing-title-author {
     margin-top: 15px;
     align-items: center;
@@ -119,18 +187,9 @@ html, body, #root {
   }
 
   .card-book-btn  .btn-borrow:hover{
-    
     box-shadow: inset -4px -4px 10px rgba(255,255,255,0.5), inset 4px 4px 10px rgba(0,0,0,0.1);
-    
+    transform: scale(0.98);
   }
-
-
-/*   .landing-card-book:hover {
-    box-shadow: 1px 8px 20px grey;
-    -webkit-transition:  box-shadow .6s ease-in;
-    border-radius: 5px;
-  }
- */
 
   .caraousel-landing {
     width: 100%;

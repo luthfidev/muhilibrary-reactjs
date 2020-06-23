@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Row, 
         Col,
         Form,
-        Button,
         Spinner} from 'react-bootstrap' 
 import {Link} from 'react-router-dom';
 import qs from 'querystring'
@@ -151,13 +150,10 @@ handlePost = async (event) => {
       this.setState({isLoading: false})
     this.resetForm()
 }
-    async componentDidMount(){
-        await this.checkToken()
+  componentDidMount(){
+      this.checkToken()
     }
 
-  /*   componentWillUnmount(){
-      this.checkToken()
-    } */
       
     render(){
       let addModalClose = () => this.setState({addModalShow:false})
@@ -183,58 +179,39 @@ handlePost = async (event) => {
                   <div className="content-login h-100">
                       <Link to="/" className="text-decoration-none">
                       <div className="brand d-flex">
-                          <img alt="brand" className="ml-auto mr-3 mt-2" src={brand}/>
+                          <img alt="brand" className="brand-img ml-auto mr-3 mt-2" src={brand}/>
                       </div>
                       </Link>
                       <div className="h-75 m-4 d-flex justify-content-center align-items-center">
-                       {/*  <Form onSubmit={ this.handlePost}>
-                        <h1>Login</h1>
-                          <p>Welcome Back, Please Login to your account</p>
-                          <Form.Group>
-                            <Form.Label>Email address</Form.Label>
-                            <Form.Control name="email" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} type="email" placeholder="Enter email" />
-                            <Form.Text className="text-muted">
-                            <ValidationMessage valid={this.state.emailValid} message={this.state.errorMsg.email} />
-
-                            </Form.Text>
-                          </Form.Group>
-                          <Form.Group>
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control name="password" value={this.state.password} onChange={(e) => this.updatePassword(e.target.value)} type="password" placeholder="Password" />
-                            <Form.Text className="text-muted">
-                            < ValidationMessage valid={this.state.passwordValid} message={this.state.errorMsg.password} />
-                            </Form.Text>
-                          </Form.Group>
-                          <Form.Group className="d-flex justify-content-between">
-                            <Form.Check type="checkbox" label="Check me out" />
-                            <Link to="/register" className="text-decoration-none"> Forgot Password</Link>
-                          </Form.Group>
-                          <Button variant="primary" type="submit" disabled={isLoading || !formValid}>
-                          {isLoading &&(
-                          <Spinner 
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                          />)} Login
-                          </Button>
-                          <Link onClick={()=> this.setState({addModalShow: true})} className="ml-2 btn btn-outline-info">Register</Link>
-                          <Link to="/" className="ml-2 btn btn-outline-dark">Back</Link>
-                        </Form> */}
                         <div className="card-login">
                             <div className="card-login-title d-flex justify-content-center mt-2">
                                 <h2>Login</h2>
                                 </div>
                                 <form className="card-form-login w-100" onSubmit={ this.handlePost}>
-                                    <div className="field d-flex justify-content-center mt-4 mb-3">
+                                  <div className="d-flex flex-column d-flex align-items-center justify-content-center">                         
+                                    <div className="field  mt-4 mb-3">
                                         <input name="email" type="text" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} placeholder="Email"/>
+                                        <Form.Text className="text-muted">
+                                          <ValidationMessage valid={this.state.emailValid} message={this.state.errorMsg.email} />
+                                        </Form.Text>
                                     </div>
-                                    <div className="field d-flex justify-content-center">
+                                    <div className="field mt-2">
                                         <input name="password" type="text" value={this.state.password} onChange={(e) => this.updatePassword(e.target.value)} placeholder="Password"/>
+                                        <Form.Text className="text-muted">
+                                          <ValidationMessage valid={this.state.passwordValid} message={this.state.errorMsg.password} />
+                                        </Form.Text>
+                                    </div>
                                     </div>
                                     <div className="d-flex justify-content-center mt-5">
-                                        <button className="btn-login text-danger">Login</button>
+                                        <button className="btn-login text-danger" disabled={isLoading || !formValid}>
+                                        {isLoading &&(
+                                        <Spinner 
+                                          as="span"
+                                          animation="border"
+                                          size="sm"
+                                          role="status"
+                                          aria-hidden="true"
+                                        />)} Login</button>
                                     </div>
                                 </form>
                         </div>
@@ -242,8 +219,8 @@ handlePost = async (event) => {
                       <Col className="footer-login d-flex justify-content-center align-content-center">
                         <div>
                         <div>By signing up, you agree to Book’s</div>
-                        <Link to="#"> Terms and Conditions</Link> & 
-                        <Link to="#"> Privacy Policy</Link>
+                        <Link className="text-decoration-none" to="#"> Terms and Conditions</Link> & 
+                        <Link className="text-decoration-none" to="#"> Privacy Policy</Link>
                         </div>
                       </Col>
                   </div>

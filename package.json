@@ -10,7 +10,6 @@
     "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
     "moment": "^2.26.0",
-    "neomorphism": "^0.0.2",
     "react": "^16.13.1",
     "react-apexcharts": "^1.3.7",
     "react-bootstrap": "^1.0.1",

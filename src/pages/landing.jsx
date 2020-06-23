@@ -97,7 +97,7 @@ class Landing extends Component {
                         </Nav>
                         <Form inline>
                             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                            <Button className='mr-2 shadow' variant="outline-info">Login</Button>
+                            <Link className="btn btn-info mr-2 shadow" to="/login">Login</Link>
                             <Button className='shadow' variant="outline-secondary">Register</Button>
                         </Form>
                         </Navbar.Collapse>

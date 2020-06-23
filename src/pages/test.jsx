@@ -24,7 +24,7 @@ const NavbarLanding = () => {
             </Nav>
             <Form inline>
                 <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                <Button className='mr-2 shadow' variant="outline-info">Login</Button>
+                <Link className="btn btn-light" to="/login">Login</Link>
                 <Button className='shadow' variant="outline-secondary">Register</Button>
             </Form>
             </Navbar.Collapse>
@@ -63,7 +63,6 @@ const CarouselLanding = () => {
                     src={slide3}
                     alt="Third slide"
                 />
-            
                 <Carousel.Caption>
                     <h3>Third slide label</h3>
                     <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
@@ -76,7 +75,6 @@ const CarouselLanding = () => {
 const ListAuthor = () => {
     return(
         <>
-       
         <div className="d-flex flex-column">
             <ul>
             <div className="landing-title-author">List Author</div>

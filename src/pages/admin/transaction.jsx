@@ -36,8 +36,8 @@ class Transaction extends Component {
              this.setState({isLogin: true})
              this.setState({isAdmin: user.userData.role})
            }else{
-               props.history.push('/login')
              this.setState({isLogin: false})
+               props.history.push('/login')
            }
          }
       }

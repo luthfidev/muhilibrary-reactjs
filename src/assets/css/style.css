@@ -24,7 +24,6 @@ html, body, #root {
   .body-bg {
     background-color: #E0E5EC;
   }
-
 /*form login */
 
 .card-login {
@@ -89,6 +88,11 @@ html, body, #root {
 }
 .btn-login:active {
   box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #fff;
+}
+
+.footer-login {
+  color: #342ead;
+  text-shadow: 1px 1px 1px #FFF;
 }
 
 /*landing */
@@ -186,9 +190,12 @@ html, body, #root {
                  -9px -9px 16px rgba(255,255,255,0.5);
   }
 
-  .card-book-btn  .btn-borrow:hover{
-    box-shadow: inset -4px -4px 10px rgba(255,255,255,0.5), inset 4px 4px 10px rgba(0,0,0,0.1);
-    transform: scale(0.98);
+  .card-book-btn .btn-borrow:hover {
+    box-shadow: -2px -2px 5px #fff, 2px 2px 5px #babecc;
+  }
+  .card-book-btn .btn-borrow:active {
+    box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #fff;
+    color: #ff8246;
   }
 
   .caraousel-landing {

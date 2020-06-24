@@ -1,22 +1,20 @@
 const initialState = {
-    dataBooks: [{}],
     isLoading: false,
     isError: false,
     errorMsg: '',
     token: null
 }
 
-
-const books = (state=initialState, action) => {
+const auth = (state=initialState, action) => {
     switch(action.type) {
-        case 'BOOKS_PENDING': {
+        case 'LOGIN_PENDING': {
             return {
                 ...state,
                 isLoading: true,
                 isError: false
             }
         }
-        case 'BOOKS_REJECTED': {
+        case 'LOGIN_REJECTED': {
             return {
                 ...state,
                 isLoading: false,
@@ -24,12 +22,12 @@ const books = (state=initialState, action) => {
                 errorMsg: action.payload.response.data.message,
             }
         }
-        case 'BOOKS_FULFILLED': {
+        case 'LOGIN_FULFILLED': {
             return {
                 ...state,
                 isLoading: false,
                 isError: false,
-                dataBooks: action.payload.data.data,
+                token: action.payload.data.token
             }
         }
         default: {
@@ -39,4 +37,5 @@ const books = (state=initialState, action) => {
         }
     }
 }
-export default books
+
+export default auth

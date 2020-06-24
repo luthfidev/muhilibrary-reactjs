@@ -124,8 +124,8 @@ class Sidebar extends Component {
                 </>)}
                 <Nav.Item>
                {/*  <Link className="nav-link text-decoration-none text-dark font-weight-bold" onClick={this.onLogout}> Logout</Link> */}
-               <Button onClick={this.onLogout} className="ml-2 mt-2" variant="info" disabled={isLoading}>
-               {isLoading &&(
+               <Button onClick={this.onLogout} className="ml-2 mt-2" variant="info" disabled={!isLoading}>
+               {!isLoading &&(
                 <Spinner 
                   as="span"
                   animation="border"

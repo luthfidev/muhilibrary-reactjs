@@ -18,8 +18,6 @@ import TopNavbar from './navbar';
 import Sidebar from './sidebar';
 import Spiner from '../components/Loader';
 
-import { showLoader, hideLoader } from '../redux/actions/loader';
-
 const { REACT_APP_URL } = process.env;
 
 class Dashboard extends Component {
@@ -46,10 +44,10 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    this.fetchData();
+   console.log(this.props)
   }
 
-    fetchData = async () => {
+   /*  fetchData = async () => {
       try {
         this.props.showLoader()
         const url = `${REACT_APP_URL}transactions/chart`;
@@ -77,14 +75,13 @@ class Dashboard extends Component {
       }
       return true
     }
-
+ */
     render() {
       const params = qs.parse(this.props.location.search.slice(1));
       params.page = params.page || 1;
      
       return (
         <>
-          <Spiner />
           <Row className="no-gutters w-100 h-100">
             <div className="d-flex flex-row w-100">
               <Sidebar {...this.props} />
@@ -123,14 +120,10 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  loader: state.loader,
+  auth: state.auth,
 });
 
-const mapDispatchToProps = {
-  showLoader,
-  hideLoader,
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default connect(mapStateToProps, null)(Dashboard);
 
 // export default Dashboard

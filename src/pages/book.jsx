@@ -18,8 +18,7 @@ import qs from 'querystring'
 import Swal from 'sweetalert2'
 
 import { connect } from 'react-redux'
-
-import { getAllBooks } from '../redux/actions/book'
+import { getbooks } from '../redux/actions/book'
 
 const { REACT_APP_URL } = process.env
 
@@ -33,7 +32,7 @@ class Book extends Component {
           addModalShow : false
         }
         // check auth flow
-        const user = JSON.parse(localStorage.getItem('user'))
+       /*  const user = JSON.parse(localStorage.getItem('user'))
         this.checkLogin = () => {
           if(user){
             this.setState({isLogin: true})
@@ -42,15 +41,16 @@ class Book extends Component {
               props.history.push('/login')
             this.setState({isLogin: false})
           }
-        }
+        } */
       }
 
 
-    componentDidMount(){
-        this.checkLogin()
+   async componentDidMount(){
+       /*  this.checkLogin() */
+      await this.props.getbooks()
         const param = qs.parse(this.props.location.search.slice(1))
-        this.fetchData(param)
-        this.fetchDataGenre()
+        // this.fetchDataGenre()
+        console.log(this.props.books.dataBooks)
     }
 
 
@@ -90,17 +90,12 @@ class Book extends Component {
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
         let addModalClose = () => this.setState({addModalShow:false})
-       
+        //  const { dataBooks } = this.props.books
+        // console.log(this.props.books)
+
         return(
             <>
-                <Row className="no-gutters w-100 h-100">
-            {this.state.isLoading &&
-                <div className='d-flex w-100 h-100 justify-content-center align-items-center'>
-                <Spiner/>
-                
-                </div>
-                }
-                 {!this.state.isLoading &&(         
+                <Row className="no-gutters w-100 h-100">        
                     <div className="d-flex flex-row w-100">
                         <Sidebar {...this.props}/>           
                             <div className="w-100 d-flex flex-column">
@@ -162,7 +157,7 @@ class Book extends Component {
                                     {this.state.data.length !== 0 &&(
                                     <Row>
 
-                                        {this.state.data.map((book, index) => (  
+                                        {this.props.books().dataBooks.map((book, index) => (  
                                         <Link key={book.id.toString()} to={{
                                                                             pathname: `/detail/${book.id}`,
                                                                             state: {
@@ -216,8 +211,7 @@ class Book extends Component {
                                     </div>
                                </Container>
                             </div>
-                    </div> 
-                )}       
+                    </div>     
                 </Row>
             </>
         )
@@ -229,7 +223,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    getAllBooks
+    getbooks
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(Book)

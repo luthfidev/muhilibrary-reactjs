@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import {Provider} from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
 
 import './App.css';
 
@@ -20,7 +21,7 @@ import UserHistory from './pages/userHistory';
 import Profile from './pages/profile';
 import Notfound from './pages/notfound';
 
-import store from './redux/store'
+import { store, persistor } from './redux/store'
 
 
 
@@ -32,6 +33,7 @@ class App extends Component {
         <>
         <Provider store={store}>
         <BrowserRouter>
+       <PersistGate persistor={persistor}> 
           <Switch>
             <Route path="/" exact component={Landing}/>
             <Route path="/test" exact component={Test}/>
@@ -49,6 +51,7 @@ class App extends Component {
             <Route path="/profile" exact component={Profile}/>
             <Route component={Notfound} />
           </Switch>
+        </PersistGate> 
         </BrowserRouter>
         </Provider>
       </>

@@ -3,12 +3,15 @@ import {Row,
         Col,
         Form,
         Spinner} from 'react-bootstrap' 
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import qs from 'querystring'
 import Swal from 'sweetalert2'
 import brand from '../assets/img/bookshelf.png'
 import {Register} from '../components/Register' 
 import axios from 'axios'
+import { connect } from 'react-redux'
+
+import { login } from '../redux/actions/auth'
 const  {REACT_APP_URL } = process.env
  
 function ValidationMessage(props) {
@@ -31,12 +34,10 @@ function ValidationMessage(props) {
         email: '', emailValid: false,
         password: '', passwordValid: false,
         loggedIn: false,
-        isLoading: false,
         addModalShow : false,
         errorMsg: {},
         formValid: false
     }
-    this.handlePost = this.handlePost.bind(this)
      
     // check auth flow
      this.checkToken = () => {
@@ -109,7 +110,7 @@ validatePassword = () => {
   this.setState({passwordValid, errorMsg}, this.validateForm)
 }
 
-handlePost = async (event) => {
+handlePost2 = async (event) => {
   event.preventDefault()
     this.setState({isLoading: true})
     const userData = {
@@ -150,14 +151,22 @@ handlePost = async (event) => {
       this.setState({isLoading: false})
     this.resetForm()
 }
-  componentDidMount(){
-      this.checkToken()
-    }
+
+handlePost = async (event) => {
+  event.preventDefault()
+  const { email, password } = this.state
+  this.props.login(email, password)
+  console.log(this.props.auth.token)
+}
 
       
     render(){
       let addModalClose = () => this.setState({addModalShow:false})
-      const {formValid, isLoading} = this.state
+      const {formValid } = this.state
+      const { isLoading, token } = this.props.auth
+      if (token) {
+        return <Redirect to="/dashboard" push />;
+      }
         return(
         <>
           <Row className="h-100 no-gutters">
@@ -231,4 +240,10 @@ handlePost = async (event) => {
     }
 }
 
-export default Login
+const mapStateToProps = (state) => ({
+  auth: state.auth
+})
+
+const mapDispatchToProps = { login }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

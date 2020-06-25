@@ -10,12 +10,12 @@ import Spiner from '../../components/Loader'
 import authHeader from '../../services/authHeader'
 
 // file form modal Add
-import {AddAuthor} from '../../components/author/AddAuthor' 
+import AddAuthor from '../../components/author/AddAuthor' 
 // file form modal edit
 import {EditAuthor} from '../../components/author/EditAuthor'
 
 import { connect } from 'react-redux'
-import { getauthors } from '../../redux/actions/author'
+import { getauthors, deleteauthors } from '../../redux/actions/author'
 
 class Author extends Component {
     constructor(props){
@@ -42,18 +42,25 @@ class Author extends Component {
           }
  */
       }
+      
+      fetchData = async () => {
+        await this.props.getauthors()
+        const { dataAuthors } = this.props.authors
+        this.setState({dataAuthors})
+      }
 
         // mount get data
-        async componentDidMount(){
+        componentDidMount(){
             /* await this.checkLogin()
             const param = qs.parse(this.props.location.search.slice(1))
             await this.fetchData(param) */
-            await this.props.getauthors()
+           /*  await this.props.getauthors()
             const { dataAuthors } = this.props.authors
-            this.setState({dataAuthors})
+            this.setState({dataAuthors}) */
+            this.fetchData()
         }
 
-      // get data 
+  /*     // get data 
       fetchData = async (params) => {
             this.setState({isLoading: true})
             const {REACT_APP_URL} = process.env
@@ -67,12 +74,16 @@ class Author extends Component {
                 this.props.history.push(`?${param}`)
             }
       }
-
+ */
       // props delete
-      deleteAuthor = async(id) => {
+    /*   deleteAuthor = async(id) => {
         const {REACT_APP_URL} = process.env
         const url = `${REACT_APP_URL}authors/${id}`
         await axios.delete(url)
+        this.fetchData()
+      } */
+      deleteAuthor = (id) => {
+        this.props.deleteauthors(id)
         this.fetchData()
       }
 
@@ -88,7 +99,8 @@ class Author extends Component {
           confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
           if (result.value) {
-            this.deleteAuthor(id)
+           /*  this.deleteAuthor(id) */
+           this.deleteAuthor(id)
             Swal.fire(
               'Deleted!',
               'Your data has been deleted.',
@@ -97,7 +109,16 @@ class Author extends Component {
           }
         })
       }
-      
+
+/*       componentDidUpdate(prevProps, prevState) {
+        // only update chart if the data has changed
+        const { updateAuthors } = this.props.authors
+        if (prevProps.upddateAuthors !== updateAuthors) {
+         this.props.getauthors()
+        }
+      } */
+
+       
     render(){
 
         // pagination
@@ -112,7 +133,9 @@ class Author extends Component {
 
         // set edit editModal close
         let editModalClose = () => this.setState({editModalShow:false})
+
         return(
+      
             <>
                <Row className="no-gutters w-100 h-100">
                 {this.state.isLoading &&
@@ -141,7 +164,7 @@ class Author extends Component {
                                      <EditAuthor
                                         show={this.state.editModalShow}
                                         onHide={editModalClose}
-                                        refreshdata={() => this.fetchData()}
+                                        refreshdata={() => this.props.getauthors()}
                                         authorid = {authorid}
                                         authorname = {authorname}
                                         authordescription = {authordescription}
@@ -208,7 +231,8 @@ const mapStateToProps = (state) => ({
   authors: state.authors
 })
 const mapDispatchToProps = {
-  getauthors
+  getauthors,
+  deleteauthors,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Author)

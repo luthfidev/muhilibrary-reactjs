@@ -31,6 +31,52 @@ const genres = (state=initialState, action) => {
                 dataGenres: action.payload.data.data
             }
         }
+         // POST
+         case 'POST_GENRES_PENDING': {
+            return {
+                ...state,
+                isLoading: true,
+                isError: false
+            }
+        }
+        case 'POST_GENRES_REJECTED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: true,
+                errorMsg: action.payload.response.data.message,
+            }
+        }
+        case 'POST_GENRES_FULFILLED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+            }
+        }
+           // delete
+        case 'DELETE_GENRES_PENDING': {
+        return {
+            ...state,
+            isLoading: true,
+            isError: false
+            }
+        }
+        case 'DELETE_GENRES_REJECTED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: true,
+                errorMsg: action.payload.response.data.message,
+            }
+        }
+        case 'DELETE_GENRES_FULFILLED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+            }
+        }
         default: {
             return {
                 ...state

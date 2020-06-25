@@ -2,9 +2,10 @@ import React, {Component} from 'react'
 import {Modal, 
         Button, 
         Form} from 'react-bootstrap'
+import qs from 'querystring'
 import Swal from 'sweetalert2'
-import axios from 'axios'
-const {REACT_APP_URL} = process.env
+import { connect } from 'react-redux'
+import { getauthors, postauthors } from '../../redux/actions/author'
 
 
 function ValidationMessage(props) {
@@ -19,7 +20,7 @@ function ValidationMessage(props) {
   }
 }
 
-export class AddAuthor extends Component {
+class AddAuthor extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -29,7 +30,6 @@ export class AddAuthor extends Component {
             errorMsg: {},
             alert: ''
         }
-        this.handlePost = this.handlePost.bind(this)
     }
 
     validateForm = () => {
@@ -84,31 +84,50 @@ export class AddAuthor extends Component {
             this.setState({[  event.target.name]: event.target.value})
         }
 
-       handlePost = (event) => {
-        event.preventDefault()
-        this.setState({isLoading: true})
-        const authorData = {
-            name: this.state.name,
-            description: this.state.description
-        }
-        const url = `${REACT_APP_URL}authors`
-        axios.post(url, authorData).then( (response) => {
-            this.setState({Msg: response.data.message})
-            Swal.fire({
-              title: 'Done !',
-              text: this.state.Msg,
-              icon: 'success',
-              timer: 2000
-            })
-            this.setState({ redirect: this.state.redirect === false });
-          })
-          .catch(function (error) {
-           }) 
-           this.props.refreshdata()
-           this.props.onHide()
+  /*   handlePost = (event) => {
+    event.preventDefault()
+    this.setState({isLoading: true})
+    const authorData = {
+        name: this.state.name,
+        description: this.state.description
     }
-       
-    render(){
+    const url = `${REACT_APP_URL}authors`
+    axios.post(url, authorData).then( (response) => {
+        this.setState({Msg: response.data.message})
+        Swal.fire({
+          title: 'Done !',
+          text: this.state.Msg,
+          icon: 'success',
+          timer: 2000
+        })
+        this.setState({ redirect: this.state.redirect === false });
+      })
+      .catch(function (error) {
+        }) 
+        this.props.refreshdata()
+        this.props.onHide()
+    } */
+    
+    handlePost = (event) => {
+      event.preventDefault()
+      const authorData = {
+        name: this.state.name,
+        description: this.state.description
+      }
+      this.props.postauthors(authorData)
+      this.props.refreshdata()
+      this.props.onHide()
+    } 
+
+  /*   componentDidUpdate() {
+ 
+        if (this.props.authors.isError === false) {
+         this.props.refreshdata()
+        } 
+      }
+    } */
+     
+    render() {
       const {formValid} = this.state
         return(
             <Modal
@@ -124,7 +143,7 @@ export class AddAuthor extends Component {
             </Modal.Header>
             <Modal.Body>
                 <div className="contaniner">
-                <Form onSubmit={ this.handlePost}>
+                <Form onSubmit={this.handlePost}>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Name Author</Form.Label>
                     <Form.Control name="name" value={this.state.name} onChange={(e) => this.updateName(e.target.value)} type="text" placeholder="Name Author" />
@@ -153,3 +172,14 @@ export class AddAuthor extends Component {
         )
     }
 }
+
+// export default AddAuthor
+const mapStateToProps = (state) => ({
+  authors: state.authors
+})
+const mapDispatchToProps = {
+  getauthors,
+  postauthors,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddAuthor)

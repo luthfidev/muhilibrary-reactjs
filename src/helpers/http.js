@@ -4,6 +4,7 @@ export default (token=null) => {
     if (token) {
         return axios.create({
             headers: {
+                'Content-Type' : 'application/x-www-form-urlencoded',
                 'Authorization': 'Bearer '.concat(token)
             }
         })

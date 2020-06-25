@@ -1,5 +1,6 @@
 const initialState = {
     dataAuthors: [],
+    updateAuthors: false,
     isLoading: false,
     isError: false,
     errorMsg: '',
@@ -29,6 +30,52 @@ const authors = (state=initialState, action) => {
                 isLoading: false,
                 isError: false,
                 dataAuthors: action.payload.data.data
+            }
+        }
+        // POST
+        case 'POST_AUTHORS_PENDING': {
+            return {
+                ...state,
+                isLoading: true,
+                isError: false
+            }
+        }
+        case 'POST_AUTHORS_REJECTED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: true,
+                errorMsg: action.payload.response.data.message,
+            }
+        }
+        case 'POST_AUTHORS_FULFILLED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+            }
+        }
+           // delete
+        case 'DELETE_AUTHORS_PENDING': {
+        return {
+            ...state,
+            isLoading: true,
+            isError: false
+            }
+        }
+        case 'DELETE_AUTHORS_REJECTED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: true,
+                errorMsg: action.payload.response.data.message,
+            }
+        }
+        case 'DELETE_AUTHORS_FULFILLED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
             }
         }
         default: {

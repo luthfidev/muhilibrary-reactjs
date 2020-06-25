@@ -12,7 +12,7 @@ import {EditGenre} from '../../components/genre/EditGenre'
 import authHeader from '../../services/authHeader'
 
 import { connect } from 'react-redux'
-import { getgenres } from '../../redux/actions/genre'
+import { getgenres, deletegenres, } from '../../redux/actions/genre'
 
 class Genre extends Component {
 
@@ -38,7 +38,7 @@ class Genre extends Component {
         } */
       }
 
-      fetchData = async (params) => {
+  /*     fetchData = async (params) => {
             this.setState({isLoading: true})
             const {REACT_APP_URL} = process.env
             const param = `${qs.stringify(params)}`
@@ -51,14 +51,26 @@ class Genre extends Component {
             if (params) {
                 this.props.history.push(`?${param}`)
             }
+      } */
+
+      fetchData = async () => {
+        await this.props.getgenres()
+        const { dataGenres } = this.props.genres
+        this.setState({dataGenres})
       }
 
+
+      deleteGenre = async(id) => {
+        this.props.deletegenres(id)
+        this.fetchData()
+      }
+/* 
       deleteGenre = async(id) => {
         const {REACT_APP_URL} = process.env
         const url = `${REACT_APP_URL}genres/${id}`
         await axios.delete(url)
         this.fetchData()
-      }
+      } */
    
       onConfirmDelete = (id) => {
         Swal.fire({
@@ -81,13 +93,14 @@ class Genre extends Component {
         })
       }
 
-      async componentDidMount(){
+      componentDidMount(){
          /*  await this.checkLogin()
           const param = qs.parse(this.props.location.search.slice(1))
           await this.fetchData(param) */
-          await this.props.getgenres()
+         /*  await this.props.getgenres()
           const { dataGenres } = this.props.genres
-          this.setState({dataGenres})
+          this.setState({dataGenres}) */
+          this.fetchData()
       }
 
 
@@ -185,7 +198,8 @@ const mapStateToProps = (state) => ({
   genres: state.genres
 })
 const mapDisPatchProps = {
-  getgenres
+  getgenres,
+  deletegenres,
 }
 
 export default connect(mapStateToProps, mapDisPatchProps)(Genre)

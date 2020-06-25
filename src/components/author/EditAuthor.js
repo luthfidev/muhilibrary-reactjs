@@ -23,6 +23,12 @@ export class EditAuthor extends Component {
         
     handlePost = async (event) => {
         event.preventDefault()
+        
+          await this.props.refreshdata()
+           this.props.onHide()
+    }
+   /*  handlePost = async (event) => {
+        event.preventDefault()
         this.setState({isLoading: true})
  
         const authorData = {
@@ -46,7 +52,7 @@ export class EditAuthor extends Component {
         })     
           await this.props.refreshdata()
            this.props.onHide()
-    }
+    } */
 
     render(){
         return(

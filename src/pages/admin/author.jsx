@@ -14,12 +14,15 @@ import {AddAuthor} from '../../components/author/AddAuthor'
 // file form modal edit
 import {EditAuthor} from '../../components/author/EditAuthor'
 
+import { connect } from 'react-redux'
+import { getauthors } from '../../redux/actions/author'
 
 class Author extends Component {
     constructor(props){
         super(props)
         // initial state
         this.state = {
+          dataAuthors: [],
           data: [],
           pageInfo: [],
           isLoading: false,
@@ -27,7 +30,7 @@ class Author extends Component {
           alert: null
         }
           // check auth flow
-          const user = JSON.parse(localStorage.getItem('user'))
+         /*  const user = JSON.parse(localStorage.getItem('user'))
           this.checkLogin = () => {
             if(user){
               this.setState({isLogin: true})
@@ -37,8 +40,18 @@ class Author extends Component {
                 props.history.push('/login')
             }
           }
-
+ */
       }
+
+        // mount get data
+        async componentDidMount(){
+            /* await this.checkLogin()
+            const param = qs.parse(this.props.location.search.slice(1))
+            await this.fetchData(param) */
+            await this.props.getauthors()
+            const { dataAuthors } = this.props.authors
+            this.setState({dataAuthors})
+        }
 
       // get data 
       fetchData = async (params) => {
@@ -83,13 +96,6 @@ class Author extends Component {
             )
           }
         })
-      }
-
-      // mount get data
-      async componentDidMount(){
-        await this.checkLogin()
-          const param = qs.parse(this.props.location.search.slice(1))
-          await this.fetchData(param)
       }
       
     render(){
@@ -148,9 +154,9 @@ class Author extends Component {
                                         <th>Action</th>
                                         </tr>
                                     </thead>
-                                    {this.state.data.length !== 0 &&(
+                                    {this.state.dataAuthors.length !== 0 &&(
                                     <tbody align="center">
-                                         {this.state.data.map((author, index) => (  
+                                         {this.state.dataAuthors.map((author, index) => (  
                                         <tr  key={author.id.toString()} >
                                         <td>{index + 1}</td>
                                         <td>{author.name}</td>                                
@@ -167,7 +173,7 @@ class Author extends Component {
                                          ))}                           
                                     </tbody>
                                     )}
-                                    {this.state.data.length===0 &&(
+                                    {this.state.dataAuthors.length===0 &&(
                                         <h1>Data Not Available</h1>
                                     )}
                                     </Table>
@@ -196,4 +202,13 @@ class Author extends Component {
     };
 }
 
-export default Author
+// export default Author
+
+const mapStateToProps = (state) => ({
+  authors: state.authors
+})
+const mapDispatchToProps = {
+  getauthors
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Author)

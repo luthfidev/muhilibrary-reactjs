@@ -4,15 +4,12 @@ import {Row,
         Form,
         Spinner} from 'react-bootstrap' 
 import {Link, Redirect} from 'react-router-dom';
-import qs from 'querystring'
 import Swal from 'sweetalert2'
 import brand from '../assets/img/bookshelf.png'
 import {Register} from '../components/Register' 
-import axios from 'axios'
 import { connect } from 'react-redux'
 
 import { login } from '../redux/actions/auth'
-const  {REACT_APP_URL } = process.env
  
 function ValidationMessage(props) {
   if (!props.valid) {
@@ -30,7 +27,6 @@ function ValidationMessage(props) {
   constructor(props) {
     super(props)
     this.state = {
-        data:[],
         email: '', emailValid: false,
         password: '', passwordValid: false,
         loggedIn: false,
@@ -92,7 +88,6 @@ validateEmail = () => {
   this.setState({emailValid, errorMsg}, this.validateForm)
 }
 
-
 updatePassword = (password) => {
   this.setState({password}, this.validatePassword)
 }
@@ -110,56 +105,13 @@ validatePassword = () => {
   this.setState({passwordValid, errorMsg}, this.validateForm)
 }
 
-handlePost2 = async (event) => {
-  event.preventDefault()
-    this.setState({isLoading: true})
-    const userData = {
-        email: this.state.email,
-        password: this.state.password
-    }
-    const url = `${REACT_APP_URL}auth/`
-    await axios.post(url, qs.stringify(userData)).then( (response) => {
-        Swal.fire({
-          title: 'Done !',
-          text: response.data.message,
-          icon: 'success',
-          timer: 2000
-        })
-      
-      if (response.data.token) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-        this.props.history.push('/dashboard')
-      }
-      })
-      .catch(function (error) {
-          if(typeof error.response !== 'undefined'){
-          Swal.fire({
-            title: 'Warning !',
-            text: 'Login Failed',
-            icon: 'warning',
-            timer: 2000
-          })
-        } else {
-          Swal.fire({
-            title: 'Warning !',
-            text: 'Error',
-            icon: 'warning',
-            timer: 2000
-          })
-        }
-      }) 
-      this.setState({isLoading: false})
-    this.resetForm()
-}
-
 handlePost = async (event) => {
   event.preventDefault()
   const { email, password } = this.state
   this.props.login(email, password)
-  console.log(this.props.auth.token)
+  this.resetForm()
 }
-
-      
+    
     render(){
       let addModalClose = () => this.setState({addModalShow:false})
       const {formValid } = this.state

@@ -6,6 +6,9 @@ import hardSet from 'redux-persist/lib/stateReconciler/hardSet'
 import auth from './auth'
 import loader from './loader'
 import books from './book'
+import authors from './author'
+import genres from './genre'
+import transactions from './transaction'
 
 const persistConfig = {
     key: 'root',
@@ -17,7 +20,10 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     auth,
-    books
+    books,
+    authors,
+    genres,
+    transactions,
 })
 
 // export default(rootReducer)

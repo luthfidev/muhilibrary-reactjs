@@ -100,7 +100,7 @@ class Sidebar extends Component {
                 <Nav.Item>
                 <Link Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/profile"><BsPersonFill/> Profile</Link>
                 </Nav.Item>
-                { this.state.isAdmin === 'admin' && (<>
+            {/*     { this.state.isAdmin === 'admin' && (<> */}
                 <Nav.Item>
                   <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/author"><BsBrush/> Author</Link>
                 </Nav.Item>
@@ -116,12 +116,12 @@ class Sidebar extends Component {
                 <Nav.Item>
                 <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/status"><BsCheckCircle/> Status</Link>
                 </Nav.Item> */}
-               </>)}
-                { this.state.isAdmin === 'user' && (<>
+       {/*         </>)}
+                { this.state.isAdmin === 'user' && (<> */}
                 <Nav.Item>
                 <Link className="nav-link text-decoration-none text-dark font-weight-bold" to="/userhistory"><BsCheckCircle/>History</Link>
                 </Nav.Item>
-                </>)}
+        {/*         </>)} */}
                 <Nav.Item>
                {/*  <Link className="nav-link text-decoration-none text-dark font-weight-bold" onClick={this.onLogout}> Logout</Link> */}
                <Button onClick={this.onLogout} className="ml-2 mt-2" variant="info" disabled={!isLoading}>

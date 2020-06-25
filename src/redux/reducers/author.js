@@ -1,35 +1,34 @@
 const initialState = {
-    dataBooks: [],
+    dataAuthors: [],
     isLoading: false,
     isError: false,
     errorMsg: '',
     token: null
 }
 
-
-export const books = (state=initialState, action) => {
+const authors = (state=initialState, action) => {
     switch(action.type) {
-        case 'BOOKS_PENDING': {
+        case 'AUTHORS_PENDING': {
             return {
                 ...state,
                 isLoading: true,
                 isError: false
             }
         }
-        case 'BOOKS_REJECTED': {
-            return {
+        case 'AUTHORS_REJECTED': {
+            return{
                 ...state,
                 isLoading: false,
                 isError: true,
                 errorMsg: action.payload.response.data.message,
             }
         }
-        case 'BOOKS_FULFILLED': {
+        case 'AUTHORS_FULFILLED': {
             return {
                 ...state,
                 isLoading: false,
                 isError: false,
-                dataBooks: action.payload.data.data,
+                dataAuthors: action.payload.data.data
             }
         }
         default: {
@@ -40,4 +39,4 @@ export const books = (state=initialState, action) => {
     }
 }
 
-export default (books)
+export default authors

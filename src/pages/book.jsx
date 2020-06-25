@@ -4,7 +4,6 @@ import { Container,
         Row, 
         Col, 
         Jumbotron, 
-        Card, 
         Carousel, 
         Pagination, 
         Dropdown } from 'react-bootstrap';
@@ -26,7 +25,7 @@ class Book extends Component {
     constructor(props){
         super(props)
         this.state = {
-          data: [],
+          dataBooks:[],
           dataGenre: [],
           pageInfo: [],
           addModalShow : false
@@ -47,14 +46,16 @@ class Book extends Component {
 
    async componentDidMount(){
        /*  this.checkLogin() */
+      const param = qs.parse(this.props.location.search.slice(1))
       await this.props.getbooks()
-        const param = qs.parse(this.props.location.search.slice(1))
+      const { dataBooks } = this.props.books
+      this.setState({dataBooks})
         // this.fetchDataGenre()
-        console.log(this.props.books.dataBooks)
+        
     }
 
 
-     fetchData = async (params) => {
+    /* fetchData = async (params) => {
     const param = `${qs.stringify(params)}`
         try {
             const url = `${REACT_APP_URL}books?${param}`
@@ -76,7 +77,7 @@ class Book extends Component {
         if (params) {
             this.props.history.push(`?${param}`)
         }
-    }
+    } */
 
     fetchDataGenre = async () => {
     this.setState({isLoading: true})
@@ -92,7 +93,7 @@ class Book extends Component {
         let addModalClose = () => this.setState({addModalShow:false})
         //  const { dataBooks } = this.props.books
         // console.log(this.props.books)
-
+        
         return(
             <>
                 <Row className="no-gutters w-100 h-100">        
@@ -105,7 +106,7 @@ class Book extends Component {
                                <Container fluid className="mt-4">
                                     <Jumbotron className="jumbotron-dashboard shadow">
                                     <Carousel>
-                                    {this.state.data.map((book, index) => (  
+                                    {this.state.dataBooks.map((book, index) => (  
                                         <Carousel.Item key={book.id.toString()}>
                                             <img  style={{ height: '200px' }}
                                             className="d-block"
@@ -154,11 +155,21 @@ class Book extends Component {
                                         onHide={addModalClose}
                                         refreshdata={() => this.fetchData()}
                                     />
-                                    {this.state.data.length !== 0 &&(
+                                    {this.state.dataBooks.length !== 0 &&(
                                     <Row>
-
-                                        {this.props.books().dataBooks.map((book, index) => (  
-                                        <Link key={book.id.toString()} to={{
+                                        {this.state.dataBooks.map((book, index) => (  
+                                            <div className="card-book">
+                                                 <img style={{ width: 250, height: 200}} src={book.image}/>
+                                                 <div className="card-book-text">
+                                                     <p className="m-2">
+                                                         
+                                                     </p>
+                                                 </div>
+                                                 <div className="card-book-btn d-flex justify-content-center mt-2">
+                                                     <Link className="btn-borrow" to="/borrow">Borrow</Link>
+                                                 </div>
+                                             </div>
+                                       /*  <Link key={book.id.toString()} to={{
                                                                             pathname: `/detail/${book.id}`,
                                                                             state: {
                                                                             bookid: `${book.id}`,
@@ -185,11 +196,11 @@ class Book extends Component {
                                                     </Card.Text>
                                                 </Card.Body>
                                                 </Card>
-                                        </Link>
+                                        </Link> */
                                         ))}           
                                     </Row>
                                     )}
-                                    {this.state.data.length===0 &&(
+                                    {this.state.dataBooks.length === 0 &&(
                                         <h1>Data Not Available</h1>
                                     )}
                                          
@@ -226,6 +237,6 @@ const mapDispatchToProps = {
     getbooks
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(Book)
+export default connect(mapStateToProps, mapDispatchToProps)(Book)
 
 // export default Book

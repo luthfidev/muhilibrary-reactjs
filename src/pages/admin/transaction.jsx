@@ -16,13 +16,17 @@ import moment from 'moment'
 import authHeader from '../../services/authHeader'
 // file form modal Add
 import {AddTransaction} from '../../components/transaction/AddTransaction' 
-const {REACT_APP_URL} = process.env
+
+import { connect } from 'react-redux'
+import { gettransactions } from '../../redux/actions/transaction'
+const { REACT_APP_URL } = process.env
 
 class Transaction extends Component {
 
     constructor(props){
         super(props)
         this.state = {
+          dataTransactions: [],
           data: [],
           pageInfo: [],
           isLoading: false,
@@ -30,7 +34,7 @@ class Transaction extends Component {
           alert: null
         }
          // check auth flow
-         const user = JSON.parse(localStorage.getItem('user'))
+        /*  const user = JSON.parse(localStorage.getItem('user'))
          this.checkLogin = () => {
            if(user){
              this.setState({isLogin: true})
@@ -39,7 +43,17 @@ class Transaction extends Component {
              this.setState({isLogin: false})
                props.history.push('/login')
            }
-         }
+         } */
+      }
+
+      async componentDidMount(){
+        /*   await this.checkLogin()
+          const param = qs.parse(this.props.location.search.slice(1))
+          await this.fetchData(param) */
+          await this.props.gettransactions()
+          const { dataTransactions } = this.props.transactions
+          this.setState({dataTransactions})
+          console.log(this.props.gettransactions())
       }
 
       // get data
@@ -57,7 +71,6 @@ class Transaction extends Component {
                 this.props.history.push(`?${param}`)
             }
       }
-
 
       cancelTransaction = async(id) => {
         this.setState({isLoading: true})
@@ -180,15 +193,7 @@ class Transaction extends Component {
             )
           }
         })
-      }
-
-    async componentDidMount(){
-        await this.checkLogin()
-        const param = qs.parse(this.props.location.search.slice(1))
-        await this.fetchData(param)
-
-    }
-    
+      } 
     
     render(){
         const params = qs.parse(this.props.location.search.slice(1))
@@ -255,9 +260,9 @@ class Transaction extends Component {
                                         <th>Action</th>
                                         </tr>
                                     </thead>
-                                    {this.state.data.length !== 0 &&(
+                                    {this.state.dataTransactions.length !== 0 &&(
                                     <tbody>
-                                         {this.state.data.map((transaction, index) => (  
+                                         {this.state.dataTransactions.map((transaction, index) => (  
                                         <tr key={transaction.id.toString()}>
                                         <td >{index + 1}</td>
                                         <td>{moment(transaction.transaction_date).format('yyyy-MM-DD')}</td>                                
@@ -284,7 +289,7 @@ class Transaction extends Component {
                                          ))}                           
                                     </tbody>
                                     )}
-                                    {this.state.data.length===0 &&(
+                                    {this.state.dataTransactions.length===0 &&(
                                         <h1>Data Not Available</h1>
                                     )}
                                     </Table>
@@ -313,4 +318,12 @@ class Transaction extends Component {
     };
 }
 
-export default Transaction
+// export default Transaction
+const mapStateToProps = (state) => ({
+  transactions: state.transactions
+})
+const mapDispatchToProps = {
+  gettransactions
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Transaction)

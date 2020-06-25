@@ -11,18 +11,22 @@ import {EditGenre} from '../../components/genre/EditGenre'
 
 import authHeader from '../../services/authHeader'
 
+import { connect } from 'react-redux'
+import { getgenres } from '../../redux/actions/genre'
+
 class Genre extends Component {
 
     constructor(props){
         super(props)
         this.state = {
+          dataGenres: [],
           data: [],
           pageInfo: [],
           isLoading: false,
           addModalShow : false,
           alert: null
         }
-        const user = JSON.parse(localStorage.getItem('user'))
+       /*  const user = JSON.parse(localStorage.getItem('user'))
         this.checkLogin = () => {
           if(user){
             this.setState({isLogin: true})
@@ -31,7 +35,7 @@ class Genre extends Component {
             this.setState({isLogin: false})
               props.history.push('/login')
           }
-        }
+        } */
       }
 
       fetchData = async (params) => {
@@ -78,9 +82,12 @@ class Genre extends Component {
       }
 
       async componentDidMount(){
-          await this.checkLogin()
+         /*  await this.checkLogin()
           const param = qs.parse(this.props.location.search.slice(1))
-          await this.fetchData(param)
+          await this.fetchData(param) */
+          await this.props.getgenres()
+          const { dataGenres } = this.props.genres
+          this.setState({dataGenres})
       }
 
 
@@ -127,9 +134,9 @@ class Genre extends Component {
                                         <th>Action</th>
                                         </tr>
                                     </thead>
-                                    {this.state.data.length !== 0 &&(
+                                    {this.state.dataGenres.length !== 0 &&(
                                     <tbody align="center">
-                                         {this.state.data.map((genre, index) => (  
+                                         {this.state.dataGenres.map((genre, index) => (  
                                         <tr key={genre.id.toString()}>
                                         <td>{index + 1}</td>
                                         <td>{genre.name}</td>                                
@@ -145,7 +152,7 @@ class Genre extends Component {
                                          ))}                           
                                     </tbody>
                                     )}
-                                    {this.state.data.length===0 &&(
+                                    {this.state.dataGenres.length===0 &&(
                                         <h1>Data Not Available</h1>
                                     )}
                                     </Table>
@@ -173,4 +180,12 @@ class Genre extends Component {
     };
 }
 
-export default Genre
+// export default Genre
+const mapStateToProps = (state) => ({
+  genres: state.genres
+})
+const mapDisPatchProps = {
+  getgenres
+}
+
+export default connect(mapStateToProps, mapDisPatchProps)(Genre)

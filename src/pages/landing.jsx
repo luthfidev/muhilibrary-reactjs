@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 import {Link} from 'react-router-dom';
 import axios from 'axios'
 import Spiner from '../components/Loader'
@@ -12,6 +12,10 @@ import {
     Carousel, 
 } from 'react-bootstrap'
 import qs from 'querystring'
+
+import { connect } from 'react-redux'
+import { getbooks } from '../redux/actions/book'
+
 import slide1 from '../assets/img/landing/1.jpg'
 import slide2 from '../assets/img/landing/2.jpg'
 import slide3 from '../assets/img/landing/3.jpg'
@@ -24,6 +28,7 @@ class Landing extends Component {
     constructor(props){
         super(props)
         this.state = {
+          dataBooks: [],
           data: [],
           dataGenre: [],
           pageInfo: [],
@@ -66,10 +71,13 @@ class Landing extends Component {
   }
 
       async componentDidMount(){
-          const param = qs.parse(this.props.location.search.slice(1))
-          this.checkLogin()
-          await this.fetchData(param)
-          await this.fetchDataGenre()
+        //   const param = qs.parse(this.props.location.search.slice(1))
+        //   this.checkLogin()
+        //   await this.fetchData(param)
+        //   await this.fetchDataGenre()
+        await this.props.getbooks()
+        const { dataBooks } = this.props.books
+        this.setState({ dataBooks })
       }
 
       
@@ -80,6 +88,7 @@ class Landing extends Component {
             )
         }
     }
+
     render() {
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
@@ -156,19 +165,19 @@ class Landing extends Component {
                             </div>
                             <div className="landing-card d-flex col-md-12 col-sm-12">
                                 <Row className="w-100 d-flex justify-content-center">
-                                {this.state.data.map((book, index) => (  
+                                {this.state.dataBooks.map((book, index) => (    
                                     <div className="card-book">
                                         <img style={{ width: 250, height: 200}} src={book.image}/>
                                         <div className="card-book-text">
                                             <p className="m-2">
-                                                {book.title}
+                                                
                                             </p>
                                         </div>
                                         <div className="card-book-btn d-flex justify-content-center mt-2">
                                             <Link className="btn-borrow" to="/borrow">Borrow</Link>
                                         </div>
                                     </div>
-                                    ))}
+                                ))} 
                                 </Row>
                             </div>
                         </Row>
@@ -177,5 +186,11 @@ class Landing extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    books: state.books
+})
+const mapDispatchToProps = {
+    getbooks
+}
 
-export default Landing
+export default connect(mapStateToProps, mapDispatchToProps)(Landing)

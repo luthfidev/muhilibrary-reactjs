@@ -6,13 +6,15 @@ import { Container,
         Jumbotron, 
         Carousel, 
         Pagination, 
-        Dropdown } from 'react-bootstrap';
+        Dropdown,
+        Badge,
+     } from 'react-bootstrap';
 import axios from 'axios'
 import authHeader from '../services/authHeader'
 import TopNavbar from './navbar'
 import Sidebar from './sidebar'
 import Spiner from '../components/Loader'
-import { AddBook } from '../components/book/AddBook'
+import AddBook from '../components/book/AddBook'
 import qs from 'querystring'
 import Swal from 'sweetalert2'
 
@@ -44,15 +46,21 @@ class Book extends Component {
       }
 
 
-   async componentDidMount(){
+   componentDidMount(){
        /*  this.checkLogin() */
       const param = qs.parse(this.props.location.search.slice(1))
-      await this.props.getbooks()
+     /*  await this.props.getbooks()
       const { dataBooks } = this.props.books
-      this.setState({dataBooks})
+      this.setState({dataBooks}) */
         // this.fetchDataGenre()
-        
+    this.fetchData()
     }
+
+     fetchData = async (params) => {
+        await this.props.getbooks()
+        const { dataBooks } = this.props.books
+        this.setState({dataBooks})
+    } 
 
 
     /* fetchData = async (params) => {
@@ -143,11 +151,11 @@ class Book extends Component {
                                                 <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 1 })}>Z-a</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>
-                                            {this.state.isAdmin === 'admin' && 
+                                           {/*  {this.state.isAdmin === 'admin' &&  */}
                                             <div className="ml-2">
                                                 <button onClick={()=> this.setState({addModalShow: true})} className="btn btn-primary mb-2">Add Book</button>
                                             </div>
-                                            }
+                                           {/*  } */}
                                         </div>
                                     
                                     <AddBook
@@ -161,9 +169,7 @@ class Book extends Component {
                                             <div className="card-book">
                                                  <img style={{ width: 250, height: 200}} src={book.image}/>
                                                  <div className="card-book-text">
-                                                     <p className="m-2">
-                                                         
-                                                     </p>
+                                                      <Badge pill variant="warning">{book.nameStatus}</Badge>
                                                  </div>
                                                  <div className="card-book-btn d-flex justify-content-center mt-2">
                                                      <Link className="btn-borrow" to="/borrow">Borrow</Link>

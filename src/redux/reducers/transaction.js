@@ -30,6 +30,29 @@ const transactions = (state=initialState, action) => {
                 dataTransactions: action.payload.data.data
             }
         }
+         // POST
+         case 'POST_BORROW_PENDING': {
+            return {
+                ...state,
+                isLoading: true,
+                isError: false
+            }
+        }
+        case 'POST_BORROW_REJECTED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: true,
+                errorMsg: action.payload.response.data.message,
+            }
+        }
+        case 'POST_BORROW_FULFILLED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+            }
+        }
         default: {
             return {
                 ...state

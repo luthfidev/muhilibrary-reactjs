@@ -3,7 +3,8 @@ import {Modal,
         Button, 
         Form} from 'react-bootstrap'
 import Swal from 'sweetalert2'
-
+import { connect } from 'react-redux'
+import { postgenres } from '../../redux/actions/genre'
 import axios from 'axios'
 const {REACT_APP_URL} = process.env
 
@@ -19,7 +20,7 @@ function ValidationMessage(props) {
   }
 }
 
-export class AddGenre extends Component {
+class AddGenre extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -28,7 +29,6 @@ export class AddGenre extends Component {
             formValid: false,
             errorMsg: {},
         }
-        this.handlePost = this.handlePost.bind(this)
     }
     
     validateForm = () => {
@@ -61,31 +61,40 @@ export class AddGenre extends Component {
     handleChange = event => {
         this.setState({[  event.target.name]: event.target.value})
     }
-       handlePost = (event) => {
-        event.preventDefault()
-        this.setState({isLoading: true})
-        const genreData = {
-            name: this.state.name
-        }
-        const url = `${REACT_APP_URL}genres`
-        axios.post(url, genreData).then( (response) => {
-            this.setState({Msg: response.data.message})
-            Swal.fire({
-              title: 'Done !',
-              text: this.state.Msg,
-              icon: 'success',
-              timer: 2000
-            })
-            this.setState({ redirect: this.state.redirect === false });
-          })
-          .catch(function (error) {
-           }) 
-           this.props.refreshdata()
-           this.props.onHide()
+
+/*     handlePost = (event) => {
+    event.preventDefault()
+    this.setState({isLoading: true})
+    const genreData = {
+        name: this.state.name
     }
+    const url = `${REACT_APP_URL}genres`
+    axios.post(url, genreData).then( (response) => {
+        this.setState({Msg: response.data.message})
+        Swal.fire({
+          title: 'Done !',
+          text: this.state.Msg,
+          icon: 'success',
+          timer: 2000
+        })
+        this.setState({ redirect: this.state.redirect === false });
+      })
+      .catch(function (error) {
+        }) 
+        this.props.refreshdata()
+        this.props.onHide()
+    } */
    
-       
-    render(){
+    handlePost = async (event) => {
+      event.preventDefault()
+      const genreData = {
+        name: this.state.name
+      }
+     await this.props.postgenres(genreData)
+      this.props.refreshdata()
+      this.props.onHide()
+    }
+    render() {
       const {formValid} = this.state
         return(
             <Modal
@@ -96,12 +105,12 @@ export class AddGenre extends Component {
           >
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter">
-                Add Author
+                Add Genre
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="contaniner">
-                <Form onSubmit={ this.handlePost}>
+                <Form onSubmit={this.handlePost}>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Name Genre</Form.Label>
                     <Form.Control name="name" value={this.state.name} onChange={(e) => this.updateName(e.target.value)} type="text" placeholder="Name Genre" />
@@ -123,3 +132,13 @@ export class AddGenre extends Component {
         )
     }
 }
+
+// export default AddGenre
+const mapStateToProps = (state) => ({
+  genres: state.genres
+})
+const mapDispatchToProps = {
+  postgenres,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddGenre)

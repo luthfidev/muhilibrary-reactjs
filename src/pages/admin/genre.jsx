@@ -6,7 +6,7 @@ import axios from 'axios'
 import qs from 'querystring'
 import Swal from 'sweetalert2'
 
-import {AddGenre} from '../../components/genre/AddGenre'
+import AddGenre from '../../components/genre/AddGenre'
 import {EditGenre} from '../../components/genre/EditGenre'
 
 import authHeader from '../../services/authHeader'

@@ -5,8 +5,10 @@ import {Modal,
         ProgressBar} from 'react-bootstrap'
 import Swal from 'sweetalert2' 
 import axios from 'axios'
-import authHeader from '../../services/authHeader'
+import { connect } from 'react-redux'
+import { postbooks } from '../../redux/actions/book'
 
+import authHeader from '../../services/authHeader'
 const {REACT_APP_URL} = process.env
 
 function ValidationMessage(props) {
@@ -21,7 +23,7 @@ function ValidationMessage(props) {
     }
   }
 
-export class AddBook extends Component {
+class AddBook extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -108,6 +110,23 @@ export class AddBook extends Component {
         formData.set('releasedate', this.state.releasedate)
         formData.set('statusid', this.state.statusid)
 
+        this.props.postbooks(formData)
+        this.props.refreshdata() 
+        this.props.onHide() 
+    }
+     /*   handlePost = async (event) => {
+        event.preventDefault()
+      this.setState({isLoading: true})
+
+        const formData = new FormData()
+        formData.append('image', this.state.image)
+        formData.set('title', this.state.title)
+        formData.set('description', this.state.description)
+        formData.set('genreid', this.state.genreid)
+        formData.set('authorid', this.state.authorid)
+        formData.set('releasedate', this.state.releasedate)
+        formData.set('statusid', this.state.statusid)
+
         const url = `${REACT_APP_URL}books`
         await axios.post(url, formData, {headers: authHeader()}).then( (response) => {
             this.setState({addMsg: "User is successfully added to the database"})
@@ -136,7 +155,7 @@ export class AddBook extends Component {
            }) 
          // this.props.onHide() 
         this.props.refreshdata() 
-    }
+    } */
     
     // get data Genre
     fetchDataGenre = async (params) => {
@@ -248,3 +267,12 @@ export class AddBook extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => ({
+  books: state.books
+})
+const mapDispatchToProps = {
+  postbooks,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddBook)

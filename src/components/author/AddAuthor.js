@@ -5,7 +5,7 @@ import {Modal,
 import qs from 'querystring'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
-import { getauthors, postauthors } from '../../redux/actions/author'
+import { postauthors } from '../../redux/actions/author'
 
 
 function ValidationMessage(props) {
@@ -178,7 +178,6 @@ const mapStateToProps = (state) => ({
   authors: state.authors
 })
 const mapDispatchToProps = {
-  getauthors,
   postauthors,
 }
 

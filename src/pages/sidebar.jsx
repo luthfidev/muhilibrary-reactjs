@@ -51,14 +51,10 @@ class Sidebar extends Component {
           } */
     }
 
-    onLogout = () => {
-      this.setState({isLoading: true},()=>{
-        setTimeout(()=>{
-    
-          this.props.logout()
-          this.props.history.push('/login')
-        },5000)
-      })
+    onLogout = async () => {
+      const { token } = this.props.auth
+      await this.props.logout(token)
+      this.props.history.push('/login')
     }
 
     

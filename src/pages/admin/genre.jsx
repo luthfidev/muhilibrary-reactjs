@@ -7,7 +7,7 @@ import qs from 'querystring'
 import Swal from 'sweetalert2'
 
 import AddGenre from '../../components/genre/AddGenre'
-import {EditGenre} from '../../components/genre/EditGenre'
+import EditGenre from '../../components/genre/EditGenre'
 
 import authHeader from '../../services/authHeader'
 
@@ -15,7 +15,6 @@ import { connect } from 'react-redux'
 import { getgenres, deletegenres, } from '../../redux/actions/genre'
 
 class Genre extends Component {
-
     constructor(props){
         super(props)
         this.state = {
@@ -58,7 +57,6 @@ class Genre extends Component {
         const { dataGenres } = this.props.genres
         this.setState({dataGenres})
       }
-
 
       deleteGenre = async(id) => {
         this.props.deletegenres(id)

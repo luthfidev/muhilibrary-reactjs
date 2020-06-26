@@ -3,10 +3,11 @@ import {Modal,
         Button, 
         Form} from 'react-bootstrap'
 import Swal from 'sweetalert2'
-import axios from 'axios'
+import { connect } from 'react-redux'
+import { updateauthors } from '../../redux/actions/author'
 const {REACT_APP_URL} = process.env
 
-export class EditAuthor extends Component {
+class EditAuthor extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -21,11 +22,16 @@ export class EditAuthor extends Component {
         this.setState({[  event.target.name]: event.target.value})
     }
         
-    handlePost = async (event) => {
+    handlePost = (event) => {
         event.preventDefault()
-        
-          await this.props.refreshdata()
-           this.props.onHide()
+        const id = this.props.authorid
+        const authorData = {
+            name: this.state.name || this.props.authorname,
+            description: this.state.description  || this.props.authordescription
+        }
+        this.props.updateauthors(id, authorData)
+        this.props.refreshdata()
+        this.props.onHide()
     }
    /*  handlePost = async (event) => {
         event.preventDefault()
@@ -115,3 +121,11 @@ export class EditAuthor extends Component {
         )
     }
 }
+const mapStateToProps = (state) => ({
+    authors: state.authors
+  })
+  const mapDispatchToProps = {
+    updateauthors,
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(EditAuthor)

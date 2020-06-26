@@ -5,8 +5,6 @@ import {Modal,
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
 import { postgenres } from '../../redux/actions/genre'
-import axios from 'axios'
-const {REACT_APP_URL} = process.env
 
 function ValidationMessage(props) {
   if (!props.valid) {

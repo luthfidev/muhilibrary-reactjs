@@ -17,6 +17,13 @@ export const postgenres = (data) => {
     }
 }
 
+export const updategenres = (id, data) => {
+    return {
+        type: 'UPDATE_GENRES',
+        payload: http().patch(url.concat(`genres/${id}`), data)
+    }
+}
+
 export const deletegenres = (id) =>{
     return {
       type: 'DELETE_GENRES',

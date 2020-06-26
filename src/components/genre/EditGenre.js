@@ -5,10 +5,11 @@ import {Modal,
 import Swal from 'sweetalert2'
 
 import axios from 'axios'
+import { connect } from 'react-redux'
+import { updategenres } from '../../redux/actions/genre'
 const {REACT_APP_URL} = process.env
 
-
-export class EditGenre extends Component {
+class EditGenre extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -23,7 +24,7 @@ export class EditGenre extends Component {
         this.setState({[  event.target.name]: event.target.value})
     }
        
-    handlePost = async (event) => {
+    /* handlePost = async (event) => {
         event.preventDefault()
         this.setState({isLoading: true})
  
@@ -48,6 +49,17 @@ export class EditGenre extends Component {
           
           await this.props.refreshdata()
            this.props.onHide()
+    } */
+
+    handlePost = (event) => {
+        event.preventDefault()
+        const id = this.props.genreid
+        const genreData = {
+            name: this.state.name || this.props.genrename,
+        }
+        this.props.updategenres(id, genreData)
+        this.props.refreshdata()
+        this.props.onHide()
     }
 
     render(){
@@ -103,3 +115,12 @@ export class EditGenre extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => ({
+    genres: state.genres
+  })
+  const mapDispatchToProps = {
+    updategenres,
+  }
+  
+export default connect(mapStateToProps, mapDispatchToProps)(EditGenre)

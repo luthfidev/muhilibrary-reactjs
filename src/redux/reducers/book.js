@@ -55,7 +55,30 @@ export const books = (state=initialState, action) => {
                 isError: false,
             }
         }
-           // delete
+         // UPDATE
+         case 'UPDATE_BOOKS_PENDING': {
+            return {
+                ...state,
+                isLoading: true,
+                isError: false
+            }
+        }
+        case 'UPDATE_BOOKS_REJECTED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: true,
+                errorMsg: action.payload.response.data.message,
+            }
+        }
+        case 'UPDATE_BOOKS_FULFILLED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+            }
+        }
+        // DELETE
         case 'DELETE_BOOKS_PENDING': {
         return {
             ...state,
@@ -68,7 +91,6 @@ export const books = (state=initialState, action) => {
                 ...state,
                 isLoading: false,
                 isError: true,
-                errorMsg: action.payload.response.data.message,
             }
         }
         case 'DELETE_BOOKS_FULFILLED': {
@@ -76,6 +98,30 @@ export const books = (state=initialState, action) => {
                 ...state,
                 isLoading: false,
                 isError: false,
+            }
+        }
+        // DETAIL
+        case 'DETAIL_BOOKS_PENDING': {
+        return {
+            ...state,
+            isLoading: true,
+            isError: false
+            }
+        }
+        case 'DETAIL_BOOKS_REJECTED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: true,
+                errorMsg: action.payload.response.data.message,
+            }
+        }
+        case 'DETAIL_BOOKS_FULFILLED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+                dataBooks: action.payload.data.data,
             }
         }
         default: {

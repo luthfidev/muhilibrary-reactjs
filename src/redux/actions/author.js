@@ -17,6 +17,13 @@ export const postauthors = (data) => {
     }
 }
 
+export const updateauthors = (id, data) => {
+    return {
+        type: 'UPDATE_AUTHORS',
+        payload: http().patch(url.concat(`authors/${id}`), data)
+    }
+}
+
 export const deleteauthors = (id) =>{
     return {
       type: 'DELETE_AUTHORS',

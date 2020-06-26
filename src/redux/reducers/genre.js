@@ -54,6 +54,29 @@ const genres = (state=initialState, action) => {
                 isError: false,
             }
         }
+         // UPDATE
+         case 'UPDATE_GENRES_PENDING': {
+            return {
+                ...state,
+                isLoading: true,
+                isError: false
+            }
+        }
+        case 'UPDATE_GENRES_REJECTED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: true,
+                errorMsg: action.payload.response.data.message,
+            }
+        }
+        case 'UPDATE_GENRES_FULFILLED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+            }
+        }
            // delete
         case 'DELETE_GENRES_PENDING': {
         return {

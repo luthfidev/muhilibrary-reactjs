@@ -9,9 +9,9 @@ export const gettransactions = () => {
     }
 }
 
-export const borrow = () => {
+export const borrow = (token, data) => {
     return {
         type: 'POST_BORROW',
-        payload: http().post(url.concat('transactions/users'))
+        payload: http(token).post(url.concat('transactions/user'), data)
     }
 }

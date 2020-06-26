@@ -12,7 +12,7 @@ import authHeader from '../../services/authHeader'
 // file form modal Add
 import AddAuthor from '../../components/author/AddAuthor' 
 // file form modal edit
-import {EditAuthor} from '../../components/author/EditAuthor'
+import EditAuthor from '../../components/author/EditAuthor'
 
 import { connect } from 'react-redux'
 import { getauthors, deleteauthors } from '../../redux/actions/author'
@@ -82,7 +82,7 @@ class Author extends Component {
         await axios.delete(url)
         this.fetchData()
       } */
-      deleteAuthor = (id) => {
+      deleteAuthor = async(id) => {
         this.props.deleteauthors(id)
         this.fetchData()
       }
@@ -164,7 +164,7 @@ class Author extends Component {
                                      <EditAuthor
                                         show={this.state.editModalShow}
                                         onHide={editModalClose}
-                                        refreshdata={() => this.props.getauthors()}
+                                        refreshdata={() => this.fetchData()}
                                         authorid = {authorid}
                                         authorname = {authorname}
                                         authordescription = {authordescription}

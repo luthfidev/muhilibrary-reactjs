@@ -20,6 +20,7 @@ import Swal from 'sweetalert2'
 
 import { connect } from 'react-redux'
 import { getbooks } from '../redux/actions/book'
+import { getgenres } from '../redux/actions/genre'
 
 const { REACT_APP_URL } = process.env
 
@@ -28,7 +29,7 @@ class Book extends Component {
         super(props)
         this.state = {
           dataBooks:[],
-          dataGenre: [],
+          dataGenres: [],
           pageInfo: [],
           addModalShow : false
         }
@@ -54,12 +55,23 @@ class Book extends Component {
       this.setState({dataBooks}) */
         // this.fetchDataGenre()
     this.fetchData()
+    this.fetchDataGenres()
     }
 
      fetchData = async (params) => {
-        await this.props.getbooks()
+        const param = `${qs.stringify(params)}`
+        await this.props.getbooks(param)
         const { dataBooks } = this.props.books
         this.setState({dataBooks})
+        if (params) {
+            this.props.history.push(`?${param}`)
+        }
+    } 
+
+     fetchDataGenres = async (params) => {
+        await this.props.getgenres()
+        const { dataGenres } = this.props.genres
+        this.setState({dataGenres})
     } 
 
 
@@ -99,8 +111,7 @@ class Book extends Component {
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
         let addModalClose = () => this.setState({addModalShow:false})
-        //  const { dataBooks } = this.props.books
-        // console.log(this.props.books)
+
         
         return(
             <>
@@ -137,7 +148,7 @@ class Book extends Component {
                                         </Dropdown.Toggle>
                                             <Dropdown.Menu>
                                             <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: '' })}>All</Dropdown.Item>
-                                            {this.state.dataGenre.map(genre => 
+                                            {this.state.dataGenres.map(genre => 
                                                 <Dropdown.Item key={genre.id.toString()} onClick={() => this.fetchData({ ...params, search: genre.name })}>{genre.name}</Dropdown.Item>
                                             )}
                                             </Dropdown.Menu>
@@ -172,7 +183,12 @@ class Book extends Component {
                                                       <Badge pill variant="warning">{book.nameStatus}</Badge>
                                                  </div>
                                                  <div className="card-book-btn d-flex justify-content-center mt-2">
-                                                     <Link className="btn-borrow" to="/borrow">Borrow</Link>
+                                                     <Link className="btn-borrow" to={{
+                                                                            pathname: `/detail/${book.id}`,
+                                                                            state: {
+                                                                            bookid: `${book.id}`
+                                                                            }
+                                                                        }}>Borrow</Link>
                                                  </div>
                                              </div>
                                        /*  <Link key={book.id.toString()} to={{
@@ -236,11 +252,13 @@ class Book extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    books: state.books
+    books: state.books,
+    genres: state.genres
 })
 
 const mapDispatchToProps = {
-    getbooks
+    getbooks,
+    getgenres
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Book)

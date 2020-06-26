@@ -2,6 +2,8 @@ import qs from 'querystring'
 import http from '../../helpers/http'
 const  { REACT_APP_URL } = process.env
 const url = `${REACT_APP_URL}`
+const user = JSON.parse(localStorage.getItem('persist:root'));
+const getToken = user.auth.token
 
 export const login = (email, password) => {
     return {
@@ -13,6 +15,6 @@ export const login = (email, password) => {
 export const logout = () => {
     return {
         type: 'LOGOUT',
-        payload: http().delete(url.concat('auth/logout'))
+        payload: http(getToken).delete(url.concat('auth/logout'))
     }
 }

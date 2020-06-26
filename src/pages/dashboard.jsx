@@ -44,7 +44,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-   console.log(this.props)
+
   }
 
    /*  fetchData = async () => {

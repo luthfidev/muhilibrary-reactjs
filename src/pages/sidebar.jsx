@@ -10,6 +10,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios'
 import authHeader from '../services/authHeader'
 import Swal from 'sweetalert2'
+import { connect } from 'react-redux'
+import { logout } from '../redux/actions/auth'
 const {REACT_APP_URL} = process.env
 
 class Sidebar extends Component {
@@ -32,7 +34,7 @@ class Sidebar extends Component {
           }
         }
 
-        this.onLogout = () => {
+        /* this.onLogout = () => {
             this.setState({isLoading: true},()=>{
               setTimeout(()=>{
                 const url = `${REACT_APP_URL}auth/logout`
@@ -46,7 +48,17 @@ class Sidebar extends Component {
                 })
               },5000)
             })
-          }
+          } */
+    }
+
+    onLogout = () => {
+      this.setState({isLoading: true},()=>{
+        setTimeout(()=>{
+    
+          this.props.logout()
+          this.props.history.push('/login')
+        },5000)
+      })
     }
 
     
@@ -124,7 +136,7 @@ class Sidebar extends Component {
         {/*         </>)} */}
                 <Nav.Item>
                {/*  <Link className="nav-link text-decoration-none text-dark font-weight-bold" onClick={this.onLogout}> Logout</Link> */}
-               <Button onClick={this.onLogout} className="ml-2 mt-2" variant="info" disabled={!isLoading}>
+               <Button onClick={this.onLogout} className="ml-2 mt-2" variant="info" >
                {!isLoading &&(
                 <Spinner 
                   as="span"
@@ -140,4 +152,14 @@ class Sidebar extends Component {
     }
 }
 
-export default Sidebar
+// export default Sidebar
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+})
+
+const mapDispatchToProps = {
+  logout
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)

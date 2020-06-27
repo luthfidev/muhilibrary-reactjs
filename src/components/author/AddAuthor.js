@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import {Modal, 
         Button, 
         Form} from 'react-bootstrap'
-import qs from 'querystring'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
 import { postauthors } from '../../redux/actions/author'
@@ -59,7 +58,6 @@ class AddAuthor extends Component {
       this.setState({nameValid, errorMsg}, this.validateForm)
     }
 
-
     updateDescription = (description) => {
       this.setState({description}, this.validateDescription)
     }
@@ -80,33 +78,9 @@ class AddAuthor extends Component {
       this.setState({descriptionValid, errorMsg}, this.validateForm)
     }
 
-        handleChange = event => {
-            this.setState({[  event.target.name]: event.target.value})
-        }
-
-  /*   handlePost = (event) => {
-    event.preventDefault()
-    this.setState({isLoading: true})
-    const authorData = {
-        name: this.state.name,
-        description: this.state.description
+    handleChange = event => {
+        this.setState({[  event.target.name]: event.target.value})
     }
-    const url = `${REACT_APP_URL}authors`
-    axios.post(url, authorData).then( (response) => {
-        this.setState({Msg: response.data.message})
-        Swal.fire({
-          title: 'Done !',
-          text: this.state.Msg,
-          icon: 'success',
-          timer: 2000
-        })
-        this.setState({ redirect: this.state.redirect === false });
-      })
-      .catch(function (error) {
-        }) 
-        this.props.refreshdata()
-        this.props.onHide()
-    } */
     
     handlePost = (event) => {
       event.preventDefault()
@@ -115,18 +89,26 @@ class AddAuthor extends Component {
         description: this.state.description
       }
       this.props.postauthors(authorData)
+      .then(response => {
+        Swal.fire({
+          title: 'Done !',
+          text: this.props.authors.successMsg,
+          icon: 'success',
+          timer: 2000
+        })
+      })
+      .catch(err => {
+        Swal.fire({
+          title: 'Done !',
+          text: this.props.authors.errorMsg,
+          icon: 'danger',
+          timer: 2000
+        })
+      });
       this.props.refreshdata()
       this.props.onHide()
-    } 
-
-  /*   componentDidUpdate() {
- 
-        if (this.props.authors.isError === false) {
-         this.props.refreshdata()
-        } 
-      }
-    } */
-     
+     }
+    
     render() {
       const {formValid} = this.state
         return(

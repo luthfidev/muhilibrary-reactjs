@@ -1,13 +1,18 @@
 import React, {Component} from 'react';
-import { Container, Row, Table, Card, Pagination} from 'react-bootstrap';
-import axios from 'axios'
+import { 
+  Container, 
+  Row, 
+  Table, 
+  Card, 
+  Pagination,
+  Dropdown, 
+} from 'react-bootstrap';
 import qs from 'querystring'
 import Swal from 'sweetalert2'
 
 import TopNavbar from '../navbar'
 import Sidebar from '../sidebar'
 import Spiner from '../../components/Loader'
-import authHeader from '../../services/authHeader'
 
 // file form modal Add
 import AddAuthor from '../../components/author/AddAuthor' 
@@ -29,59 +34,23 @@ class Author extends Component {
           addModalShow : false,
           alert: null
         }
-          // check auth flow
-         /*  const user = JSON.parse(localStorage.getItem('user'))
-          this.checkLogin = () => {
-            if(user){
-              this.setState({isLogin: true})
-              this.setState({isAdmin: user.userData.role})
-            }else{
-              this.setState({isLogin: false})
-                props.history.push('/login')
-            }
-          }
- */
-      }
+    }
       
-      fetchData = async () => {
-        await this.props.getauthors()
-        const { dataAuthors } = this.props.authors
-        this.setState({dataAuthors})
-      }
-
-        // mount get data
-        componentDidMount(){
-            /* await this.checkLogin()
-            const param = qs.parse(this.props.location.search.slice(1))
-            await this.fetchData(param) */
-           /*  await this.props.getauthors()
-            const { dataAuthors } = this.props.authors
-            this.setState({dataAuthors}) */
-            this.fetchData()
-        }
-
-  /*     // get data 
       fetchData = async (params) => {
-            this.setState({isLoading: true})
-            const {REACT_APP_URL} = process.env
-            const param = `${qs.stringify(params)}`
-            const url = `${REACT_APP_URL}authors?${param}`
-            const results = await axios.get(url, {headers: authHeader()})
-            const {data} = results.data
-            const pageInfo = results.data.pageInfo
-            this.setState({data, pageInfo, isLoading: false})
-            if (params) {
-                this.props.history.push(`?${param}`)
-            }
+        const param = `${qs.stringify(params)}`
+        await this.props.getauthors(param)
+        const { dataAuthors, pageInfo } = this.props.authors
+        this.setState({dataAuthors, pageInfo})
+        if (params) {
+          this.props.history.push(`?${param}`)
       }
- */
-      // props delete
-    /*   deleteAuthor = async(id) => {
-        const {REACT_APP_URL} = process.env
-        const url = `${REACT_APP_URL}authors/${id}`
-        await axios.delete(url)
-        this.fetchData()
-      } */
+      }
+
+      // mount get data
+      componentDidMount(){
+          this.fetchData()
+      }
+
       deleteAuthor = async(id) => {
         this.props.deleteauthors(id)
         this.fetchData()
@@ -110,15 +79,7 @@ class Author extends Component {
         })
       }
 
-/*       componentDidUpdate(prevProps, prevState) {
-        // only update chart if the data has changed
-        const { updateAuthors } = this.props.authors
-        if (prevProps.upddateAuthors !== updateAuthors) {
-         this.props.getauthors()
-        }
-      } */
-
-       
+            
     render(){
 
         // pagination
@@ -152,14 +113,36 @@ class Author extends Component {
                                <Card>
                                 <Card.Header>Author</Card.Header>
                                 <Card.Body>
+                                <div className="d-flex flex-row">
+                                <div className="action-btn mr-2">
                                 <button onClick={()=> this.setState({addModalShow: true})} className="btn btn-success mb-2">Add</button>
+                                </div>
                                     {/* component modal add */}
                                     <AddAuthor
                                         show={this.state.addModalShow}
                                         onHide={addModalClose}
                                         refreshdata={() => this.fetchData()}
                                     />
-
+                                      <Dropdown className="mb-4">
+                                              <Dropdown.Toggle variant="info" id="dropdown-basic">
+                                                  Limit
+                                              </Dropdown.Toggle>
+                                                  <Dropdown.Menu>
+                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, limit: '10' })}>10</Dropdown.Item>
+                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, limit: '50' })}>50</Dropdown.Item>
+                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, limit: '100' })}>100</Dropdown.Item>
+                                                  </Dropdown.Menu>
+                                          </Dropdown>
+                                          <Dropdown className="ml-2">
+                                        <Dropdown.Toggle variant="info" id="dropdown-basic">
+                                            Sort
+                                        </Dropdown.Toggle>
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 0 })}>A-z</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 1 })}>Z-a</Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+                                    </div>
                                       {/* component modal edit */}
                                      <EditAuthor
                                         show={this.state.editModalShow}

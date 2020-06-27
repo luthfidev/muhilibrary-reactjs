@@ -10,9 +10,6 @@ import { login } from '../../redux/actions/auth'
 import { updatebooks } from '../../redux/actions/book'
 import { getgenres } from '../../redux/actions/genre'
 import { getauthors } from '../../redux/actions/author'
-/* import axios from 'axios'
-import authHeader from '../../services/authHeader'
-const {REACT_APP_URL} = process.env */
 
 class EditBook extends Component {
     constructor(props) {
@@ -73,8 +70,6 @@ class EditBook extends Component {
         const { dataAuthors } = this.props.authors
         this.setState({dataAuthors})
     }
-
-
        
     render(){
         return(

@@ -5,7 +5,6 @@ import {Modal,
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
 import { updateauthors } from '../../redux/actions/author'
-const {REACT_APP_URL} = process.env
 
 class EditAuthor extends Component {
     constructor(props) {
@@ -30,35 +29,25 @@ class EditAuthor extends Component {
             description: this.state.description  || this.props.authordescription
         }
         this.props.updateauthors(id, authorData)
+        .then(response => {
+            Swal.fire({
+              title: 'Done !',
+              text: this.props.authors.successMsg,
+              icon: 'success',
+              timer: 2000
+            })
+          })
+          .catch(err => {
+            Swal.fire({
+              title: 'Done !',
+              text: this.props.authors.errorMsg,
+              icon: 'danger',
+              timer: 2000
+            })
+          });
         this.props.refreshdata()
         this.props.onHide()
     }
-   /*  handlePost = async (event) => {
-        event.preventDefault()
-        this.setState({isLoading: true})
- 
-        const authorData = {
-            name: this.state.name || this.props.authorname,
-            description: this.state.description  || this.props.authordescription
-        }
-
-        const url = `${REACT_APP_URL}authors/${this.props.authorid}`
-        await axios.patch(url, authorData).then( (response) => {
-        this.setState({Msg: response.data.message})
-        Swal.fire({
-            title: 'Done !',
-            text: this.state.Msg,
-            icon: 'success',
-            timer: 2000
-        })
-        this.setState({ redirect: this.state.redirect === false });
-        })
-        .catch(function (error) {
-            
-        })     
-          await this.props.refreshdata()
-           this.props.onHide()
-    } */
 
     render(){
         return(

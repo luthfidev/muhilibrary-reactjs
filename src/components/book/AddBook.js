@@ -7,8 +7,6 @@ import Swal from 'sweetalert2'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import { postbooks } from '../../redux/actions/book'
-
-import authHeader from '../../services/authHeader'
 const {REACT_APP_URL} = process.env
 
 function ValidationMessage(props) {

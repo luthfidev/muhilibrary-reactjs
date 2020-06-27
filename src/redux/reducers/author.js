@@ -1,7 +1,9 @@
 const initialState = {
     dataAuthors: [],
+    pageInfo: [],
     updateAuthors: false,
     isLoading: false,
+    successMsg: '',
     isError: false,
     errorMsg: '',
     token: null
@@ -13,7 +15,7 @@ const authors = (state=initialState, action) => {
             return {
                 ...state,
                 isLoading: true,
-                isError: false
+                isError: false,
             }
         }
         case 'AUTHORS_REJECTED': {
@@ -29,7 +31,9 @@ const authors = (state=initialState, action) => {
                 ...state,
                 isLoading: false,
                 isError: false,
-                dataAuthors: action.payload.data.data
+                dataAuthors: action.payload.data.data,
+                pageInfo: action.payload.data.pageInfo,
+                successMsg: 'Success Fetch Data'
             }
         }
         // POST
@@ -37,7 +41,7 @@ const authors = (state=initialState, action) => {
             return {
                 ...state,
                 isLoading: true,
-                isError: false
+                isError: false,
             }
         }
         case 'POST_AUTHORS_REJECTED': {
@@ -53,6 +57,7 @@ const authors = (state=initialState, action) => {
                 ...state,
                 isLoading: false,
                 isError: false,
+                successMsg: action.payload.data.message,
             }
         }
         // UPDATE
@@ -76,6 +81,7 @@ const authors = (state=initialState, action) => {
                 ...state,
                 isLoading: false,
                 isError: false,
+                successMsg: action.payload.data.message,
             }
         }
            // delete

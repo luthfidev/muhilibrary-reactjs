@@ -2,14 +2,11 @@ import React, {Component} from 'react';
 import TopNavbar from '../navbar'
 import Sidebar from '../sidebar'
 import { Container, Row, Table, Card, Pagination} from 'react-bootstrap';
-import axios from 'axios'
 import qs from 'querystring'
 import Swal from 'sweetalert2'
 
 import AddGenre from '../../components/genre/AddGenre'
 import EditGenre from '../../components/genre/EditGenre'
-
-import authHeader from '../../services/authHeader'
 
 import { connect } from 'react-redux'
 import { getgenres, deletegenres, } from '../../redux/actions/genre'

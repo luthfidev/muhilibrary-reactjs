@@ -36,11 +36,11 @@ class Detail extends Component {
         }
       }
 
-      componentWillMount() {
+    /*   componentWillMount() {
         if (!this.props.auth.token) {
           this.props.history.push('/')
         }   
-      } 
+      }  */
 
       componentDidMount() {
         this.fetchData()       

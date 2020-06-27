@@ -3,10 +3,10 @@ import http from '../../helpers/http'
 const { REACT_APP_URL } = process.env
 const url = `${REACT_APP_URL}`
 
-export const getauthors = () => {
+export const getauthors = (param) => {
     return {
         type: 'AUTHORS',
-        payload: http().get(url.concat('authors'))
+        payload: http().get(url.concat(`authors?${param}`))
     }
 }
 

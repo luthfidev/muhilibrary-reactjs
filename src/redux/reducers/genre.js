@@ -1,6 +1,8 @@
 const initialState = {
     dataGenres: [],
+    pageInfo: [],
     isLoading: false,
+    successMsg: '',
     isError: false,
     errorMsg: '',
     token: null
@@ -28,7 +30,8 @@ const genres = (state=initialState, action) => {
                 ...state,
                 isLoading: false,
                 isError: false,
-                dataGenres: action.payload.data.data
+                dataGenres: action.payload.data.data,
+                pageInfo: action.payload.data.pageInfo,
             }
         }
          // POST
@@ -52,6 +55,7 @@ const genres = (state=initialState, action) => {
                 ...state,
                 isLoading: false,
                 isError: false,
+                successMsg: action.payload.data.message,
             }
         }
          // UPDATE
@@ -75,6 +79,7 @@ const genres = (state=initialState, action) => {
                 ...state,
                 isLoading: false,
                 isError: false,
+                successMsg: action.payload.data.message,
             }
         }
            // delete

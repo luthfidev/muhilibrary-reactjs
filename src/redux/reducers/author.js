@@ -1,7 +1,6 @@
 const initialState = {
     dataAuthors: [],
     pageInfo: [],
-    updateAuthors: false,
     isLoading: false,
     successMsg: '',
     isError: false,
@@ -33,7 +32,6 @@ const authors = (state=initialState, action) => {
                 isError: false,
                 dataAuthors: action.payload.data.data,
                 pageInfo: action.payload.data.pageInfo,
-                successMsg: 'Success Fetch Data'
             }
         }
         // POST

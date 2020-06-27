@@ -1,4 +1,3 @@
-import qs from 'querystring'
 import http from '../../helpers/http'
 const { REACT_APP_URL } = process.env
 const url = `${REACT_APP_URL}`

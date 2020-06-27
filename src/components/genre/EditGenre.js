@@ -3,11 +3,9 @@ import {Modal,
         Button, 
         Form} from 'react-bootstrap'
 import Swal from 'sweetalert2'
-
-import axios from 'axios'
 import { connect } from 'react-redux'
+
 import { updategenres } from '../../redux/actions/genre'
-const {REACT_APP_URL} = process.env
 
 class EditGenre extends Component {
     constructor(props) {
@@ -16,40 +14,12 @@ class EditGenre extends Component {
             name: '',
             alert: ''
         }
-        this.handlePost = this.handlePost.bind(this)
     }
     
 
     handleChange = event => {
         this.setState({[  event.target.name]: event.target.value})
     }
-       
-    /* handlePost = async (event) => {
-        event.preventDefault()
-        this.setState({isLoading: true})
- 
-        const authorData = {
-            name: this.state.name || this.props.genrename,
-        }
-
-        const url = `${REACT_APP_URL}genres/${this.props.genreid}`
-        await axios.patch(url, authorData).then( (response) => {
-            this.setState({Msg: response.data.message})
-
-            Swal.fire({
-              title: 'Done !',
-              text: this.state.Msg,
-              icon: 'success',
-              timer: 2000
-            })
-            this.setState({ redirect: this.state.redirect === false });
-          })
-          .catch(function (error) {
-           }) 
-          
-          await this.props.refreshdata()
-           this.props.onHide()
-    } */
 
     handlePost = (event) => {
         event.preventDefault()
@@ -58,6 +28,22 @@ class EditGenre extends Component {
             name: this.state.name || this.props.genrename,
         }
         this.props.updategenres(id, genreData)
+        .then(response => {
+          Swal.fire({
+            title: 'Done !',
+            text: this.props.genres.successMsg,
+            icon: 'success',
+            timer: 2000
+          })
+        })
+        .catch(err => {
+          Swal.fire({
+            title: 'Done !',
+            text: this.props.genres.errorMsg,
+            icon: 'danger',
+            timer: 2000
+          })
+        });
         this.props.refreshdata()
         this.props.onHide()
     }

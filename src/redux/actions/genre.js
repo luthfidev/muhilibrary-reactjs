@@ -1,12 +1,11 @@
-import qs from 'querystring'
 import http from '../../helpers/http'
 const { REACT_APP_URL } = process.env
 const url = `${REACT_APP_URL}`
 
-export const getgenres = () => {
+export const getgenres = (param) => {
     return {
         type: 'GENRES',
-        payload: http().get(url.concat('genres'))
+        payload: http().get(url.concat(`genres?${param}`))
     }
 }
 

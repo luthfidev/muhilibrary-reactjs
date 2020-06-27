@@ -1,11 +1,22 @@
-import React, {Component} from 'react';
-import TopNavbar from '../navbar'
-import Sidebar from '../sidebar'
-import { Container, Row, Table, Card, Pagination} from 'react-bootstrap';
+import React, { Component } from 'react';
+import { 
+  Container, 
+  Row, 
+  Table, 
+  Card, 
+  Pagination,
+  Dropdown, 
+} from 'react-bootstrap';
 import qs from 'querystring'
 import Swal from 'sweetalert2'
 
+import TopNavbar from '../navbar'
+import Sidebar from '../sidebar'
+import Spiner from '../../components/Loader'
+
+// file form modal Add
 import AddGenre from '../../components/genre/AddGenre'
+// file form modal edit
 import EditGenre from '../../components/genre/EditGenre'
 
 import { connect } from 'react-redux'
@@ -18,54 +29,31 @@ class Genre extends Component {
           dataGenres: [],
           data: [],
           pageInfo: [],
-          isLoading: false,
+          isLoading: true,
           addModalShow : false,
           alert: null
         }
-       /*  const user = JSON.parse(localStorage.getItem('user'))
-        this.checkLogin = () => {
-          if(user){
-            this.setState({isLogin: true})
-            this.setState({isAdmin: user.userData.role})
-          }else{
-            this.setState({isLogin: false})
-              props.history.push('/login')
-          }
-        } */
+      
       }
 
-  /*     fetchData = async (params) => {
-            this.setState({isLoading: true})
-            const {REACT_APP_URL} = process.env
-            const param = `${qs.stringify(params)}`
-            const url = `${REACT_APP_URL}genres?${param}`
-            const results = await axios.get(url, {headers: authHeader()})
-            const {data} = results.data
-            
-            const pageInfo = results.data.pageInfo
-            this.setState({data, pageInfo, isLoading: false})
-            if (params) {
-                this.props.history.push(`?${param}`)
-            }
-      } */
+      componentDidMount() {
+         this.fetchData()
+     }
 
-      fetchData = async () => {
-        await this.props.getgenres()
-        const { dataGenres } = this.props.genres
-        this.setState({dataGenres})
+      fetchData = async (params) => {
+        const param = `${qs.stringify(params)}`
+        await this.props.getgenres(param)
+        const { dataGenres, pageInfo, isLoading } = this.props.genres
+        this.setState({dataGenres, pageInfo, isLoading})
+        if (params) {
+          this.props.history.push(`?${param}`)
+        }
       }
 
       deleteGenre = async(id) => {
         this.props.deletegenres(id)
         this.fetchData()
       }
-/* 
-      deleteGenre = async(id) => {
-        const {REACT_APP_URL} = process.env
-        const url = `${REACT_APP_URL}genres/${id}`
-        await axios.delete(url)
-        this.fetchData()
-      } */
    
       onConfirmDelete = (id) => {
         Swal.fire({
@@ -88,27 +76,25 @@ class Genre extends Component {
         })
       }
 
-      componentDidMount(){
-         /*  await this.checkLogin()
-          const param = qs.parse(this.props.location.search.slice(1))
-          await this.fetchData(param) */
-         /*  await this.props.getgenres()
-          const { dataGenres } = this.props.genres
-          this.setState({dataGenres}) */
-          this.fetchData()
-      }
-
-
     render(){
+         // pagination
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
 
         const {genreid, genrename} = this.state
+
+         // set state addModal
         let addModalClose = () => this.setState({addModalShow:false})
+
+        // set edit editModal close
         let editModalClose = () => this.setState({editModalShow:false})
         return(
             <>
                 <Row className="no-gutters w-100 h-100">
+                {this.state.isLoading &&
+                  <Spiner/>
+                  }
+                   {!this.state.isLoading  &&( 
                     <div className="d-flex flex-row w-100">
                         <Sidebar {...this.props}/>           
                             <div className="w-100 d-flex flex-column">
@@ -119,14 +105,35 @@ class Genre extends Component {
                                <Card>
                                 <Card.Header>Genre</Card.Header>
                                 <Card.Body>
+                                <div className="d-flex flex-row">
+                                <div className="action-btn mr-2">
                                 <button onClick={()=> this.setState({addModalShow: true})} className="btn btn-success mb-2">Add</button>
-                                    
+                                  </div>
                                     <AddGenre
                                         show={this.state.addModalShow}
                                         onHide={addModalClose}
                                         refreshdata={() => this.fetchData()}
                                     />
-
+                                    <Dropdown className="mb-4">
+                                              <Dropdown.Toggle variant="info" id="dropdown-basic">
+                                                  Limit
+                                              </Dropdown.Toggle>
+                                                  <Dropdown.Menu>
+                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, limit: '10' })}>10</Dropdown.Item>
+                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, limit: '50' })}>50</Dropdown.Item>
+                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, limit: '100' })}>100</Dropdown.Item>
+                                                  </Dropdown.Menu>
+                                          </Dropdown>
+                                          <Dropdown className="ml-2">
+                                        <Dropdown.Toggle variant="info" id="dropdown-basic">
+                                            Sort
+                                        </Dropdown.Toggle>
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 0 })}>A-z</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 1 })}>Z-a</Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+                                     </div>
                                      <EditGenre
                                         show={this.state.editModalShow}
                                         onHide={editModalClose}
@@ -181,7 +188,8 @@ class Genre extends Component {
                                 </Card>
                                </Container>
                             </div>
-                    </div>        
+                    </div>     
+                  )}       
                 </Row>
             </>
         )

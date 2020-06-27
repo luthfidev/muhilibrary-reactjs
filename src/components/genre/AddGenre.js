@@ -4,6 +4,7 @@ import {Modal,
         Form} from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
+
 import { postgenres } from '../../redux/actions/genre'
 
 function ValidationMessage(props) {
@@ -23,6 +24,7 @@ class AddGenre extends Component {
         super(props)
         this.state = {
             name: '',
+            nameValid: false,
             alert: '',
             formValid: false,
             errorMsg: {},
@@ -59,39 +61,33 @@ class AddGenre extends Component {
     handleChange = event => {
         this.setState({[  event.target.name]: event.target.value})
     }
-
-/*     handlePost = (event) => {
-    event.preventDefault()
-    this.setState({isLoading: true})
-    const genreData = {
-        name: this.state.name
-    }
-    const url = `${REACT_APP_URL}genres`
-    axios.post(url, genreData).then( (response) => {
-        this.setState({Msg: response.data.message})
-        Swal.fire({
-          title: 'Done !',
-          text: this.state.Msg,
-          icon: 'success',
-          timer: 2000
-        })
-        this.setState({ redirect: this.state.redirect === false });
-      })
-      .catch(function (error) {
-        }) 
-        this.props.refreshdata()
-        this.props.onHide()
-    } */
    
-    handlePost = async (event) => {
+    handlePost = (event) => {
       event.preventDefault()
       const genreData = {
         name: this.state.name
       }
-     await this.props.postgenres(genreData)
+     this.props.postgenres(genreData)
+     .then(response => {
+      Swal.fire({
+        title: 'Done !',
+        text: this.props.genres.successMsg,
+        icon: 'success',
+        timer: 2000
+      })
+    })
+    .catch(err => {
+      Swal.fire({
+        title: 'Done !',
+        text: this.props.genres.errorMsg,
+        icon: 'danger',
+        timer: 2000
+      })
+    });
       this.props.refreshdata()
       this.props.onHide()
     }
+
     render() {
       const {formValid} = this.state
         return(

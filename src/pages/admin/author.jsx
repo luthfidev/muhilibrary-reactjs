@@ -25,31 +25,31 @@ import { getauthors, deleteauthors } from '../../redux/actions/author'
 class Author extends Component {
     constructor(props){
         super(props)
-        // initial state
         this.state = {
           dataAuthors: [],
           data: [],
           pageInfo: [],
-          isLoading: false,
+          isLoading: true,
           addModalShow : false,
           alert: null
         }
     }
-      
-      fetchData = async (params) => {
-        const param = `${qs.stringify(params)}`
-        await this.props.getauthors(param)
-        const { dataAuthors, pageInfo } = this.props.authors
-        this.setState({dataAuthors, pageInfo})
-        if (params) {
-          this.props.history.push(`?${param}`)
-      }
-      }
+    
+    // mount get data
+    componentDidMount() {
+        this.fetchData()
+    }
 
-      // mount get data
-      componentDidMount(){
-          this.fetchData()
+    fetchData = async (params) => {
+      const param = `${qs.stringify(params)}`
+      await this.props.getauthors(param)
+      const { dataAuthors, pageInfo, isLoading } = this.props.authors
+      console.log(isLoading)
+      this.setState({dataAuthors, pageInfo, isLoading})
+      if (params) {
+        this.props.history.push(`?${param}`)
       }
+    }
 
       deleteAuthor = async(id) => {
         this.props.deleteauthors(id)
@@ -68,7 +68,6 @@ class Author extends Component {
           confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
           if (result.value) {
-           /*  this.deleteAuthor(id) */
            this.deleteAuthor(id)
             Swal.fire(
               'Deleted!',
@@ -78,15 +77,13 @@ class Author extends Component {
           }
         })
       }
-
             
     render(){
-
+        // const { isLoading } = this.props.authors
         // pagination
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
         
-        // state for edit modal close
         const {authorid, authorname, authordescription} = this.state
 
         // set state addModal
@@ -96,13 +93,12 @@ class Author extends Component {
         let editModalClose = () => this.setState({editModalShow:false})
 
         return(
-      
             <>
                <Row className="no-gutters w-100 h-100">
                 {this.state.isLoading &&
                   <Spiner/>
                   }
-                   {!this.state.isLoading &&( 
+                   {!this.state.isLoading  &&( 
                     <div className="d-flex flex-row w-100">
                         <Sidebar {...this.props}/>           
                             <div className="w-100 d-flex flex-column">

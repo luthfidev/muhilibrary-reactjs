@@ -1,115 +1,86 @@
 import React, {Component} from 'react';
+import { 
+  Container, 
+  Row, 
+  Table, 
+  Card, 
+  Pagination, 
+  Badge, 
+  Dropdown,
+} from 'react-bootstrap';
+import { connect } from 'react-redux'
+import qs from 'querystring'
+import Swal from 'sweetalert2'
+import moment from 'moment'
+
 import TopNavbar from '../navbar'
 import Sidebar from '../sidebar'
-import {Container, 
-        Row, 
-        Table, 
-        Card, 
-        Pagination, 
-        Badge, 
-        Dropdown} from 'react-bootstrap';
-import qs from 'querystring'
-import axios from 'axios'
-import Swal from 'sweetalert2'
 import Spiner from '../../components/Loader'
-import moment from 'moment'
-import authHeader from '../../services/authHeader'
+
 // file form modal Add
 import {AddTransaction} from '../../components/transaction/AddTransaction' 
 
-import { connect } from 'react-redux'
-import { gettransactions } from '../../redux/actions/transaction'
-const { REACT_APP_URL } = process.env
+import { gettransactions, updatetransactions, deletetransactions } from '../../redux/actions/transaction'
 
 class Transaction extends Component {
-
     constructor(props){
         super(props)
         this.state = {
           dataTransactions: [],
           data: [],
           pageInfo: [],
-          isLoading: false,
+          isLoading: true,
           addModalShow : false,
           alert: null
         }
-         // check auth flow
-        /*  const user = JSON.parse(localStorage.getItem('user'))
-         this.checkLogin = () => {
-           if(user){
-             this.setState({isLogin: true})
-             this.setState({isAdmin: user.userData.role})
-           }else{
-             this.setState({isLogin: false})
-               props.history.push('/login')
-           }
-         } */
-      }
+    }
 
-      async componentDidMount(){
-        /*   await this.checkLogin()
-          const param = qs.parse(this.props.location.search.slice(1))
-          await this.fetchData(param) */
-          await this.props.gettransactions()
-          const { dataTransactions } = this.props.transactions
-          this.setState({dataTransactions})
-          console.log(this.props.gettransactions())
+      componentDidMount() {
+        this.fetchData()
       }
 
       // get data
       fetchData = async (params) => {
-            this.setState({isLoading: true})
-            const {REACT_APP_URL} = process.env
-            const param = `${qs.stringify(params)}`
-            const url = `${REACT_APP_URL}transactions?${param}`
-            const results = await axios.get(url, {headers: authHeader()})
-            const {data} = results.data
-            
-            const pageInfo = results.data.pageInfo
-            this.setState({data, pageInfo, isLoading: false})
-            if (params) {
-                this.props.history.push(`?${param}`)
-            }
+        const param = `${qs.stringify(params)}`
+        await this.props.gettransactions(param)
+        const { dataTransactions, pageInfo, isLoading } = this.props.transactions
+        this.setState({dataTransactions, pageInfo, isLoading})
+        if (params) {
+          this.props.history.push(`?${param}`)
+        }
       }
 
       cancelTransaction = async(id) => {
-        this.setState({isLoading: true})
-        const url = `${REACT_APP_URL}transactions/${id}`
         const data = {
           statusid: 4
         }
-        await axios.patch(url,  data)
+       await this.props.updatetransactions(id, data)
         this.fetchData()
       }
-
-       // props delete
-       deleteTransaction = async(id) => {
-        this.setState({isLoading: true})
-        const {REACT_APP_URL} = process.env
-        const url = `${REACT_APP_URL}transactions/${id}`
-        await axios.delete(url)
-        this.fetchData()
-      }
-       // props delete
-       prosesBook = async(id) => {
-        const {REACT_APP_URL} = process.env
-        const url = `${REACT_APP_URL}transactions/${id}`
+  
+      // props delete
+      prosesBook = async(id) => {
         const data = {
           statusid: 2
         }
-        await axios.patch(url, data)
+        await this.props.updatetransactions(id, data)
         this.fetchData()
       }
-       // props delete
-       returnBook = async(id) => {
-        const {REACT_APP_URL} = process.env
-        const url = `${REACT_APP_URL}transactions/${id}`
+
+      // props delete
+      returnBook = async(id) => {
         const data = {
           statusid: 1
         }
-        await axios.patch(url, data)
+       await this.props.updatetransactions(id, data)
         this.fetchData()
       }
+      
+      // props delete
+      deleteTransaction = async(id) => {
+       await this.props.deletetransactions(id)
+       this.fetchData()
+     }
 
       // modal confirmation cancel
       onConfirmCancel = (id) => {
@@ -154,6 +125,7 @@ class Transaction extends Component {
           }
         })
       }
+
       onConfirmProses = (id) => {
         Swal.fire({
           title: 'Are you sure?',
@@ -174,6 +146,7 @@ class Transaction extends Component {
           }
         })
       }
+
       onConfirmReturn = (id) => {
         Swal.fire({
           title: 'Are you sure?',
@@ -199,17 +172,11 @@ class Transaction extends Component {
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
 
-         // state for edit modal close
-        //  const {transactionid, transactiondate, userid, bookid, statusid} = this.state
-
          // set state addModal
          let addModalClose = () => this.setState({addModalShow:false})
- 
-         // set edit editModal close
-        //  let editModalClose = () => this.setState({editModalShow:false})
+
         return(
             <>
-            
                 <Row className="no-gutters w-100 h-100">
                 {this.state.isLoading &&
                 <div className='d-flex w-100 h-100 justify-content-center align-items-center'>
@@ -248,6 +215,25 @@ class Transaction extends Component {
                                                       <Dropdown.Item  onClick={() => this.fetchData({ ...params, search: 'Borrowed' })}>Borrowed</Dropdown.Item>
                                                   </Dropdown.Menu>
                                           </Dropdown>
+                                          <Dropdown className="ml-2 mb-4">
+                                              <Dropdown.Toggle variant="info" id="dropdown-basic">
+                                                  Limit
+                                              </Dropdown.Toggle>
+                                                  <Dropdown.Menu>
+                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, limit: '10' })}>10</Dropdown.Item>
+                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, limit: '50' })}>50</Dropdown.Item>
+                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, limit: '100' })}>100</Dropdown.Item>
+                                                  </Dropdown.Menu>
+                                          </Dropdown>
+                                          <Dropdown className="ml-2">
+                                        <Dropdown.Toggle variant="info" id="dropdown-basic">
+                                            Sort
+                                        </Dropdown.Toggle>
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 0 })}>A-z</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 1 })}>Z-a</Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
                                       </div>
                                     <Table striped bordered hover>
                                     <thead align="center">
@@ -270,12 +256,6 @@ class Transaction extends Component {
                                         <td>{transaction.title}</td>                                
                                         <td><Badge variant="primary" className="font-weight-bold">{transaction.statusName}</Badge></td>                                
                                         <td align="left">
-                                       {/*  <button onClick={() =>  {  this.setState({editModalShow: true, 
-                                                                                    transactionid: transaction.id, 
-                                                                                    transactiondate: transaction.date, 
-                                                                                    userid: transaction.userid, 
-                                                                                    bookid: transaction.bookid, 
-                                                                                    statusid: transaction.statusid})} } className="btn btn-warning ml-2">Edit</button> */}
                                          {transaction.statusName === 'Pending' && (<>
                                          <button onClick={() =>  {  this.onConfirmProses(transaction.id)} } className="btn btn-info ml-2">Proses</button>
                                          <button onClick={() =>  {  this.onConfirmCancel(transaction.id)} } className="btn btn-warning ml-2">Cancel</button>
@@ -284,7 +264,7 @@ class Transaction extends Component {
                                          <button onClick={() =>  {  this.onConfirmReturn(transaction.id)} } className="btn btn-success ml-2">Return Book</button>
                                          }
                                          <button onClick={() =>  {  this.onConfirmDelete(transaction.id)} } className="btn btn-danger ml-2">Delete</button>
-                                        </td>                                
+                                        </td>                         
                                         </tr>   
                                          ))}                           
                                     </tbody>
@@ -323,7 +303,9 @@ const mapStateToProps = (state) => ({
   transactions: state.transactions
 })
 const mapDispatchToProps = {
-  gettransactions
+  gettransactions,
+  updatetransactions,
+  deletetransactions,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Transaction)

@@ -44,7 +44,6 @@ class Author extends Component {
       const param = `${qs.stringify(params)}`
       await this.props.getauthors(param)
       const { dataAuthors, pageInfo, isLoading } = this.props.authors
-      console.log(isLoading)
       this.setState({dataAuthors, pageInfo, isLoading})
       if (params) {
         this.props.history.push(`?${param}`)

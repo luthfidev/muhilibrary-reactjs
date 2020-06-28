@@ -14,6 +14,7 @@ import jwt from 'jsonwebtoken'
 import qs from 'querystring'
 // file form modal edit book
 import EditBook from '../components/book/EditBook'
+import Spiner from '../components/Loader'
 
 import { login } from '../redux/actions/auth'
 import { deletebooks, detailbooks } from '../redux/actions/book'
@@ -34,6 +35,7 @@ class Detail extends Component {
             transactiondate: moment().format('yyyy-MM-DD'),
             editModalShow: false,
             errorMsg: {},
+            isLoading: true,
         }
       }
 
@@ -42,9 +44,9 @@ class Detail extends Component {
       } 
 
       fetchData = async () => {
-        await this.props.detailbooks(this.state.bookid)
-        const { dataBooks } = this.props.books
-        this.setState({dataBooks})
+       await this.props.detailbooks(this.state.bookid)
+        const { dataBooks, isLoading } = this.props.books
+        this.setState({dataBooks, isLoading})
         this.state.dataBooks.map((books, index) => (
           this.setState({
             bookid: books.id,
@@ -130,6 +132,12 @@ class Detail extends Component {
             <>  
            
                 <Row className="h-100 w-100 no-gutters">
+                {this.state.isLoading &&
+                <div className='d-flex w-100 h-100 justify-content-center align-items-center'>
+                <Spiner/>
+                </div>
+                }
+                {!this.state.isLoading && (<>
                     <div className="detail-header ">
                         <div className="btn-action p-3 w-100 d-flex justify-content-between"> 
                             <div className="btn-back">
@@ -211,8 +219,10 @@ class Detail extends Component {
                                     </div>
                                 </div>
                             </Col>
+                           
                         </Row>
                     </div>
+                    </>)}  
                 </Row>
             </>
         )

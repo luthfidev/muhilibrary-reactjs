@@ -11,6 +11,7 @@ import { Container,
      } from 'react-bootstrap';
 import qs from 'querystring'
 import { connect } from 'react-redux'
+import jwt from 'jsonwebtoken'
 
 import TopNavbar from './navbar'
 import Sidebar from './sidebar'
@@ -24,6 +25,10 @@ class Book extends Component {
     constructor(props){
         super(props)
         this.state = {
+        user: jwt.decode(this.props.auth.token) || {
+            email: '',
+            role: '',
+            },
           dataBooks:[],
           dataGenres: [],
           pageInfo: [],
@@ -32,12 +37,12 @@ class Book extends Component {
         }
     }
     
-   componentWillMount() {
+  async componentWillMount() {
         if (!this.props.auth.token) {
             this.props.history.push('/')       
         } else {
-            this.fetchData()
-            this.fetchDataGenres()
+         await this.fetchData()
+         await this.fetchDataGenres()
         }  
     }  
 
@@ -64,10 +69,13 @@ class Book extends Component {
         
         return(
             <>
-             {this.state.isLoading &&
-                  <Spiner/>
-             }
-                <Row className="no-gutters w-100 h-100">        
+                   <Row className="no-gutters w-100 h-100">  
+                   {this.state.isLoading &&
+                    <div className='d-flex w-100 h-100 justify-content-center align-items-center'>
+                    <Spiner/>
+                    </div>
+                    }
+                 {!this.state.isLoading &&(      
                     <div className="d-flex flex-row w-100">
                         <Sidebar {...this.props}/>           
                             <div className="w-100 d-flex flex-column">
@@ -168,7 +176,8 @@ class Book extends Component {
                                     </div>
                                </Container>
                             </div>
-                    </div>     
+                    </div>  
+                 )}   
                 </Row>
             </>
         )

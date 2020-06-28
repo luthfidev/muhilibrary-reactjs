@@ -8,6 +8,7 @@ import {
   Col,
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import Spiner from '../components/Loader'
 import qs from 'querystring';
 import Chart from 'react-apexcharts';
 import moment from 'moment'
@@ -23,22 +24,25 @@ class Dashboard extends Component {
       data: [],
       dataTransactionsChart: [],
       options: {},
-      series: {}
+      series: {},
+      isLoading: false,
     }
   }
-
+  
   componentWillMount() {
     if (!this.props.auth.token) {
-        this.props.history.push('/')       
-    } else {
-        this.fetchData()
-    }  
-  }  
+      this.props.history.push('/')       
+    } 
+  }
+
+ async componentDidMount() {
+     await this.fetchData()
+ }
 
    fetchData = async () => {
    await this.props.gettransactionschart()
-   const { dataTransactionsChart } = this.props.transactions
-   this.setState({ dataTransactionsChart })
+  /*  const { dataTransactionsChart, isLoading } = this.props.transactions
+   this.setState({ dataTransactionsChart, isLoading })
    this.state.dataTransactionsChart.map((data, index) => (
    this.setState({
     datechart: data.transaction_date,
@@ -61,7 +65,7 @@ class Dashboard extends Component {
         data: [this.state.returnbook],
       },
     ],
-  })
+  }) */
   }
 
      render() {
@@ -70,6 +74,12 @@ class Dashboard extends Component {
       return (
         <>
           <Row className="no-gutters w-100 h-100">
+          {this.state.isLoading &&
+            <div className='d-flex w-100 h-100 justify-content-center align-items-center'>
+            <Spiner/>
+            </div>
+            }
+            {!this.state.isLoading &&(  
             <div className="d-flex flex-row w-100">
               <Sidebar {...this.props} />
               <div className="w-100 d-flex flex-column">
@@ -97,8 +107,8 @@ class Dashboard extends Component {
                   </div>
                 </Container>
               </div>
-            </div>
-
+            </div> 
+            )}
           </Row>
         </>
       );

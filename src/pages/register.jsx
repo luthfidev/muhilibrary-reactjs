@@ -1,16 +1,126 @@
 import React, {Component} from 'react';
 import {
-    Row, 
-    Col,
-    Form,
-    Button} from 'react-bootstrap'
+  Row, 
+  Col,
+  Form,
+  Button,
+  Spinner,
+} from 'react-bootstrap'
+import Swal from 'sweetalert2' 
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux'
+
+import { register } from '../redux/actions/auth'
 
 import brand from '../assets/img/bookshelf.png'
 
+function ValidationMessage(props) {
+  if (!props.valid) {
+    return(
+      <div className='error-msg text-danger'>{props.message}</div>
+    )
+  } else {
+    return(
+      <div className='error-msg text-success'>Look Goods!</div>
+    )
+  }
+}
 class Register extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+        email: '', emailValid: false,
+        password: '', passwordValid: false,
+        loggedIn: false,
+        addModalShow : false,
+        errorMsg: {},
+        formValid: false,
+        isLoading: false,
+    }
+    this.baseState = this.state 
+    if (this.props.auth.token) {
+      this.props.history.push('/dashboard') 
+  }
+}
+
+  resetForm = () => {
+    this.setState(this.baseState)
+  }
   
+  handleChange = event => {
+      this.setState({[  event.target.name]: event.target.value})
+  }
+  
+  validateForm = () => {
+    const {emailValid, passwordValid} = this.state;
+    this.setState({
+      formValid: emailValid && passwordValid,
+    })
+  }
+  
+  updateEmail = (email) => {
+    this.setState({email}, this.validateEmail)
+  }
+  
+  validateEmail = () => {
+    const {email} = this.state;
+    let emailValid = true;
+    let errorMsg = {...this.state.errorMsg}
+  
+    if (email.length < 3) {
+      emailValid = false;
+      errorMsg.email = 'Must be at least 3 characters long'
+    } else if (!email.includes('@')) {
+      emailValid = false;
+      errorMsg.email = 'Invalid Email'
+    }
+  
+    this.setState({emailValid, errorMsg}, this.validateForm)
+  }
+  
+  updatePassword = (password) => {
+    this.setState({password}, this.validatePassword)
+  }
+  
+  validatePassword = () => {
+    const {password} = this.state;
+    let passwordValid = true;
+    let errorMsg = {...this.state.errorMsg}
+  
+    if (password.length < 4) {
+      passwordValid = false;
+      errorMsg.password = 'Must be at least 4 characters long'
+    }
+  
+    this.setState({passwordValid, errorMsg}, this.validateForm)
+  }
+  
+  handlePost = async (event) => {
+    event.preventDefault()
+    const { email, password } = this.state
+    this.props.register(email, password)
+    .then(response => {
+      Swal.fire({
+        title: 'Done !',
+        text: this.props.auth.successMsg,
+        icon: 'success',
+        timer: 2000
+      })
+      this.props.history.push('/login')
+    })
+    .catch(err => {
+      Swal.fire({
+        title: 'Done !',
+        text: this.props.auth.errorMsg,
+        icon: 'danger',
+        timer: 2000
+      })
+    });
+   
+  }
     render() { 
+      const {formValid } = this.state
+      const { isLoading } = this.props.auth
         return(
             <>
              <Row className="h-100 no-gutters">
@@ -30,36 +140,45 @@ class Register extends Component {
                           <img alt="brand" className="ml-auto mr-3 mt-2" src={brand}/>
                       </div>
                       <div className="h-75 m-4 d-flex justify-content-center align-items-center">
-                        <Form >
-                        <h1>Register</h1>
-                          <p>Welcome Back, Please Login to your account</p>
-                          <Form.Group>
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control type="text" placeholder="Username" />
-                          </Form.Group>
-                          <Form.Group>
-                            <Form.Label>Full Name</Form.Label>
-                            <Form.Control type="text" placeholder="Full Name" />
-                          </Form.Group>
-                          <Form.Group>
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" />
-                          </Form.Group>
-                          <Form.Group>
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" />
-                          </Form.Group>
-                          <Button variant="primary" type="submit">
-                            Submit
-                          </Button>
-                          <Link to="/" className="ml-2 btn btn-outline-dark"> Login</Link>
-                        </Form>
+                      <div className="card-login">
+                            <div className="card-login-title d-flex justify-content-center mt-2">
+                                <h2>Regsiter</h2>
+                                </div>
+                                <form className="card-form-login w-100" onSubmit={ this.handlePost}>
+                                  <div className="d-flex flex-column d-flex align-items-center justify-content-center">                         
+                                    <div className="field  mt-4 mb-3">
+                                        <input name="email" type="text" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} placeholder="Email"/>
+                                        <Form.Text className="text-muted">
+                                          <ValidationMessage valid={this.state.emailValid} message={this.state.errorMsg.email} />
+                                        </Form.Text>
+                                    </div>
+                                    <div className="field mt-2">
+                                        <input name="password" type="text" value={this.state.password} onChange={(e) => this.updatePassword(e.target.value)} placeholder="Password"/>
+                                        <Form.Text className="text-muted">
+                                          <ValidationMessage valid={this.state.passwordValid} message={this.state.errorMsg.password} />
+                                        </Form.Text>
+                                    </div>
+                                    </div>
+                                    <div className="d-flex justify-content-center mt-5">
+                                        <button className="btn-login text-danger" disabled={isLoading || !formValid}>
+                                        {isLoading &&(
+                                        <Spinner 
+                                          as="span"
+                                          animation="border"
+                                          size="sm"
+                                          role="status"
+                                          aria-hidden="true"
+                                        />)}
+                                        Register</button>
+                                    </div>
+                                </form>
+                        </div>
                       </div>
                       <Col className="footer-login d-flex justify-content-center align-content-center">
                         <div>
                         <div>By signing up, you agree to Book’s</div>
-                        <Link to="/register"> Terms and Conditions</Link> & 
-                        <Link to="/register"> Privacy Policy</Link>
+                        <Link className="text-decoration-none" to="#"> Terms and Conditions</Link> & 
+                        <Link className="text-decoration-none" to="#"> Privacy Policy</Link>
                         </div>
                       </Col>
                   </div>
@@ -69,5 +188,10 @@ class Register extends Component {
         )
     }
 }
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+})
 
-export default Register
+const mapDispatchToProps = { register }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register)

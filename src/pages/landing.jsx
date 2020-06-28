@@ -11,6 +11,7 @@ import {
     Carousel, 
 } from 'react-bootstrap'
 import qs from 'querystring'
+import jwt from 'jsonwebtoken'
 
 import { connect } from 'react-redux'
 import { getbooks } from '../redux/actions/book'
@@ -28,6 +29,10 @@ class Landing extends Component {
     constructor(props){
         super(props)
         this.state = {
+        user: jwt.decode(this.props.auth.token) || {
+            email: '',
+            role: '',
+            },
           dataBooks: [],
           data: [],
           dataGenre: [],
@@ -37,15 +42,6 @@ class Landing extends Component {
           query: ''
         }
         
-        const user = JSON.parse(localStorage.getItem('user'))
-        this.checkLogin = () => {
-          if(user){
-            this.setState({isLogin: true})
-          }else{
-            this.setState({isLogin: false})
-          }
-        }
-
     }
 
       fetchData = async (params) => {
@@ -106,8 +102,13 @@ class Landing extends Component {
                         </Nav>
                         <Form inline>
                             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+                            {this.props.auth.token &&
+                            <Link className="btn btn-info mr-2 shadow" to="/dashboard">Dashboard</Link>
+                            }
+                            {!this.props.auth.token && (<>
                             <Link className="btn btn-info mr-2 shadow" to="/login">Login</Link>
-                            <Button className='shadow' variant="outline-secondary">Register</Button>
+                            <Link className="btn btn-info mr-2 shadow" to="/Register">Register</Link>
+                            </>)}
                         </Form>
                         </Navbar.Collapse>
                     </Navbar>
@@ -177,7 +178,12 @@ class Landing extends Component {
                                             </p>
                                         </div>
                                         <div className="card-book-btn d-flex justify-content-center mt-2">
-                                            <Link className="btn-borrow" to="/borrow">Borrow</Link>
+                                        <Link className="btn-borrow" to={{
+                                                                            pathname: `/detail/${book.id}`,
+                                                                            state: {
+                                                                            bookid: `${book.id}`
+                                                                            }
+                                                                        }}>Borrow</Link>
                                         </div>
                                     </div>
                                 ))} 
@@ -190,6 +196,7 @@ class Landing extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    auth: state.auth,
     books: state.books
 })
 const mapDispatchToProps = {

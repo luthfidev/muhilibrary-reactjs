@@ -17,10 +17,10 @@ export const getbooks = (param) => {
     }
 }
 
-export const postbooks = (data) => {
+export const postbooks = (token, data) => {
     return {
         type: 'POST_BOOKS',
-        payload: http().post(url.concat('books'), data)
+        payload: http(token).post(url.concat('books'), data)
     }
 }
 

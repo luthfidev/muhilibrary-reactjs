@@ -4,12 +4,18 @@ import {Modal,
         Form} from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
+import jwt from 'jsonwebtoken'
+
 import { updateauthors } from '../../redux/actions/author'
 
 class EditAuthor extends Component {
     constructor(props) {
         super(props)
         this.state = {
+          user: jwt.decode(this.props.auth.token) || {
+            email: '',
+            role: '',
+          },
             name: '',
             description: '',
             alert: ''
@@ -28,7 +34,8 @@ class EditAuthor extends Component {
             name: this.state.name || this.props.authorname,
             description: this.state.description  || this.props.authordescription
         }
-        this.props.updateauthors(id, authorData)
+        const { token } = this.props.auth
+        this.props.updateauthors(token, id, authorData)
         .then(response => {
             Swal.fire({
               title: 'Done !',
@@ -111,8 +118,9 @@ class EditAuthor extends Component {
     }
 }
 const mapStateToProps = (state) => ({
+    auth: state.auth,
     authors: state.authors
-  })
+})
   const mapDispatchToProps = {
     updateauthors,
   }

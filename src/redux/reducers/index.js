@@ -4,9 +4,8 @@ import storage from 'redux-persist/lib/storage'
 import hardSet from 'redux-persist/lib/stateReconciler/hardSet'
 // import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
 import auth from './auth'
-import loader from './loader'
+import users from './user'
 import books from './book'
-
 import authors from './author'
 import genres from './genre'
 import transactions from './transaction'
@@ -20,6 +19,7 @@ const persistConfig = {
 }
 
 const rootReducer = combineReducers({
+    users,
     auth,
     books,
     authors,

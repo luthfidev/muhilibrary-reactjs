@@ -9,6 +9,7 @@ import {
 } from 'react-bootstrap';
 import qs from 'querystring'
 import Swal from 'sweetalert2'
+import jwt from 'jsonwebtoken'
 
 import TopNavbar from '../navbar'
 import Sidebar from '../sidebar'
@@ -26,6 +27,10 @@ class Genre extends Component {
     constructor(props){
         super(props)
         this.state = {
+          user: jwt.decode(this.props.auth.token) || {
+            email: '',
+            role: '',
+          },
           dataGenres: [],
           data: [],
           pageInfo: [],
@@ -36,9 +41,13 @@ class Genre extends Component {
       
       }
 
-      componentDidMount() {
-         this.fetchData()
-     }
+      componentWillMount() {
+        if (!this.props.auth.token) {
+            this.props.history.push('/')       
+        } else {
+            this.fetchData()
+        }  
+      }  
 
       fetchData = async (params) => {
         const param = `${qs.stringify(params)}`
@@ -51,7 +60,8 @@ class Genre extends Component {
       }
 
       deleteGenre = async(id) => {
-        this.props.deletegenres(id)
+        const { token } = this.props.auth
+        this.props.deletegenres(token, id)
         this.fetchData()
       }
    
@@ -198,6 +208,7 @@ class Genre extends Component {
 
 // export default Genre
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   genres: state.genres
 })
 const mapDisPatchProps = {

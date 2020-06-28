@@ -4,10 +4,12 @@ import {Modal,
         Form, 
         ProgressBar} from 'react-bootstrap'
 import Swal from 'sweetalert2' 
-import axios from 'axios'
+import jwt from 'jsonwebtoken'
 import { connect } from 'react-redux'
+
 import { postbooks } from '../../redux/actions/book'
-const {REACT_APP_URL} = process.env
+import { getgenres } from '../../redux/actions/genre'
+import { getauthors } from '../../redux/actions/author'
 
 function ValidationMessage(props) {
     if (!props.valid) {
@@ -25,6 +27,10 @@ class AddBook extends Component {
     constructor(props) {
         super(props)
         this.state = {
+          user: jwt.decode(this.props.auth.token) || {
+            email: '',
+            role: '',
+          },
             title: '', titleValid: false,
             description: '', descriptionValid: false,
             image: '',
@@ -33,8 +39,8 @@ class AddBook extends Component {
             releasedate: '',
             statusid: '',
             alert: '',
-            dataGenre:[],
-            dataAuthor:[],
+            dataGenres:[],
+            dataAuthors:[],
             percentage: 0,
             formValid: false,
             errorMsg: {}
@@ -42,6 +48,17 @@ class AddBook extends Component {
         }
         this.handlePost = this.handlePost.bind(this)
     }
+
+      // mount get data
+      componentDidMount(){
+        this.fetchDataGenre()
+        this.fetchDataAuthor()
+    }
+
+      componentWillUnmount(){
+          this.fetchDataGenre()
+          this.fetchDataAuthor()
+      }
 
     validateForm = () => {
         const {titleValid, descriptionValid} = this.state;
@@ -97,7 +114,7 @@ class AddBook extends Component {
         
        handlePost = async (event) => {
         event.preventDefault()
-      /*   this.setState({isLoading: true}) */
+      /*   this.setState({isLoading: true}) */    
 
         const formData = new FormData()
         formData.append('image', this.state.image)
@@ -107,81 +124,40 @@ class AddBook extends Component {
         formData.set('authorid', this.state.authorid)
         formData.set('releasedate', this.state.releasedate)
         formData.set('statusid', this.state.statusid)
-
-        this.props.postbooks(formData)
-        this.props.refreshdata() 
+        const { token } = this.props.auth
+        this.props.postbooks(token, formData)
+        .then(response => {
+          Swal.fire({
+            title: 'Done !',
+            text: this.props.books.successMsg,
+            icon: 'success',
+            timer: 2000
+          })
+        })
+        .catch(err => {
+          Swal.fire({
+            title: 'Done !',
+            text: this.props.books.errorMsg,
+            icon: 'danger',
+            timer: 2000
+          })
+        });
+        await this.props.refreshdata() 
         this.props.onHide() 
     }
-     /*   handlePost = async (event) => {
-        event.preventDefault()
-      this.setState({isLoading: true})
-
-        const formData = new FormData()
-        formData.append('image', this.state.image)
-        formData.set('title', this.state.title)
-        formData.set('description', this.state.description)
-        formData.set('genreid', this.state.genreid)
-        formData.set('authorid', this.state.authorid)
-        formData.set('releasedate', this.state.releasedate)
-        formData.set('statusid', this.state.statusid)
-
-        const url = `${REACT_APP_URL}books`
-        await axios.post(url, formData, {headers: authHeader()}).then( (response) => {
-            this.setState({addMsg: "User is successfully added to the database"})
-            console.log(response)
-            this.setState({ uploadPercentage: 100 }, () => {
-                setTimeout(()=> {
-                    this.setState({ uploadPercentage: 0})
-                }, 2000)
-                this.setState({Msg: response.data.message})
-                Swal.fire({
-                    title: 'Done !',
-                    text: this.state.addMsg,
-                    icon: 'success',
-                    timer: 2000
-                  })
-                  this.setState({ redirect: this.state.redirect === false });
-            })
-          })
-          .catch(function (error) {
-            Swal.fire({
-                title: 'Done !',
-                text: error.response.data.message,
-                icon: 'warning',
-                timer: 3000
-              }) 
-           }) 
-         // this.props.onHide() 
-        this.props.refreshdata() 
-    } */
     
     // get data Genre
-    fetchDataGenre = async (params) => {
-    this.setState({isLoading: true})
-    const url = `${REACT_APP_URL}genres`
-    const results = await axios.get(url)
-    const {data} = results.data
-    this.setState({dataGenre: data, isLoading: false})
+    fetchDataGenre = async () => {
+      await this.props.getgenres()
+      const { dataGenres, isLoading } = this.props.genres
+      this.setState({dataGenres, isLoading})
     }
 
     // get data Author
-    fetchDataAuthor = async (params) => {
-    this.setState({isLoading: true})
-    const url = `${REACT_APP_URL}authors`
-    const results = await axios.get(url)
-    const {data} = results.data
-    this.setState({dataAuthor: data, isLoading: false})
-    }
-
-    // mount get data
-    componentDidMount(){
-        this.fetchDataGenre()
-        this.fetchDataAuthor()
-    }
-
-    componentWillUnmount(){
-        this.fetchDataGenre()
-        this.fetchDataAuthor()
+    fetchDataAuthor = async () => {
+      await this.props.getauthors()
+      const { dataAuthors, isLoading } = this.props.authors
+      this.setState({dataAuthors, isLoading})
     }
   
     render(){
@@ -224,7 +200,7 @@ class AddBook extends Component {
                 <Form.Label>Genre</Form.Label>
                     <Form.Control as="select" name="genreid" onChange={(e) => this.handleChange(e)}>
                         <option>Select Genre</option>
-                        {this.state.dataGenre.map((genre, index) => (  
+                        {this.state.dataGenres.map((genre, index) => (  
                              <option value={genre.id} key={genre.id.toString()}>{genre.name}</option>
                          ))}           
                     </Form.Control>
@@ -233,7 +209,7 @@ class AddBook extends Component {
                 <Form.Label>Author</Form.Label>
                     <Form.Control as="select" name="authorid" onChange={(e) => this.handleChange(e)}>
                         <option>Select Author</option>
-                        {this.state.dataAuthor.map((author, index) => (  
+                        {this.state.dataAuthors.map((author, index) => (  
                              <option value={author.id} key={author.id.toString()}>NomorID: {author.id} Name: {author.name}</option>
                          ))}           
                     </Form.Control>
@@ -267,10 +243,15 @@ class AddBook extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
+  authors: state.authors,
+  genres: state.genres,
   books: state.books
 })
 const mapDispatchToProps = {
   postbooks,
+  getauthors,
+  getgenres,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddBook)

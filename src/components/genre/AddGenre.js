@@ -3,6 +3,7 @@ import {Modal,
         Button, 
         Form} from 'react-bootstrap'
 import Swal from 'sweetalert2'
+import jwt from 'jsonwebtoken'
 import { connect } from 'react-redux'
 
 import { postgenres } from '../../redux/actions/genre'
@@ -23,6 +24,10 @@ class AddGenre extends Component {
     constructor(props) {
         super(props)
         this.state = {
+          user: jwt.decode(this.props.auth.token) || {
+            email: '',
+            role: '',
+          },
             name: '',
             nameValid: false,
             alert: '',
@@ -67,7 +72,8 @@ class AddGenre extends Component {
       const genreData = {
         name: this.state.name
       }
-     this.props.postgenres(genreData)
+    const { token } = this.props.auth
+     this.props.postgenres(token, genreData)
      .then(response => {
       Swal.fire({
         title: 'Done !',
@@ -129,6 +135,7 @@ class AddGenre extends Component {
 
 // export default AddGenre
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   genres: state.genres
 })
 const mapDispatchToProps = {

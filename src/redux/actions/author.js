@@ -9,24 +9,24 @@ export const getauthors = (param) => {
     }
 }
 
-export const postauthors = (data) => {
+export const postauthors = (token, data) => {
     return {
         type: 'POST_AUTHORS',
-        payload: http().post(url.concat('authors'), data)
+        payload: http(token).post(url.concat('authors'), data)
     }
 }
 
-export const updateauthors = (id, data) => {
+export const updateauthors = (token, id, data) => {
     return {
         type: 'UPDATE_AUTHORS',
-        payload: http().patch(url.concat(`authors/${id}`), data)
+        payload: http(token).patch(url.concat(`authors/${id}`), data)
     }
 }
 
-export const deleteauthors = (id) =>{
+export const deleteauthors = (token, id) =>{
     return {
       type: 'DELETE_AUTHORS',
-      payload: http().delete(url.concat(`authors/${id}`))
+      payload: http(token).delete(url.concat(`authors/${id}`))
     }
 }
     

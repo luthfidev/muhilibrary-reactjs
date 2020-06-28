@@ -4,6 +4,7 @@ import {Modal,
         Form} from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
+import jwt from 'jsonwebtoken'
 
 import { updategenres } from '../../redux/actions/genre'
 
@@ -11,6 +12,10 @@ class EditGenre extends Component {
     constructor(props) {
         super(props)
         this.state = {
+          user: jwt.decode(this.props.auth.token) || {
+            email: '',
+            role: '',
+          },
             name: '',
             alert: ''
         }
@@ -27,7 +32,8 @@ class EditGenre extends Component {
         const genreData = {
             name: this.state.name || this.props.genrename,
         }
-        this.props.updategenres(id, genreData)
+        const { token } = this.props.auth
+        this.props.updategenres(token, id, genreData)
         .then(response => {
           Swal.fire({
             title: 'Done !',
@@ -103,8 +109,9 @@ class EditGenre extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
     genres: state.genres
-  })
+})
   const mapDispatchToProps = {
     updategenres,
   }

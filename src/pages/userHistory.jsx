@@ -1,58 +1,68 @@
-import React, {Component} from 'react';
-import {Container, 
-        Row, 
-        Table, 
-        Card, 
-        Badge} from 'react-bootstrap';
+import React, { Component } from 'react';
+import {
+  Container, 
+  Row, 
+  Table, 
+  Card, 
+  Badge,
+  Pagination,
+  Dropdown,
+} from 'react-bootstrap';
 import Swal from 'sweetalert2' // alert sweetalert
+import qs from 'querystring'
+import moment from 'moment'
+import jwt from 'jsonwebtoken'
+import { connect } from 'react-redux'
+
+
 import Spiner from '../components/Loader' // loader
 import TopNavbar from './navbar' // topnavbar
 import Sidebar from './sidebar' // sidebar
-import moment from 'moment'
-import authHeader from '../services/authHeader'
-import axios from 'axios' // rest client
-const {REACT_APP_URL} = process.env
+
+import { userhistory } from '../redux/actions/user'
+import { updatetransactions } from '../redux/actions/transaction'
 
 class userHistory extends Component {
     constructor(props){
         super(props)
         this.state = {
-          data: [],
+          user: jwt.decode(this.props.auth.token) || {
+            email: '',
+            role: '',
+          },
+          dataHistoryUsers: [],
           pageInfo: [],
-          isLoading: false,
+          isLoading: true,
           addModalShow : false,
           alert: null
         }
       }
-      // get data
-      fetchData = async () => {
-        /* this.setState({isLoading: true}) */
-        const {REACT_APP_URL} = process.env
-        try {
-          const url = `${REACT_APP_URL}transactions/userstatus`
-          const results = await axios.get(url, {headers: authHeader()})
-            const {data} = results.data
-            this.setState({data, isLoading: false})
-        } catch (error) {
-            if (error.response === undefined) {
-              return false
-          } else {
-            Swal.fire({
-              title: 'Done !',
-              text: error.response.data.message,
-              icon: 'warning',
-            })
-          }
-        }     
+      
+      componentWillMount() {
+        if (!this.props.auth.token) {
+            this.props.history.push('/')       
+        } else {
+            this.fetchData()
+        }  
+      }  
+
+      fetchData = async (params) => {
+        const { token } = this.props.auth
+        const param = `${qs.stringify(params)}`
+        await this.props.userhistory(token, param)
+        const { dataHistoryUsers, pageInfo, isLoading } = this.props.users
+        this.setState({dataHistoryUsers, pageInfo, isLoading})
+        if (params) {
+          this.props.history.push(`?${param}`)
+        }
       }
+
        // props cancel
        cancelTransaction = async(id) => {
-        this.setState({isLoading: true})
-        const url = `${REACT_APP_URL}transactions/${id}`
         const data = {
           statusid: 4
         }
-        await axios.patch(url,  data)
+       await this.props.updatetransactions(id, data)
         this.fetchData()
       }
      
@@ -78,31 +88,46 @@ class userHistory extends Component {
         })
       }
     
-    async componentDidMount(){
-       await this.fetchData()
-    }
-    
     render(){
-
+      const params = qs.parse(this.props.location.search.slice(1))
+      params.page = params.page || 1
         return(
             <>
-                <Row className="no-gutters w-100 h-100">
-                {this.state.isLoading &&
-                <div className='d-flex w-100 h-100 justify-content-center align-items-center'>
+              {this.state.isLoading &&
                 <Spiner/>
-                </div>
                 }
-                 {!this.state.isLoading &&(   
+                <Row className="no-gutters w-100 h-100">
                     <div className="d-flex flex-row w-100">
                         <Sidebar {...this.props}/>           
                             <div className="w-100 d-flex flex-column">
                                 <div className="top-navbar sticky-top">
-                                    <TopNavbar/>
+                                    <TopNavbar search={(query) => this.fetchData(query)}/>
                                 </div>
                                <Container fluid className="mt-4">
                                <Card>
                                 <Card.Header>Transactions</Card.Header>
-                                <Card.Body>                        
+                                <Card.Body>
+                                <div className="d-flex flex-row">
+                                      <Dropdown className="mb-4">
+                                              <Dropdown.Toggle variant="info" id="dropdown-basic">
+                                                  Limit
+                                              </Dropdown.Toggle>
+                                                  <Dropdown.Menu>
+                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, limit: '10' })}>10</Dropdown.Item>
+                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, limit: '50' })}>50</Dropdown.Item>
+                                                      <Dropdown.Item  onClick={() => this.fetchData({ ...params, limit: '100' })}>100</Dropdown.Item>
+                                                  </Dropdown.Menu>
+                                          </Dropdown>
+                                          <Dropdown className="ml-2">
+                                        <Dropdown.Toggle variant="info" id="dropdown-basic">
+                                            Sort
+                                        </Dropdown.Toggle>
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 0 })}>A-z</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => this.fetchData({ ...params, sort: 1 })}>Z-a</Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+                                    </div>                        
                                     <Table striped bordered hover>
                                     <thead align="center">
                                         <tr>
@@ -114,9 +139,9 @@ class userHistory extends Component {
                                         <th>Action</th>
                                         </tr>
                                     </thead>
-                                    {this.state.data.length !== 0 &&(
+                                    {this.state.dataHistoryUsers.length !== 0 &&(
                                     <tbody>
-                                         {this.state.data.map((transaction, index) => (  
+                                         {this.state.dataHistoryUsers.map((transaction, index) => (  
                                         <tr key={transaction.id.toString()}>
                                         <td >{index + 1}</td>
                                         <td>{moment(transaction.transaction_date).format('yyyy-MM-DD')}</td>                                
@@ -144,12 +169,12 @@ class userHistory extends Component {
                                          ))}                           
                                     </tbody>
                                     )}
-                                    {this.state.data.length===0 &&(
+                                    {this.state.dataHistoryUsers.length===0 &&(
                                         <h1>Data Not Available</h1>
                                     )}
                                     </Table>
                                     <div className="d-flex justify-content-center">
-                                  {/*   <Pagination>
+                                    <Pagination>
                                             <Pagination.First onClick={()=>this.fetchData({...params, page: parseInt(params.page)-1})}/>
                                             <Pagination.Prev />
                                             {[...Array(this.state.pageInfo.totalPage)].map((o, i)=>{
@@ -159,18 +184,27 @@ class userHistory extends Component {
                                             })}
                                             <Pagination.Next onClick={()=>this.fetchData({...params, page: parseInt(params.page)+1})}/>
                                             <Pagination.Last />
-                                    </Pagination> */}
+                                    </Pagination> 
                                     </div>
                                 </Card.Body>
-                                </Card>
+                                </Card>   
                                </Container>
                             </div>
-                    </div> 
-                )}           
+                    </div>            
                 </Row>
             </>
         )
     };
 }
 
-export default userHistory
+
+const mapStateToProps = (state) => ({
+  users: state.users,
+  auth: state.auth,
+})
+const mapDispatchToProps = {
+  userhistory,
+  updatetransactions,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(userHistory)

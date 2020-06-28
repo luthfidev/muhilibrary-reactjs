@@ -1,5 +1,6 @@
 const initialState = {
     dataTransactions: [],
+    dataTransactionsChart: [],
     pageInfo: [],
     successMsg: '',
     isLoading: false,
@@ -10,6 +11,31 @@ const initialState = {
 
 const transactions = (state=initialState, action) => {
     switch(action.type) {
+        //GET CHART
+        case 'TRANSACTIONS_CHART_PENDING': {
+            return {
+                ...state,
+                isLoading: true,
+                isError: false
+            }
+        }
+        case 'TRANSACTIONS_CHART_REJECTED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: true,
+                errorMsg: action.payload.response.data.message
+            }
+        }
+        case 'TRANSACTIONS_CHART_FULFILLED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+                dataTransactionsChart: action.payload.data.data,
+            }
+        }
+        //GET 
         case 'TRANSACTIONS_PENDING': {
             return {
                 ...state,

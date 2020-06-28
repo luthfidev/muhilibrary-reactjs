@@ -6,7 +6,7 @@ import {
     OverlayTrigger,
     Tooltip,
 } from 'react-bootstrap'
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import moment from 'moment'
 import { connect } from 'react-redux'
@@ -32,15 +32,10 @@ class Detail extends Component {
             id: props.match.params.id,
             bookid: props.location.state.bookid,
             transactiondate: moment().format('yyyy-MM-DD'),
-            editModalShow: false
+            editModalShow: false,
+            errorMsg: {},
         }
       }
-
-    /*   componentWillMount() {
-        if (!this.props.auth.token) {
-          this.props.history.push('/')
-        }   
-      }  */
 
       componentDidMount() {
         this.fetchData()       
@@ -75,15 +70,30 @@ class Detail extends Component {
             transactiondate: this.state.transactiondate
         } 
         this.props.borrow(token, qs.stringify(borrowData))
+        .then(response => {
+          Swal.fire({
+            title: 'Done !',
+            text: this.props.transactions.successMsg,
+            icon: 'success',
+            timer: 2000
+          })
+        })
+        .catch(err => {
+          Swal.fire({
+            title: 'Done !',
+            text: this.props.transactions.errorMsg,
+            icon: 'danger',
+            timer: 2000
+          })
+        });
         this.props.history.push('/dashboard')
       }
-
 
      // props delete
       deleteBook = async(id) => {
       const { token } = this.props.auth
       this.props.deletebooks(token, id)
-      this.props.history.push('/dashboard')
+     /*  this.props.history.push('/dashboard') */
       } 
 
       // modal confirmation delete
@@ -99,7 +109,6 @@ class Detail extends Component {
         }).then((result) => {
           if (result.value) {
             this.deleteBook(id)
-            this.props.history.push('/dashboard')
             Swal.fire(
               'Deleted!',
               'Your data has been deleted.',
@@ -213,7 +222,7 @@ class Detail extends Component {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   books: state.books,
-  transaction: state.transaction,
+  transactions: state.transactions,
 })
 const mapDisPatchProps = {
   login,
@@ -222,4 +231,4 @@ const mapDisPatchProps = {
   borrow,
 }
 
-export default connect(mapStateToProps, mapDisPatchProps)(Detail)
+export default connect(mapStateToProps, mapDisPatchProps)(withRouter(Detail))

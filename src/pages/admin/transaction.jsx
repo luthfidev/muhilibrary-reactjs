@@ -35,9 +35,13 @@ class Transaction extends Component {
         }
     }
 
-      componentDidMount() {
-        this.fetchData()
-      }
+    componentWillMount() {
+      if (!this.props.auth.token) {
+          this.props.history.push('/')       
+      } else {
+          this.fetchData()
+      }  
+    }  
 
       // get data
       fetchData = async (params) => {
@@ -300,7 +304,8 @@ class Transaction extends Component {
 
 // export default Transaction
 const mapStateToProps = (state) => ({
-  transactions: state.transactions
+  auth: state.auth,
+  transactions: state.transactions,
 })
 const mapDispatchToProps = {
   gettransactions,

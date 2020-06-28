@@ -8,78 +8,67 @@ import {
   Col,
   Jumbotron,
 } from 'react-bootstrap';
-import axios from 'axios';
-import qs from 'querystring';
-import Swal from 'sweetalert2';
-import Chart from 'react-apexcharts';
 import { connect } from 'react-redux';
-import authHeader from '../services/authHeader';
+import qs from 'querystring';
+import Chart from 'react-apexcharts';
+import moment from 'moment'
 import TopNavbar from './navbar';
 import Sidebar from './sidebar';
 import Spiner from '../components/Loader';
 
-const { REACT_APP_URL } = process.env;
+import { gettransactionschart } from '../redux/actions/transaction'
 
 class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
-      options: {
-        chart: {
-          id: 'basic-bar',
-        },
-        xaxis: {
-          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
-        },
-      },
-      series: [
-        {
-          name: 'series-1',
-          data: [30, 40, 45, 50, 49, 60, 70, 91],
-        },
-      ],
-
-    };
-  }
-
-  componentDidMount() {
-
-  }
-
-   /*  fetchData = async () => {
-      try {
-        this.props.showLoader()
-        const url = `${REACT_APP_URL}transactions/chart`;
-        const response =  await axios.get(url, { headers: authHeader() });
-        const {data} = response.data 
-        this.setState({data})
-        this.props.hideLoader()
-       var dataChart = []
-        for (var i = 0; i < data.length; i++) {
-            dataChart.push({
-                categories: new Date(data[i].transaction_date),
-                series: data[i].Borrowed
-            })
-        }
-      
-      } catch (error) {
-        if (error.response === undefined) {
-          return false;
-        }
-        Swal.fire({
-          title: 'Done !',
-          text: error.response.data.message,
-          icon: 'warning',
-        });
-      }
-      return true
+      dataTransactionsChart: [],
+      options: {},
+      series: {}
     }
- */
-    render() {
+  }
+
+  componentWillMount() {
+    if (!this.props.auth.token) {
+        this.props.history.push('/')       
+    } else {
+        this.fetchData()
+    }  
+  }  
+
+   fetchData = async () => {
+   await this.props.gettransactionschart()
+   const { dataTransactionsChart } = this.props.transactions
+   this.setState({ dataTransactionsChart })
+   this.state.dataTransactionsChart.map((data, index) => (
+   this.setState({
+    datechart: data.transaction_date,
+    returnbook: data.return_the_book, 
+    statuschartborrow: data.borrowed 
+    })
+  ))
+  this.setState({
+    options: {
+      chart: {
+        id: 'basic-bar',
+      },
+      xaxis: {
+        categories: [moment(this.state.datechart).format('yyyy-MM')],
+      },
+    },
+    series: [
+      {
+        name: 'series-1',
+        data: [this.state.returnbook],
+      },
+    ],
+  })
+  }
+
+     render() {
       const params = qs.parse(this.props.location.search.slice(1));
       params.page = params.page || 1;
-     
       return (
         <>
           <Row className="no-gutters w-100 h-100">
@@ -90,14 +79,13 @@ class Dashboard extends Component {
                   <TopNavbar search={(query) => this.fetchData(query)} />
                 </div>
                 <Container fluid className="mt-4">
-                  <Jumbotron className="jumbotron-dashboard shadow" />
                   <Col>
-
                     {this.state.data.length !== 0 && (
                     <Row />
                     )}
                     {this.state.data.length === 0 && (
-                    <h1>Data Not Available</h1>
+                    <h1>{this.state.returnbook}</h1>
+                    
                     )}
 
                   </Col>
@@ -121,9 +109,13 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-});
+  transactions: state.transactions
+})
+const mapDispatchToProps = {
+  gettransactionschart,
 
+}
 
-export default connect(mapStateToProps, null)(Dashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
 
 // export default Dashboard

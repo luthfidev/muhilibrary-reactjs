@@ -9,20 +9,16 @@ import { Container,
         Dropdown,
         Badge,
      } from 'react-bootstrap';
-import axios from 'axios'
-import authHeader from '../services/authHeader'
+import qs from 'querystring'
+import { connect } from 'react-redux'
+
 import TopNavbar from './navbar'
 import Sidebar from './sidebar'
 import Spiner from '../components/Loader'
 import AddBook from '../components/book/AddBook'
-import qs from 'querystring'
-import Swal from 'sweetalert2'
 
-import { connect } from 'react-redux'
 import { getbooks } from '../redux/actions/book'
 import { getgenres } from '../redux/actions/genre'
-
-const { REACT_APP_URL } = process.env
 
 class Book extends Component {
     constructor(props){
@@ -31,38 +27,25 @@ class Book extends Component {
           dataBooks:[],
           dataGenres: [],
           pageInfo: [],
-          addModalShow : false
+          addModalShow : false,
+          isLoading: true,
         }
-        // check auth flow
-       /*  const user = JSON.parse(localStorage.getItem('user'))
-        this.checkLogin = () => {
-          if(user){
-            this.setState({isLogin: true})
-            this.setState({isAdmin: user.userData.role})
-          }else{
-              props.history.push('/login')
-            this.setState({isLogin: false})
-          }
-        } */
-      }
-
-
-   componentDidMount(){
-       /*  this.checkLogin() */
-      const param = qs.parse(this.props.location.search.slice(1))
-     /*  await this.props.getbooks()
-      const { dataBooks } = this.props.books
-      this.setState({dataBooks}) */
-        // this.fetchDataGenre()
-    this.fetchData()
-    this.fetchDataGenres()
     }
+    
+   componentWillMount() {
+        if (!this.props.auth.token) {
+            this.props.history.push('/')       
+        } else {
+            this.fetchData()
+            this.fetchDataGenres()
+        }  
+    }  
 
      fetchData = async (params) => {
         const param = `${qs.stringify(params)}`
         await this.props.getbooks(param)
-        const { dataBooks } = this.props.books
-        this.setState({dataBooks})
+        const { dataBooks, isLoading } = this.props.books
+        this.setState({dataBooks, isLoading})
         if (params) {
             this.props.history.push(`?${param}`)
         }
@@ -74,47 +57,16 @@ class Book extends Component {
         this.setState({dataGenres})
     } 
 
-
-    /* fetchData = async (params) => {
-    const param = `${qs.stringify(params)}`
-        try {
-            const url = `${REACT_APP_URL}books?${param}`
-            const response = await axios.get(url, {headers: authHeader()})
-            const {data} = response.data
-            const pageInfo = response.data.pageInfo
-            this.setState({data, pageInfo, isLoading: false})       
-        } catch (error) {
-            if (error.response === undefined) {
-                return false
-            } else {
-                Swal.fire({
-                    title: 'Done !',
-                    text: error.response.data.message,
-                    icon: 'warning',
-                })
-            }
-        }
-        if (params) {
-            this.props.history.push(`?${param}`)
-        }
-    } */
-
-    fetchDataGenre = async () => {
-    this.setState({isLoading: true})
-    const url = `${REACT_APP_URL}genres`
-    const results = await axios.get(url, {headers: authHeader()})
-    const {data} = results.data
-    this.setState({dataGenre: data, isLoading: false})
-    }
-  
     render(){
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
         let addModalClose = () => this.setState({addModalShow:false})
-
         
         return(
             <>
+             {this.state.isLoading &&
+                  <Spiner/>
+             }
                 <Row className="no-gutters w-100 h-100">        
                     <div className="d-flex flex-row w-100">
                         <Sidebar {...this.props}/>           
@@ -178,7 +130,7 @@ class Book extends Component {
                                     <Row>
                                         {this.state.dataBooks.map((book, index) => (  
                                             <div className="card-book">
-                                                 <img style={{ width: 250, height: 200}} src={book.image}/>
+                                                 <img style={{ width: 250, height: 200}} src={book.image} alt="card-book"/>
                                                  <div className="card-book-text">
                                                       <Badge pill variant="warning">{book.nameStatus}</Badge>
                                                  </div>
@@ -191,34 +143,6 @@ class Book extends Component {
                                                                         }}>Borrow</Link>
                                                  </div>
                                              </div>
-                                       /*  <Link key={book.id.toString()} to={{
-                                                                            pathname: `/detail/${book.id}`,
-                                                                            state: {
-                                                                            bookid: `${book.id}`,
-                                                                            booktitle: `${book.title}`,
-                                                                            bookrelease: `${book.releaseDate}`,
-                                                                            bookimage: `${book.image}`,
-                                                                            bookdesc: `${book.description}`,
-                                                                            bookgenreid: `${book.genreId}`,
-                                                                            bookgenre: `${book.genreName}`,
-                                                                            bookauthorid: `${book.authorId}`,
-                                                                            bookauthor: `${book.authorName}`,
-                                                                            bookstatusid: `${book.nameStatusId}`,
-                                                                            bookstatus: `${book.nameStatus}`,
-                                                                            }
-                                                                        }}  className="text-dark text-decoration-none"> 
-                                            <Card className="shadow m-2" style={{ width: '18rem' }}>
-                                                <Card.Img variant="top" style={{ height: '200px' }} src={book.image} />
-                                                <Card.Body>
-                                                    <Card.Title>{book.title}</Card.Title>
-                                                    <Card.Subtitle className="badge badge-primary">{book.genreName}</Card.Subtitle>
-                                                    <Card.Subtitle className="ml-2 badge badge-success text-white">{book.nameStatus}</Card.Subtitle>
-                                                    <Card.Text>
-                                                    {book.description}
-                                                    </Card.Text>
-                                                </Card.Body>
-                                                </Card>
-                                        </Link> */
                                         ))}           
                                     </Row>
                                     )}
@@ -253,7 +177,8 @@ class Book extends Component {
 
 const mapStateToProps = (state) => ({
     books: state.books,
-    genres: state.genres
+    genres: state.genres,
+    auth: state.auth,
 })
 
 const mapDispatchToProps = {
@@ -262,5 +187,3 @@ const mapDispatchToProps = {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Book)
-
-// export default Book

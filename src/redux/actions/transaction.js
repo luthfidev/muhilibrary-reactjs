@@ -2,6 +2,13 @@ import http from '../../helpers/http'
 const  { REACT_APP_URL } = process.env
 const url = `${REACT_APP_URL}`
 
+export const gettransactionschart = (param) => {
+    return {
+        type: 'TRANSACTIONS_CHART',
+        payload: http().get(url.concat('transactions/chart'))
+    }
+}
+
 export const gettransactions = (param) => {
     return {
         type: 'TRANSACTIONS',

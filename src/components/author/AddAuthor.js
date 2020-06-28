@@ -4,6 +4,7 @@ import {Modal,
         Form} from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import { connect } from 'react-redux'
+import jwt from 'jsonwebtoken'
 
 import { postauthors } from '../../redux/actions/author'
 
@@ -24,6 +25,10 @@ class AddAuthor extends Component {
     constructor(props) {
         super(props)
         this.state = {
+          user: jwt.decode(this.props.auth.token) || {
+            email: '',
+            role: '',
+          },
             name: '', nameValid: false,
             description: '', descriptionValid: false,
             formValid: false,
@@ -83,13 +88,15 @@ class AddAuthor extends Component {
         this.setState({[  event.target.name]: event.target.value})
     }
     
-    handlePost = (event) => {
+    handlePost = async (event) => {
       event.preventDefault()
+      // const { token } = this.props.auth
       const authorData = {
         name: this.state.name,
         description: this.state.description
       }
-      this.props.postauthors(authorData)
+      const { token } = this.props.auth
+      this.props.postauthors(token, authorData)
       .then(response => {
         Swal.fire({
           title: 'Done !',
@@ -158,6 +165,7 @@ class AddAuthor extends Component {
 
 // export default AddAuthor
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   authors: state.authors
 })
 const mapDispatchToProps = {

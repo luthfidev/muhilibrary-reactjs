@@ -9,24 +9,24 @@ export const getgenres = (param) => {
     }
 }
 
-export const postgenres = (data) => {
+export const postgenres = (token, data) => {
     return {
         type: 'POST_GENRES',
-        payload: http().post(url.concat('genres'), data)
+        payload: http(token).post(url.concat('genres'), data)
     }
 }
 
-export const updategenres = (id, data) => {
+export const updategenres = (token, id, data) => {
     return {
         type: 'UPDATE_GENRES',
-        payload: http().patch(url.concat(`genres/${id}`), data)
+        payload: http(token).patch(url.concat(`genres/${id}`), data)
     }
 }
 
-export const deletegenres = (id) =>{
+export const deletegenres = (token, id) =>{
     return {
       type: 'DELETE_GENRES',
-      payload: http().delete(url.concat(`genres/${id}`))
+      payload: http(token).delete(url.concat(`genres/${id}`))
     }
 }
     

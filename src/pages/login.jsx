@@ -36,7 +36,7 @@ function ValidationMessage(props) {
     }
      
     // check auth flow
-     this.checkToken = () => {
+   /*   this.checkToken = () => {
       if(!localStorage.getItem('user')){
           props.history.push('/login')
       } else {
@@ -49,7 +49,7 @@ function ValidationMessage(props) {
           props.history.push('/dashboard')
       }
     }
-    this.handlePost = this.handlePost.bind(this)
+  */   this.handlePost = this.handlePost.bind(this)
     this.baseState = this.state 
 }
 
@@ -193,7 +193,8 @@ handlePost = async (event) => {
 }
 
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
+  books: state.books
 })
 
 const mapDispatchToProps = { login }

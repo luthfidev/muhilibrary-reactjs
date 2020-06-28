@@ -9,6 +9,8 @@ import {
 } from 'react-bootstrap';
 import qs from 'querystring'
 import Swal from 'sweetalert2'
+import { connect } from 'react-redux'
+import jwt from 'jsonwebtoken'
 
 import TopNavbar from '../navbar'
 import Sidebar from '../sidebar'
@@ -19,13 +21,16 @@ import AddAuthor from '../../components/author/AddAuthor'
 // file form modal edit
 import EditAuthor from '../../components/author/EditAuthor'
 
-import { connect } from 'react-redux'
 import { getauthors, deleteauthors } from '../../redux/actions/author'
 
 class Author extends Component {
     constructor(props){
         super(props)
         this.state = {
+          user: jwt.decode(this.props.auth.token) || {
+            email: '',
+            role: '',
+          },
           dataAuthors: [],
           data: [],
           pageInfo: [],
@@ -34,11 +39,14 @@ class Author extends Component {
           alert: null
         }
     }
-    
-    // mount get data
-    componentDidMount() {
-        this.fetchData()
-    }
+
+    componentWillMount() {
+      if (!this.props.auth.token) {
+          this.props.history.push('/')       
+      } else {
+          this.fetchData()
+      }  
+  }  
 
     fetchData = async (params) => {
       const param = `${qs.stringify(params)}`
@@ -51,7 +59,8 @@ class Author extends Component {
     }
 
       deleteAuthor = async(id) => {
-        this.props.deleteauthors(id)
+        const { token } = this.props.auth
+        this.props.deleteauthors(token, id)
         this.fetchData()
       }
 
@@ -206,6 +215,7 @@ class Author extends Component {
 // export default Author
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   authors: state.authors
 })
 const mapDispatchToProps = {

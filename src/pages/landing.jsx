@@ -1,7 +1,6 @@
-import React, { Component, useState, useEffect } from 'react'
+import React, { Component } from 'react'
 import {Link} from 'react-router-dom';
 import axios from 'axios'
-import Spiner from '../components/Loader'
 import { 
     Row,
     Navbar, 
@@ -19,6 +18,7 @@ import { getbooks } from '../redux/actions/book'
 import slide1 from '../assets/img/landing/1.jpg'
 import slide2 from '../assets/img/landing/2.jpg'
 import slide3 from '../assets/img/landing/3.jpg'
+import Spiner from '../components/Loader'
 
 import {Register} from '../components/Register' 
 const {REACT_APP_URL} = process.env
@@ -32,7 +32,7 @@ class Landing extends Component {
           data: [],
           dataGenre: [],
           pageInfo: [],
-          isLoading: false,
+          isLoading: true,
           addModalShow : false,
           query: ''
         }
@@ -76,8 +76,8 @@ class Landing extends Component {
         //   await this.fetchData(param)
         //   await this.fetchDataGenre()
         await this.props.getbooks()
-        const { dataBooks } = this.props.books
-        this.setState({ dataBooks })
+        const { dataBooks, isLoading } = this.props.books
+        this.setState({ dataBooks, isLoading })
       }
 
       
@@ -111,9 +111,12 @@ class Landing extends Component {
                         </Form>
                         </Navbar.Collapse>
                     </Navbar>
-               
+                    {this.state.isLoading &&
+                        <Spiner/>
+                    }
                         <Row className="body-bg no-gutters w-100">
-                            <div className="d-flex justify-content-center mt-3 col-md-6 col-sm-12">
+                     
+                                <div className="d-flex justify-content-center mt-3 col-md-6 col-sm-12">
                                 <Carousel className="caraousel-landing shadow ml-4">
                                     <Carousel.Item>
                                     <img
@@ -167,7 +170,7 @@ class Landing extends Component {
                                 <Row className="w-100 d-flex justify-content-center">
                                 {this.state.dataBooks.map((book, index) => (    
                                     <div className="card-book">
-                                        <img style={{ width: 250, height: 200}} src={book.image}/>
+                                        <img style={{ width: 250, height: 200}} src={book.image} alt="card-book"/>
                                         <div className="card-book-text">
                                             <p className="m-2">
                                                 

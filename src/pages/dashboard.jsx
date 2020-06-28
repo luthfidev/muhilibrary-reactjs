@@ -6,7 +6,6 @@ import {
   Container,
   Row,
   Col,
-  Jumbotron,
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import qs from 'querystring';
@@ -14,7 +13,6 @@ import Chart from 'react-apexcharts';
 import moment from 'moment'
 import TopNavbar from './navbar';
 import Sidebar from './sidebar';
-import Spiner from '../components/Loader';
 
 import { gettransactionschart } from '../redux/actions/transaction'
 

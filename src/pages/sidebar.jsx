@@ -8,7 +8,6 @@ import {BsBook,
         BsCheckCircle } from 'react-icons/bs'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom';
-import Swal from 'sweetalert2'
 import jwt from 'jsonwebtoken'
 
 import { getusersid } from '../redux/actions/user'

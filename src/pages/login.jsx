@@ -123,7 +123,6 @@ handlePost = async (event) => {
     render(){
       const {formValid } = this.state
       const { isLoading } = this.state
-      // const { isLoading } = this.props.auth
 
         return(
         <>
@@ -181,7 +180,7 @@ handlePost = async (event) => {
                       </div>
                       <Col className="footer-login d-flex justify-content-center align-content-center">
                         <div>
-                        <div>By signing up, you agree to Book’s</div>
+                        <div className="mb-2">Don't have account ? <Link className="text-teal" to="/register">Register</Link></div>
                         <Link className="text-decoration-none" to="#"> Terms and Conditions</Link> & 
                         <Link className="text-decoration-none" to="#"> Privacy Policy</Link>
                         </div>

@@ -1,5 +1,6 @@
 const initialState = {
     dataBooks: [],
+    dataBookLimit: [],
     isLoading: false,
     isError: false,
     errorMsg: '',
@@ -9,6 +10,29 @@ const initialState = {
 
 export const books = (state=initialState, action) => {
     switch(action.type) {
+        case 'BOOKS_LIMIT_PENDING': {
+            return {
+                ...state,
+                isLoading: true,
+                isError: false
+            }
+        }
+        case 'BOOKS_LIMIT_REJECTED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: true,
+                errorMsg: action.payload.response.data.message,
+            }
+        }
+        case 'BOOKS_LIMIT_FULFILLED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+                dataBookLimit: action.payload.data.data,
+            }
+        }
         case 'BOOKS_PENDING': {
             return {
                 ...state,

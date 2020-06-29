@@ -145,6 +145,23 @@ html, body, #root {
     text-shadow: 1px 1px 1px #FFF
   }
 
+  .card-book-top {
+    position: relative;
+    margin: 20px;
+    height: 200px;
+    width: 150px;
+    border-radius: 20px;
+    background-color:#E0E5EC;
+    box-shadow: 9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px    rgba(255,255,255, 0.5);
+  }
+
+  .card-book-top img{
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+
   .card-book {
     position: relative;
     margin: 30px;
@@ -179,17 +196,28 @@ html, body, #root {
 
   .card-book-btn  .btn-borrow{
     display: inline-block;
-    color:#342ead;
+    color:#007aff;
     font-family: sans-serif;
     font-weight: bold;
     padding: 10px 20px;
-    margin-top: 15px;
     border-radius: 40px;
     background-color: #e0e5ec;
     font-size: 16px;
     text-decoration: none;
     box-shadow: 9px 9px 16px rgb(163,177,198,0.6),
                  -9px -9px 16px rgba(255,255,255,0.5);
+  opacity: 0;
+  transition: opacity .35s ease;
+  }
+
+  .card-book:hover .card-description{
+    display: none;
+    opacity: 0;
+  }
+
+  .card-book:hover .btn-borrow{
+  margin-top: 50px;
+  opacity: 1;
   }
 
   .card-book-btn .btn-borrow:hover {

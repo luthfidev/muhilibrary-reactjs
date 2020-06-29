@@ -148,7 +148,7 @@ html, body, #root {
   .card-book {
     position: relative;
     margin: 30px;
-    height: 350px;
+    height: 400px;
     width: 250px;
     border-radius: 20px;
     background-color:#E0E5EC;
@@ -169,6 +169,8 @@ html, body, #root {
 
   .card-book-text {
     color: black;
+    text-shadow: 1px 1px 1px #fff;
+    color: #342ead;
   }
 
   .card-book-btn {

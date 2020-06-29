@@ -8,7 +8,8 @@ import {
     Form, 
     FormControl, 
     Button, 
-    Carousel, 
+    Carousel,
+    Badge, 
 } from 'react-bootstrap'
 import qs from 'querystring'
 import jwt from 'jsonwebtoken'
@@ -173,9 +174,12 @@ class Landing extends Component {
                                     <div className="card-book">
                                         <img style={{ width: 250, height: 200}} src={book.image} alt="card-book"/>
                                         <div className="card-book-text">
-                                            <p className="m-2">
-                                                
-                                            </p>
+                                        <div className="d-flex justify-content-center mt-2">
+                                        <Badge pill variant="warning">{book.nameStatus}</Badge>
+                                        </div>
+                                        <div className="p-2">
+                                        <p>{book.description}</p>
+                                        </div>
                                         </div>
                                         <div className="card-book-btn d-flex justify-content-center mt-2">
                                         <Link className="btn-borrow" to={{

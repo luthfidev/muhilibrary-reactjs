@@ -140,9 +140,14 @@ class Book extends Component {
                                             <div className="card-book">
                                                  <img style={{ width: 250, height: 200}} src={book.image} alt="card-book"/>
                                                  <div className="card-book-text">
+                                                     <div className="d-flex justify-content-center mt-2">
                                                       <Badge pill variant="warning">{book.nameStatus}</Badge>
+                                                     </div>
+                                                     <div className="p-2">
+                                                      <p>{book.description}</p>
+                                                     </div>
                                                  </div>
-                                                 <div className="card-book-btn d-flex justify-content-center mt-2">
+                                                 <div className="card-book-btn d-flex justify-content-center">
                                                      <Link className="btn-borrow" to={{
                                                                             pathname: `/detail/${book.id}`,
                                                                             state: {

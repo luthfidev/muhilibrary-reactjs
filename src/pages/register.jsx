@@ -153,7 +153,7 @@ class Register extends Component {
                                         </Form.Text>
                                     </div>
                                     <div className="field mt-2">
-                                        <input name="password" type="text" value={this.state.password} onChange={(e) => this.updatePassword(e.target.value)} placeholder="Password"/>
+                                        <input name="password" type="password" value={this.state.password} onChange={(e) => this.updatePassword(e.target.value)} placeholder="Password"/>
                                         <Form.Text className="text-muted">
                                           <ValidationMessage valid={this.state.passwordValid} message={this.state.errorMsg.password} />
                                         </Form.Text>

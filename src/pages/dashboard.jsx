@@ -11,7 +11,6 @@ import { connect } from 'react-redux';
 import Spiner from '../components/Loader'
 import qs from 'querystring';
 import Chart from 'react-apexcharts';
-import moment from 'moment'
 import TopNavbar from './navbar';
 import Sidebar from './sidebar';
 
@@ -41,31 +40,7 @@ class Dashboard extends Component {
 
    fetchData = async () => {
    await this.props.gettransactionschart()
-  /*  const { dataTransactionsChart, isLoading } = this.props.transactions
-   this.setState({ dataTransactionsChart, isLoading })
-   this.state.dataTransactionsChart.map((data, index) => (
-   this.setState({
-    datechart: data.transaction_date,
-    returnbook: data.return_the_book, 
-    statuschartborrow: data.borrowed 
-    })
-  ))
-  this.setState({
-    options: {
-      chart: {
-        id: 'basic-bar',
-      },
-      xaxis: {
-        categories: [moment(this.state.datechart).format('yyyy-MM')],
-      },
-    },
-    series: [
-      {
-        name: 'series-1',
-        data: [this.state.returnbook],
-      },
-    ],
-  }) */
+
   }
 
      render() {

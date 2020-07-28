@@ -83,7 +83,7 @@ export const books = (state=initialState, action) => {
                 pageInfo: action.payload.data.pageInfo,
             }
         }
-        // UPDATE USERS PROFI;E
+        // UPDATE USERS PROFILE
         case 'UPDATE_USERS_PROFILE_PENDING': {
         return {
             ...state,
@@ -105,6 +105,30 @@ export const books = (state=initialState, action) => {
                 isLoading: false,
                 isError: false,
                 dataUsers: action.payload.data.data,
+                successMsg: action.payload.data.message,
+            }
+        }
+        // UPDATE USERS PROFILE
+        case 'UPLOAD_AVATAR_PROFILE_PENDING': {
+        return {
+            ...state,
+            isLoading: true,
+            isError: false
+            }
+        }
+        case 'UPLOAD_AVATAR_PROFILE_REJECTED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: true,
+                errorMsg: action.payload.response.data.message,
+            }
+        }
+        case 'UPLOAD_AVATAR_PROFILE_FULFILLED': {
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
                 successMsg: action.payload.data.message,
             }
         }

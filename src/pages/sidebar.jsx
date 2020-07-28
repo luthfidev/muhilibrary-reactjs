@@ -10,9 +10,9 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom';
 import jwt from 'jsonwebtoken'
 
+import UploadAvatar from '../components/user/UploadAvatar'
 import { getusersid } from '../redux/actions/user'
 import { logout } from '../redux/actions/auth'
-import imgError from '../assets/img/jono.png'
 const {REACT_APP_URL} = process.env
 
 class Sidebar extends Component {
@@ -23,6 +23,7 @@ class Sidebar extends Component {
             email: '',
             role: '',
           },
+          UploadModalShow : false,
           dataUsers: [],
           isLoading: true,
         }
@@ -48,14 +49,19 @@ class Sidebar extends Component {
     }
    
     render(){
+      let UploadModalClose = () => this.setState({UploadModalShow:false})
         return(
-            <>
-            
+            <>        
             <Nav className="d-none d-md-block sidebar bg-light shadow">
+            <UploadAvatar
+                show={this.state.UploadModalShow}
+                onHide={UploadModalClose}
+                refreshdata={() => this.fetchData()}
+            />
             {this.state.dataUsers.map((user, index) => (
-                <div className="avatar-img">
-                    <img onError={imgError} key={user.id} src={`${REACT_APP_URL}`+user.picture} alt="avatar"/>
-                    <h1>{user.name}</h1>
+                <div className="avatar-img" onClick={()=> this.setState({UploadModalShow: true})}>
+                    <img key={user.id} src={`${REACT_APP_URL}`+user.picture} alt="avatar"/>
+                    <h3>{user.name}</h3>
                 </div>
                 ))}   
                 <Nav.Item className="mt-4">

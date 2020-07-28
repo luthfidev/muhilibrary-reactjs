@@ -6,7 +6,7 @@ const url = `${REACT_APP_URL}`
 export const login = (email, password) => {
     return {
         type: 'LOGIN',
-        payload: http().post(url.concat('auth/'), qs.stringify({email, password}))
+        payload: http().post(url.concat('auth/signin'), qs.stringify({email, password}))
     }
 }
 

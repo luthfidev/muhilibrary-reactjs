@@ -93,10 +93,13 @@ class userHistory extends Component {
       params.page = params.page || 1
         return(
             <>
-              {this.state.isLoading &&
-                <Spiner/>
-                }
                 <Row className="no-gutters w-100 h-100">
+                {this.state.isLoading &&
+                  <div className='d-flex w-100 h-100 justify-content-center align-items-center'>
+                    <Spiner/>
+                  </div>
+                }
+                {!this.state.isLoading &&(  
                     <div className="d-flex flex-row w-100">
                         <Sidebar {...this.props}/>           
                             <div className="w-100 d-flex flex-column">
@@ -149,18 +152,6 @@ class userHistory extends Component {
                                         <td>{transaction.title}</td>                                
                                         <td><Badge variant="primary" className="font-weight-bold">{transaction.statusName}</Badge></td>                                
                                         <td align="center">
-                                       {/*  <button onClick={() =>  {  this.setState({editModalShow: true, 
-                                                                                    transactionid: transaction.id, 
-                                                                                    transactiondate: transaction.date, 
-                                                                                    userid: transaction.userid, 
-                                                                                    bookid: transaction.bookid, 
-                                                                                    statusid: transaction.statusid})} } className="btn btn-warning ml-2">Edit</button> */}
-                                       {/*   {transaction.statusName === 'Pending' && 
-                                         <button onClick={() =>  {  this.onConfirmProses(transaction.id)} } className="btn btn-warning ml-2">Proses</button>
-                                         }
-                                         {transaction.statusName === 'Borrowed' && 
-                                         <button onClick={() =>  {  this.onConfirmReturn(transaction.id)} } className="btn btn-success ml-2">Return Book</button>
-                                         } */}
                                          {transaction.statusName === 'Pending' && 
                                          <button onClick={() =>  {  this.onConfirmCancel(transaction.id)} } className="btn btn-warning ml-2">Cancel</button>
                                         }
@@ -190,7 +181,8 @@ class userHistory extends Component {
                                 </Card>   
                                </Container>
                             </div>
-                    </div>            
+                    </div>  
+                     )}          
                 </Row>
             </>
         )

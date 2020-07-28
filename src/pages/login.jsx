@@ -103,15 +103,15 @@ handlePost = async (event) => {
   .then(response => {
     Swal.fire({
       title: 'Done !',
-      text: this.props.auth.successMsg,
+      text: 'Login Success !',
       icon: 'success',
       timer: 2000
     })
   })
   .catch(err => {
     Swal.fire({
-      title: 'Done !',
-      text: this.props.auth.errorMsg,
+      title: 'Login Failed',
+      text: 'Someting Wrong !!',
       icon: 'danger',
       timer: 2000
     })
@@ -158,7 +158,7 @@ handlePost = async (event) => {
                                         </Form.Text>
                                     </div>
                                     <div className="field mt-2">
-                                        <input name="password" readOnly={isLoading} type="text" value={this.state.password} onChange={(e) => this.updatePassword(e.target.value)} placeholder="Password"/>
+                                        <input name="password" readOnly={isLoading} type="password" value={this.state.password} onChange={(e) => this.updatePassword(e.target.value)} placeholder="Password"/>
                                         <Form.Text className="text-muted">
                                           <ValidationMessage valid={this.state.passwordValid} message={this.state.errorMsg.password} />
                                         </Form.Text>

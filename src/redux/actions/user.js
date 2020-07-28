@@ -30,3 +30,10 @@ export const updateusersprofile = (token, data) => {
     }
 }
 
+export const uploadavatar = (token, id, data) => {
+    return {
+        type: 'UPLOAD_AVATAR_PROFILE',
+        payload: http(token).patch(url.concat(`users/upload/${id}`), data)
+    }
+}
+

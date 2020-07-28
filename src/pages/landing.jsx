@@ -15,16 +15,12 @@ import qs from 'querystring'
 import jwt from 'jsonwebtoken'
 
 import { connect } from 'react-redux'
-import { getbooks } from '../redux/actions/book'
+import { getbooks, getbookslimit } from '../redux/actions/book'
 
 import slide1 from '../assets/img/landing/1.jpg'
 import slide2 from '../assets/img/landing/2.jpg'
 import slide3 from '../assets/img/landing/3.jpg'
 import Spiner from '../components/Loader'
-
-import {Register} from '../components/Register' 
-const {REACT_APP_URL} = process.env
-
 
 class Landing extends Component {
     constructor(props){
@@ -35,7 +31,7 @@ class Landing extends Component {
             role: '',
             },
           dataBooks: [],
-          data: [],
+          dataBookLimit: [],
           dataGenre: [],
           pageInfo: [],
           isLoading: true,
@@ -45,36 +41,21 @@ class Landing extends Component {
         
     }
 
-      fetchData = async (params) => {
-            this.setState({isLoading: true})
-            const param = `${qs.stringify(params)}`
-            const url = `${REACT_APP_URL}books?limit=10?${param}`
-            const results = await axios.get(url)
-            const {data} = results.data
-            const pageInfo = results.data.pageInfo
-            this.setState({data, pageInfo, isLoading: false})
-            if (params) {
-                this.props.history.push(`?${param}`)
-            }
+      componentDidMount(){
+        this.fethData()
+        this.fethDataLimit()
       }
 
-      fetchDataGenre = async (params) => {
-        this.setState({isLoading: true})
-        const url = `${REACT_APP_URL}genres`
-        const results = await axios.get(url)
-        const {data} = results.data
-    
-        this.setState({dataGenre: data, isLoading: false})
-  }
-
-      async componentDidMount(){
-        //   const param = qs.parse(this.props.location.search.slice(1))
-        //   this.checkLogin()
-        //   await this.fetchData(param)
-        //   await this.fetchDataGenre()
+      fethData = async () => {
         await this.props.getbooks()
         const { dataBooks, isLoading } = this.props.books
         this.setState({ dataBooks, isLoading })
+      }
+
+      fethDataLimit = async () => {
+        await this.props.getbookslimit()
+        const { dataBookLimit, isLoading } = this.props.books
+        this.setState({ dataBookLimit, isLoading })
       }
 
       
@@ -89,8 +70,7 @@ class Landing extends Component {
     render() {
         const params = qs.parse(this.props.location.search.slice(1))
         params.page = params.page || 1
-         // set state addModal
-         let addModalClose = () => this.setState({addModalShow:false})
+
         return (
             <>
                     <Navbar bg="light" expand="md" className="shadow rounded">
@@ -114,10 +94,12 @@ class Landing extends Component {
                         </Navbar.Collapse>
                     </Navbar>
                     {this.state.isLoading &&
-                        <Spiner/>
-                    }
+                       <div className='d-flex w-100 h-100 justify-content-center align-content-center align-items-center'>
+                       <Spiner/>
+                       </div>
+                        }
+                        {!this.state.isLoading && (<>
                         <Row className="body-bg no-gutters w-100">
-                     
                                 <div className="d-flex justify-content-center mt-3 col-md-6 col-sm-12">
                                 <Carousel className="caraousel-landing shadow ml-4">
                                     <Carousel.Item>
@@ -159,10 +141,14 @@ class Landing extends Component {
                             </div>
                             <div className="mt-3 col-md-6 col-sm-12">
                                 <div className="d-flex flex-column ml-4 mr-4">
-                                    <div className="landing-title-author">LIST AUTHOR</div>
-                                        <li className="landing-list-author"></li>
-                                        <li className="landing-list-author"></li>
-                                        <li className="landing-list-author"></li>
+                                    <div className="landing-title-author mb-2">Top 3 Recomended Books</div>
+                                    <Row>
+                                    {this.state.dataBookLimit.map((book, index) => ( 
+                                    <div className="card-book-top">
+                                        <img style={{ width: 150, height: 200}} src={book.image} alt="card-book"/>
+                                    </div>
+                                     ))} 
+                                    </Row>
                                 </div>
                             </div>
                             <div className="landing-card-title col-md-12 mt-5 d-flex justify-content-center">
@@ -174,26 +160,30 @@ class Landing extends Component {
                                     <div className="card-book">
                                         <img style={{ width: 250, height: 200}} src={book.image} alt="card-book"/>
                                         <div className="card-book-text">
-                                        <div className="d-flex justify-content-center mt-2">
-                                        <Badge pill variant="warning">{book.nameStatus}</Badge>
+                                            <div className="d-flex justify-content-center mt-4">
+                                            <Badge pill variant="warning">{book.nameStatus}</Badge>
+                                            </div>
+                                            <div className="p-2 card-description">
+                                                <p>{book.description}</p>
+                                            </div>
                                         </div>
-                                        <div className="p-2">
-                                        <p>{book.description}</p>
-                                        </div>
-                                        </div>
-                                        <div className="card-book-btn d-flex justify-content-center mt-2">
-                                        <Link className="btn-borrow" to={{
-                                                                            pathname: `/detail/${book.id}`,
-                                                                            state: {
-                                                                            bookid: `${book.id}`
-                                                                            }
-                                                                        }}>Borrow</Link>
+                                        <div className="card-book-btn d-flex justify-content-center">
+                                        {book.nameStatus === "Available" && 
+                                        <Link className="btn-borrow" 
+                                        to={{
+                                            pathname: `/detail/${book.id}`,
+                                            state: {
+                                            bookid: `${book.id}`
+                                            }
+                                         }}>Borrow</Link>
+                                        }
                                         </div>
                                     </div>
-                                ))} 
+                                ))}   
                                 </Row>
                             </div>
                         </Row>
+                        </>)}
             </>
         )
     }
@@ -204,7 +194,8 @@ const mapStateToProps = (state) => ({
     books: state.books
 })
 const mapDispatchToProps = {
-    getbooks
+    getbooks,
+    getbookslimit,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Landing)

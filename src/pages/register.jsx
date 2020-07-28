@@ -134,7 +134,7 @@ class Register extends Component {
                     </div>
                   </div>
               </Col>
-              <Col md={4} className="h-100">
+              <Col md={4} >
                   <div className="content-login h-100">
                       <div className="brand d-flex">
                           <img alt="brand" className="ml-auto mr-3 mt-2" src={brand}/>
@@ -172,11 +172,12 @@ class Register extends Component {
                                         Register</button>
                                     </div>
                                 </form>
-                        </div>
+                        </div> 
                       </div>
+                      
                       <Col className="footer-login d-flex justify-content-center align-content-center">
                         <div>
-                        <div>By signing up, you agree to Book’s</div>
+                        <div className="mb-2">Have account ? <Link to="/login">Login</Link></div>
                         <Link className="text-decoration-none" to="#"> Terms and Conditions</Link> & 
                         <Link className="text-decoration-none" to="#"> Privacy Policy</Link>
                         </div>

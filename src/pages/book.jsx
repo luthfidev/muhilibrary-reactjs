@@ -143,17 +143,20 @@ class Book extends Component {
                                                      <div className="d-flex justify-content-center mt-2">
                                                       <Badge pill variant="warning">{book.nameStatus}</Badge>
                                                      </div>
-                                                     <div className="p-2">
+                                                     <div className="p-2 card-description">
                                                       <p>{book.description}</p>
                                                      </div>
                                                  </div>
                                                  <div className="card-book-btn d-flex justify-content-center">
-                                                     <Link className="btn-borrow" to={{
-                                                                            pathname: `/detail/${book.id}`,
-                                                                            state: {
-                                                                            bookid: `${book.id}`
-                                                                            }
-                                                                        }}>Borrow</Link>
+                                                 {book.nameStatus === "Available" &&
+                                                     <Link className="btn-borrow" 
+                                                     to={{
+                                                        pathname: `/detail/${book.id}`,
+                                                        state: {
+                                                                 bookid: `${book.id}`
+                                                        }
+                                                     }}>Borrow</Link>
+                                                }
                                                  </div>
                                              </div>
                                         ))}           

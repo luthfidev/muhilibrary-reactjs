@@ -9,6 +9,13 @@ export const detailbooks = (id) => {
     }
 }
 
+export const getbookslimit = () => {
+    return {
+        type: 'BOOKS_LIMIT',
+        payload: http().get(url.concat(`books?limit=3`))
+    }
+}
+
 export const getbooks = (param) => {
     return {
         type: 'BOOKS',
